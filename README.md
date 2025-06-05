@@ -124,6 +124,92 @@ graph TB
     class IAC utilClass
 ```
 
+### 🖥️ [Лабораторна робота 4: Серверний додаток](Lab4_ServerSide_Application.md)
+- Архітектура "тонкий клієнт" (Thin Client)
+- Токенна автентифікація замість паролів
+- Short Polling для real-time оновлень
+- Комплексна система логування
+- UML діаграми серверної архітектури
+
+**Short Polling схема:**
+```mermaid
+sequenceDiagram
+    participant C as Client Browser
+    participant JS as JavaScript App
+    participant S as Server
+    participant TM as TokenManager
+    participant DB as Database
+    
+    C->>JS: User Login
+    JS->>S: POST /api/login
+    S->>TM: generateToken(userId)
+    TM-->>S: auth_token
+    S-->>JS: 200 OK {token}
+    
+    loop Every 5 seconds
+        JS->>S: GET /api/poll
+        S->>TM: validateToken(token)
+        S->>DB: gatherUpdates()
+        DB-->>S: updates data
+        S-->>JS: {updates}
+        JS->>C: updateUI()
+    end
+```
+
+**Серверна архітектура:**
+```mermaid
+flowchart TB
+    subgraph LoadBalancer["Load Balancing Layer"]
+        LB["Nginx Load Balancer"]
+    end
+    
+    subgraph ServerCluster["Application Server Cluster"]
+        S1["Server Instance 1"]
+        S2["Server Instance 2"]
+        S3["Server Instance 3"]
+    end
+    
+    subgraph ApplicationLayer["Application Layer"]
+        subgraph Controllers["Controllers"]
+            PC["PollingController"]
+            AC["AuthController"]
+            VC["VacancyController"]
+        end
+        
+        subgraph Services["Business Logic"]
+            TM["TokenManager"]
+            NS["NotificationService"]
+            JS["JobService"]
+        end
+        
+        subgraph Utils["Utilities"]
+            L["Logger"]
+            API["ApiClient"]
+            V["Validator"]
+        end
+    end
+    
+    subgraph DataLayer["Data Layer"]
+        DB[(MySQL Database)]
+        Redis[(Redis Cache)]
+        FileSystem[File Storage]
+    end
+    
+    Client["Client Browser"] --> LB
+    LB --> S1
+    LB --> S2
+    LB --> S3
+    
+    S1 --> Controllers
+    S2 --> Controllers
+    S3 --> Controllers
+    
+    Controllers --> Services
+    Services --> Utils
+    Services --> DB
+    Services --> Redis
+```
+
 ## 🚀 Як переглянути діаграми
 
 ### GitHub
@@ -145,6 +231,7 @@ project/
 ├── Lab1_TechnicalRequirements.md    # Технічні вимоги
 ├── Lab2_ClientServer_Architecture.md # Клієнт-серверна архітектура  
 ├── Lab3_ClientSide_Architecture.md   # Клієнтська архітектура
+├── Lab4_ServerSide_Application.md    # Серверний додаток
 ├── webroot/searhjob/                 # Основний код проекту
 │   ├── backend/                      # Серверна частина
 │   │   ├── controllers/              # API контролери

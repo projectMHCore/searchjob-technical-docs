@@ -65,229 +65,248 @@
 ### 1. UML-діаграма компонентів клієнтської частини
 
 ```mermaid
-graph TB
-    subgraph "Frontend MVC Architecture"
-        subgraph "View Layer"
-            LV[login_view.php]
-            VLV[vacancy_list_view.php]
-            PV[profile_view.php]
-            AFV[apply_form_view.php]
-            RV[register_view.php]
+---
+title: Frontend MVC Architecture Components
+---
+flowchart TB
+    subgraph Frontend["🎨 Frontend MVC Architecture"]
+        subgraph ViewLayer["📱 View Layer"]
+            LV["login_view.php<br/>🔐 Форма входу"]
+            VLV["vacancy_list_view.php<br/>📋 Список вакансій"]
+            PV["profile_view.php<br/>👤 Профіль користувача"]
+            AFV["apply_form_view.php<br/>📝 Форма заявки"]
+            RV["register_view.php<br/>✍️ Реєстрація"]
         end
         
-        subgraph "Controller Layer" 
-            LC[LoginController]
-            VC[VacancyController]
-            PC[ProfileController]
-            RC[RegisterController]
-            AC[ApplicationController]
+        subgraph ControllerLayer["🎯 Controller Layer"] 
+            LC["LoginController<br/>🔑 Авторизація"]
+            VC["VacancyController<br/>💼 Управління вакансіями"]
+            PC["ProfileController<br/>👤 Профіль"]
+            RC["RegisterController<br/>✍️ Реєстрація"]
+            AC["ApplicationController<br/>📋 Заявки"]
         end
         
-        subgraph "Model Layer"
-            UM[UserModel]
-            VM[VacancyModel]
-            AM[ApplicationModel]
+        subgraph ModelLayer["💾 Model Layer"]
+            UM["UserModel<br/>👥 Дані користувачів"]
+            VM["VacancyModel<br/>💼 Дані вакансій"]
+            AM["ApplicationModel<br/>📄 Дані заявок"]
         end
         
-        subgraph "Utils Layer"
-            IAC[InternalApiClient]
+        subgraph UtilsLayer["🔧 Utils Layer"]
+            IAC["InternalApiClient<br/>🌐 API клієнт"]
         end
     end
     
-    subgraph "Backend API"
-        API[Backend Controllers]
+    subgraph Backend["🖥️ Backend API"]
+        API["Backend Controllers<br/>⚡ REST API"]
     end
     
-    subgraph "External Interface"
-        USER[User Browser]
+    subgraph External["🌍 External Interface"]
+        USER["👤 User Browser<br/>🌐 Веб-браузер"]
     end
     
-    %% View to Controller connections
-    USER --> LC
-    USER --> VC
-    USER --> PC
-    USER --> RC
-    USER --> AC
+    %% User interactions
+    USER -.->|HTTP Request| LC
+    USER -.->|HTTP Request| VC
+    USER -.->|HTTP Request| PC
+    USER -.->|HTTP Request| RC
+    USER -.->|HTTP Request| AC
     
-    %% Controller to View connections
-    LC --> LV
-    VC --> VLV
-    PC --> PV
-    RC --> RV
-    AC --> AFV
+    %% Controller to View responses
+    LC -->|Render| LV
+    VC -->|Render| VLV
+    PC -->|Render| PV
+    RC -->|Render| RV
+    AC -->|Render| AFV
     
-    %% Controller to Model connections
-    LC --> UM
-    VC --> VM
-    PC --> UM
-    RC --> UM
-    AC --> AM
+    %% Controller to Model interactions
+    LC -.->|Data Request| UM
+    VC -.->|Data Request| VM
+    PC -.->|Data Request| UM
+    RC -.->|Data Request| UM
+    AC -.->|Data Request| AM
     
-    %% Model to API connections
-    UM --> IAC
-    VM --> IAC
-    AM --> IAC
-    IAC --> API
+    %% Model to API interactions
+    UM -->|API Call| IAC
+    VM -->|API Call| IAC
+    AM -->|API Call| IAC
+    IAC ===|HTTP/JSON| API
     
-    %% Styling
-    classDef viewClass fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef controllerClass fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef modelClass fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    classDef utilClass fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    %% Styling for GitHub compatibility
+    classDef viewStyle fill:#E3F2FD,stroke:#1976D2,stroke-width:2px,color:#000
+    classDef controllerStyle fill:#F3E5F5,stroke:#7B1FA2,stroke-width:2px,color:#000
+    classDef modelStyle fill:#E8F5E8,stroke:#388E3C,stroke-width:2px,color:#000
+    classDef utilStyle fill:#FFF3E0,stroke:#F57C00,stroke-width:2px,color:#000
+    classDef backendStyle fill:#FFEBEE,stroke:#D32F2F,stroke-width:2px,color:#000
+    classDef userStyle fill:#E8EAF6,stroke:#3F51B5,stroke-width:2px,color:#000
     
-    class LV,VLV,PV,AFV,RV viewClass
-    class LC,VC,PC,RC,AC controllerClass
-    class UM,VM,AM modelClass
-    class IAC utilClass
+    class LV,VLV,PV,AFV,RV viewStyle
+    class LC,VC,PC,RC,AC controllerStyle
+    class UM,VM,AM modelStyle
+    class IAC utilStyle
+    class API backendStyle
+    class USER userStyle
 ```
 
 ### 2. UML-діаграма класів для рівня Model
 
 ```mermaid
+---
+title: Model Layer Class Diagram
+---
 classDiagram
     class UserModel {
-        -string apiBaseUrl
-        +__construct()
-        +login(string login, string password) : array
-        +register(array data) : array
-        +getProfile(string token) : array
-        +updateProfile(array data, string token) : array
-        +getAllUsers() : array
-        -makeApiCall(string url, string method, array data, string token) : array
-        -buildHeaders(string token) : array
+        🔒 -string apiBaseUrl
+        ➕ +__construct() void
+        🔑 +login(string login, string password) array
+        ✍️ +register(array data) array
+        👤 +getProfile(string token) array
+        🔄 +updateProfile(array data, string token) array
+        👥 +getAllUsers() array
+        🔒 -makeApiCall(string url, string method, array data, string token) array
+        🔒 -buildHeaders(string token) array
     }
     
     class VacancyModel {
-        -string apiBaseUrl
-        +__construct()
-        +getAllVacancies(array filters) : array
-        +getVacancy(int id) : array
-        +createVacancy(array data, string token) : array
-        +updateVacancy(int id, array data, string token) : array
-        +deleteVacancy(int id, string token) : array
-        +searchVacancies(string query) : array
-        -makeApiCall(string url, string method, array data, string token) : array
-        -buildApiUrl(string endpoint) : string
+        🔒 -string apiBaseUrl
+        ➕ +__construct() void
+        📋 +getAllVacancies(array filters) array
+        👁️ +getVacancy(int id) array
+        ➕ +createVacancy(array data, string token) array
+        🔄 +updateVacancy(int id, array data, string token) array
+        ❌ +deleteVacancy(int id, string token) array
+        🔍 +searchVacancies(string query) array
+        🔒 -makeApiCall(string url, string method, array data, string token) array
+        🔒 -buildApiUrl(string endpoint) string
     }
     
     class ApplicationModel {
-        -string apiBaseUrl
-        +__construct()
-        +submitApplication(array data, string token) : array
-        +getUserApplications(string token) : array
-        +getApplicationStatus(int applicationId, string token) : array
-        +updateApplicationStatus(int applicationId, string status, string token) : array
-        -makeApiCall(string url, string method, array data, string token) : array
-        -validateApplicationData(array data) : bool
+        🔒 -string apiBaseUrl
+        ➕ +__construct() void
+        📝 +submitApplication(array data, string token) array
+        📋 +getUserApplications(string token) array
+        📊 +getApplicationStatus(int applicationId, string token) array
+        🔄 +updateApplicationStatus(int applicationId, string status, string token) array
+        🔒 -makeApiCall(string url, string method, array data, string token) array
+        ✅ -validateApplicationData(array data) bool
     }
     
     class ApiClient {
-        <<utility>>
-        +makeHttpRequest(string url, string method, array data, array headers) : array
-        +buildJsonPayload(array data) : string
-        +parseJsonResponse(string response) : array
-        +handleHttpErrors(int statusCode, string response) : array
+        &lt;&lt;utility&gt;&gt;
+        🌐 +makeHttpRequest(string url, string method, array data, array headers) array
+        📦 +buildJsonPayload(array data) string
+        📥 +parseJsonResponse(string response) array
+        ⚠️ +handleHttpErrors(int statusCode, string response) array
     }
     
-    UserModel --> ApiClient : uses
-    VacancyModel --> ApiClient : uses
-    ApplicationModel --> ApiClient : uses
+    %% Relationships
+    UserModel --> ApiClient : 🔗 використовує
+    VacancyModel --> ApiClient : 🔗 використовує
+    ApplicationModel --> ApiClient : 🔗 використовує
     
-    note for UserModel "Відповідає за взаємодію\nз API користувачів"
-    note for VacancyModel "Керує даними вакансій\nта пошуком роботи"
-    note for ApplicationModel "Обробляє заявки\nна вакансії"
+    %% Notes
+    note for UserModel "👤 Відповідає за взаємодію\nз API користувачів\n🔐 Автентифікація та профілі"
+    note for VacancyModel "💼 Керує даними вакансій\nта пошуком роботи\n🔍 Фільтрація та CRUD"
+    note for ApplicationModel "📄 Обробляє заявки\nна вакансії\n📊 Статуси та історія"
+    note for ApiClient "🔧 Утиліта для HTTP\nкомунікації з Backend\n🌐 JSON обробка"
 ```
 
 ### 3. UML-діаграма класів для рівня Controller
 
 ```mermaid
+---
+title: Controller Layer Class Hierarchy
+---
 classDiagram
     class BaseController {
-        <<abstract>>
-        #render(string view, array data) : void
-        #redirect(string url) : void
-        #isAuthenticated() : bool
-        #requireAuth() : void
-        #getCurrentUser() : array
-        #handleError(string message) : void
+        &lt;&lt;abstract&gt;&gt;
+        🛡️ #render(string view, array data) void
+        🔄 #redirect(string url) void
+        🔐 #isAuthenticated() bool
+        ⚠️ #requireAuth() void
+        👤 #getCurrentUser() array
+        ❌ #handleError(string message) void
     }
     
     class LoginController {
-        -UserModel userModel
-        +__construct()
-        +index() : void
-        +authenticate() : void
-        +logout() : void
-        -validateCredentials(string login, string password) : bool
-        -setUserSession(array userData) : void
+        🔒 -UserModel userModel
+        ➕ +__construct() void
+        🏠 +index() void
+        🔑 +authenticate() void
+        🚪 +logout() void
+        ✅ -validateCredentials(string login, string password) bool
+        💾 -setUserSession(array userData) void
     }
     
     class VacancyController {
-        -VacancyModel vacancyModel
-        +__construct()
-        +index() : void
-        +show(int id) : void
-        +create() : void
-        +store() : void
-        +edit(int id) : void
-        +update(int id) : void
-        +delete(int id) : void
-        -validateVacancyData(array data) : bool
-        -checkOwnership(int vacancyId) : bool
+        🔒 -VacancyModel vacancyModel
+        ➕ +__construct() void
+        📋 +index() void
+        👁️ +show(int id) void
+        ➕ +create() void
+        💾 +store() void
+        ✏️ +edit(int id) void
+        🔄 +update(int id) void
+        ❌ +delete(int id) void
+        ✅ -validateVacancyData(array data) bool
+        🔒 -checkOwnership(int vacancyId) bool
     }
     
     class ProfileController {
-        -UserModel userModel
-        +__construct()
-        +index() : void
-        +edit() : void
-        +update() : void
-        +uploadAvatar() : void
-        -validateProfileData(array data) : bool
-        -handleFileUpload() : string
+        🔒 -UserModel userModel
+        ➕ +__construct() void
+        🏠 +index() void
+        ✏️ +edit() void
+        🔄 +update() void
+        📸 +uploadAvatar() void
+        ✅ -validateProfileData(array data) bool
+        📁 -handleFileUpload() string
     }
     
     class RegisterController {
-        -UserModel userModel
-        +__construct()
-        +index() : void
-        +store() : void
-        -validateRegistrationData(array data) : bool
-        -checkUserExists(string login, string email) : bool
+        🔒 -UserModel userModel
+        ➕ +__construct() void
+        🏠 +index() void
+        💾 +store() void
+        ✅ -validateRegistrationData(array data) bool
+        🔍 -checkUserExists(string login, string email) bool
     }
     
     class ApplicationController {
-        -ApplicationModel applicationModel
-        -VacancyModel vacancyModel
-        +__construct()
-        +index() : void
-        +apply(int vacancyId) : void
-        +store() : void
-        +myApplications() : void
-        +manageApplications() : void
-        +updateStatus(int applicationId) : void
-        -validateApplication(array data) : bool
-        -checkDuplicateApplication(int vacancyId) : bool
+        🔒 -ApplicationModel applicationModel
+        🔒 -VacancyModel vacancyModel
+        ➕ +__construct() void
+        📋 +index() void
+        📝 +apply(int vacancyId) void
+        💾 +store() void
+        📄 +myApplications() void
+        🛠️ +manageApplications() void
+        🔄 +updateStatus(int applicationId) void
+        ✅ -validateApplication(array data) bool
+        🔍 -checkDuplicateApplication(int vacancyId) bool
     }
     
-    BaseController <|-- LoginController
-    BaseController <|-- VacancyController
-    BaseController <|-- ProfileController
-    BaseController <|-- RegisterController
-    BaseController <|-- ApplicationController
+    %% Inheritance relationships
+    BaseController <|-- LoginController : 🧬 наслідує
+    BaseController <|-- VacancyController : 🧬 наслідує
+    BaseController <|-- ProfileController : 🧬 наслідує
+    BaseController <|-- RegisterController : 🧬 наслідує
+    BaseController <|-- ApplicationController : 🧬 наслідує
     
-    LoginController --> UserModel : uses
-    VacancyController --> VacancyModel : uses
-    ProfileController --> UserModel : uses
-    RegisterController --> UserModel : uses
-    ApplicationController --> ApplicationModel : uses
-    ApplicationController --> VacancyModel : uses
+    %% Usage relationships
+    LoginController --> UserModel : 🔗 використовує
+    VacancyController --> VacancyModel : 🔗 використовує
+    ProfileController --> UserModel : 🔗 використовує
+    RegisterController --> UserModel : 🔗 використовує
+    ApplicationController --> ApplicationModel : 🔗 використовує
+    ApplicationController --> VacancyModel : 🔗 використовує
     
-    note for BaseController "Базовий клас з\nзагальною функціональністю"
-    note for LoginController "Контролює автентифікацію\nта авторизацію"
-    note for VacancyController "Управляє CRUD операціями\nдля вакансій"
-    note for ProfileController "Керує профілем\nкористувача"
-    note for ApplicationController "Обробляє заявки\nна вакансії"
+    %% Notes with emojis
+    note for BaseController "🏗️ Базовий клас з загальною\nфункціональністю для всіх\nконтролерів MVC"
+    note for LoginController "🔐 Контролює автентифікацію\nта авторизацію користувачів\n🚪 Вхід/вихід із системи"
+    note for VacancyController "💼 Управляє CRUD операціями\nдля вакансій\n🔍 Пошук та фільтрація"
+    note for ProfileController "👤 Керує профілем користувача\n📸 Завантаження файлів\n✏️ Редагування даних"
+    note for ApplicationController "📋 Обробляє заявки на вакансії\n📊 Управління статусами\n📄 Історія подач"
 ```
 
 ## Детальні описи UML-діаграм для створення зображень

@@ -68,27 +68,28 @@ sequenceDiagram
     Note over Logger: All interactions logged to files
 ```
 
-### Основні компоненти взаємодії:
+### Основні компоненти проекту SearchJob:
 
-1. Frontend Client
+1. **Frontend Client**
    - Веб-браузер користувача
-   - JavaScript для AJAX запитів
-   - Форми для введення даних
+   - JavaScript для AJAX запитів у файлах `frontend/assets/`
+   - Форми для введення даних у `frontend/views/`
 
-2. Backend API
-   - `ApiController.php` - основний API контролер
-   - `XmlApiController.php` - XML API контролер  
+2. **Backend API (реально реалізовані контролери)**
+   - `ApiController.php` - основний API контролер (307 рядків)
+   - `XmlApiController.php` - XML API контролер (293 рядки)
    - `VacancyApiController.php` - API для роботи з вакансіями
+   - `ApiLogController.php` - контролер логування (15 рядків)
 
-3. Data Models
-   - `User.php` - модель користувача
+3. **Data Models (реально реалізовані моделі)**
+   - `User.php` - модель користувача (220 рядків з токенною автентифікацією)
    - `Vacancy.php` - модель вакансії
    - `JobApplication.php` - модель заявки на роботу
 
-4. Database/Storage
-   - MySQL база даних
-   - XML файли для сериалізації
-   - Файлове сховище логів
+4. **Database/Storage**
+   - MySQL база даних з таблицями users, vacancies, job_applications
+   - XML файли для сериалізації у директорії `backend/xml/`
+   - Файлове сховище логів у `backend/logs/`
 
 ## Сериалізація та десериалізація повідомлень
 
@@ -150,17 +151,62 @@ echo json_encode([
 </response>
 ```
 
-#### Реалізація XML сериалізації в `XmlApiController.php`:
+#### Реалізація XML сериалізації у SearchJob проекті:
+
+**Файл `backend/controllers/XmlApiController.php` - повноцінний XML API:**
 ```php
-function arrayToXml($data, $xml, $parentNode) {
-    foreach ($data as $key => $value) {
+<?php
+// XML API-контроллер для работы с вакансиями (согласно требованиям Lab-2)
+require_once __DIR__ . '/../models/Vacancy.php';
+require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/ApiLogController.php';
+
+header('Content-Type: application/xml; charset=utf-8');
+
+/**
+ * Функция для отправки XML ответа с логированием
+ */
+function sendXmlResponse($data, $statusCode = 200) {
+    http_response_code($statusCode);
+    
+    // Преобразуем данные в XML
+    $xml = new DOMDocument('1.0', 'UTF-8');
+    $xml->formatOutput = true;
+    
+    $root = $xml->createElement('response');
+    $xml->appendChild($root);
+    
+    arrayToXml($data, $xml, $root);
+    
+    $xmlResponse = $xml->saveXML();
+    
+    // Логируем ответ
+    log_api([
+        'response' => $data,
+        'status_code' => $statusCode,
+        'time' => date('Y-m-d H:i:s'),
+        'format' => 'XML'
+    ]);
+    
+    echo $xmlResponse;
+}
+
+/**
+ * Рекурсивная функция для преобразования массива в XML
+ */
+function arrayToXml($array, $xml, $parent) {
+    foreach ($array as $key => $value) {
         if (is_array($value)) {
-            $child = $xml->createElement($key);
-            $parentNode->appendChild($child);
-            arrayToXml($value, $xml, $child);
+            if (is_numeric($key)) {
+                $element = $xml->createElement('item');
+            } else {
+                $element = $xml->createElement($key);
+            }
+            $parent->appendChild($element);
+            arrayToXml($value, $xml, $element);
         } else {
-            $child = $xml->createElement($key, htmlspecialchars($value));
-            $parentNode->appendChild($child);
+            $element = $xml->createElement($key, htmlspecialchars((string)$value));
+            $parent->appendChild($element);
         }
     }
 }
@@ -207,20 +253,31 @@ function arrayToXml($data, $xml, $parentNode) {
 
 ### 3. Типи логування
 
-#### a) API Логування (`ApiLogController.php`):
+#### Реальний код логування з `ApiLogController.php`:
 ```php
+<?php
+// API-контроллер для логирования сообщений (логирование всех запросов и ответов)
+$logDir = __DIR__ . '/../logs/';
+if (!is_dir($logDir)) mkdir($logDir, 0777, true);
+$logFile = $logDir . 'api.log';
+
 function log_api($data) {
     global $logFile;
     $entry = date('Y-m-d H:i:s') . ' ' . json_encode($data, JSON_UNESCAPED_UNICODE) . "\n";
     file_put_contents($logFile, $entry, FILE_APPEND);
 }
+```
 
-// Використання:
+**Використання в проекті SearchJob:**
+```php
+// Логування всіх API запитів
 log_api([
     'request' => $_SERVER['REQUEST_URI'],
     'method' => $_SERVER['REQUEST_METHOD'],
-    'headers' => getRequestHeaders(),
-    'body' => file_get_contents('php://input')
+    'headers' => getallheaders(),
+    'body' => file_get_contents('php://input'),
+    'timestamp' => date('Y-m-d H:i:s'),
+    'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'Unknown'
 ]);
 ```
 
