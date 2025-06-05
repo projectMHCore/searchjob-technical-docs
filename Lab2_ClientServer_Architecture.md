@@ -70,23 +70,23 @@ sequenceDiagram
 
 ### Основні компоненти проекту SearchJob:
 
-1. **Frontend Client**
+1. Frontend Client
    - Веб-браузер користувача
    - JavaScript для AJAX запитів у файлах `frontend/assets/`
    - Форми для введення даних у `frontend/views/`
 
-2. **Backend API (реально реалізовані контролери)**
+2. Backend API (реально реалізовані контролери)
    - `ApiController.php` - основний API контролер (307 рядків)
    - `XmlApiController.php` - XML API контролер (293 рядки)
    - `VacancyApiController.php` - API для роботи з вакансіями
    - `ApiLogController.php` - контролер логування (15 рядків)
 
-3. **Data Models (реально реалізовані моделі)**
+3. Data Models (реально реалізовані моделі)
    - `User.php` - модель користувача (220 рядків з токенною автентифікацією)
    - `Vacancy.php` - модель вакансії
    - `JobApplication.php` - модель заявки на роботу
 
-4. **Database/Storage**
+4. Database/Storage
    - MySQL база даних з таблицями users, vacancies, job_applications
    - XML файли для сериалізації у директорії `backend/xml/`
    - Файлове сховище логів у `backend/logs/`
@@ -153,7 +153,7 @@ echo json_encode([
 
 #### Реалізація XML сериалізації у SearchJob проекті:
 
-**Файл `backend/controllers/XmlApiController.php` - повноцінний XML API:**
+Файл `backend/controllers/XmlApiController.php` - повноцінний XML API:
 ```php
 <?php
 // XML API-контроллер для работы с вакансиями (согласно требованиям Lab-2)
@@ -163,7 +163,7 @@ require_once __DIR__ . '/ApiLogController.php';
 
 header('Content-Type: application/xml; charset=utf-8');
 
-/**
+/
  * Функция для отправки XML ответа с логированием
  */
 function sendXmlResponse($data, $statusCode = 200) {
@@ -191,7 +191,7 @@ function sendXmlResponse($data, $statusCode = 200) {
     echo $xmlResponse;
 }
 
-/**
+/
  * Рекурсивная функция для преобразования массива в XML
  */
 function arrayToXml($array, $xml, $parent) {
@@ -268,7 +268,7 @@ function log_api($data) {
 }
 ```
 
-**Використання в проекті SearchJob:**
+Використання в проекті SearchJob:
 ```php
 // Логування всіх API запитів
 log_api([

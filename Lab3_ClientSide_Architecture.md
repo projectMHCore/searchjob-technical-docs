@@ -315,7 +315,7 @@ classDiagram
 
 #### 1. Діаграма компонентів MVC архітектури
 
-**Промт для генерації зображення:**
+Промт для генерації зображення:
 ```
 Create a professional UML component diagram showing MVC architecture with:
 
@@ -359,7 +359,7 @@ Use professional UML styling with clear labels and consistent coloring.
 
 #### 2. Діаграма класів для Model Layer
 
-**Промт для генерації зображення:**
+Промт для генерації зображення:
 ```
 Create a professional UML class diagram showing:
 
@@ -424,7 +424,7 @@ Use standard UML class diagram notation with proper visibility symbols (+, -, #)
 
 #### 3. Діаграма класів для Controller Layer
 
-**Промт для генерації зображення:**
+Промт для генерації зображення:
 ```
 Create a comprehensive UML class diagram for the Controller layer of a PHP MVC job search application:
 
@@ -511,7 +511,7 @@ VISUAL REQUIREMENTS:
 
 #### 4. Діаграма послідовності (Sequence Diagram)
 
-**Промт для генерації зображення:**
+Промт для генерації зображення:
 ```
 Create a UML sequence diagram showing the user authentication flow in the SearchJob MVC application:
 
@@ -551,7 +551,7 @@ VISUAL REQUIREMENTS:
 
 #### 5. Архітектурна діаграма системи
 
-**Промт для генерації зображення:**
+Промт для генерації зображення:
 ```
 Create a high-level system architecture diagram for the SearchJob web application showing:
 
@@ -607,7 +607,7 @@ VISUAL STYLE:
 
 ### 1. Онлайн інструменти з готовими шаблонами:
 
-**Draw.io (diagrams.net):**
+Draw.io (diagrams.net):
 ```
 1. Відкрийте diagrams.net
 2. Виберіть "Create New Diagram"
@@ -616,7 +616,7 @@ VISUAL STYLE:
 5. Скопіюйте структуру з Mermaid діаграм вище
 ```
 
-**Lucidchart:**
+Lucidchart:
 ```
 1. Зареєструйтеся на lucidchart.com
 2. Створіть новий документ
@@ -627,19 +627,19 @@ VISUAL STYLE:
 
 ### 2. Спеціалізовані AI інструменти для діаграм:
 
-**Whimsical AI:**
+Whimsical AI:
 ```
 Prompt: "Create a UML component diagram for PHP MVC architecture with these components: [вставте список компонентів]"
 ```
 
-**Miro AI:**
+Miro AI:
 ```
 Prompt: "Generate UML class diagram showing PHP models: UserModel, VacancyModel, ApplicationModel with their methods and relationships"
 ```
 
 ### 3. Генерація через код:
 
-**PlantUML код для компонентної діаграми:**
+PlantUML код для компонентної діаграми:
 ```plantuml
 @startuml SearchJob_Components
 !define RECTANGLE class
@@ -683,17 +683,17 @@ package "Frontend MVC Architecture" {
 
 ### 4. Детальні інструкції для ручного створення:
 
-**Крок 1:** Відкрийте будь-який графічний редактор (навіть PowerPoint)
+Крок 1: Відкрийте будь-який графічний редактор (навіть PowerPoint)
 
-**Крок 2:** Створіть прямокутники для кожного компонента:
+Крок 2: Створіть прямокутники для кожного компонента:
 - Views: світло-блакитний колір
 - Controllers: світло-фіолетовий колір  
 - Models: світло-зелений колір
 - Utils: світло-помаранчевий колір
 
-**Крок 3:** Додайте стрілки між компонентами згідно з залежностями
+Крок 3: Додайте стрілки між компонентами згідно з залежностями
 
-**Крок 4:** Додайте підписи та стереотипи (<<view>>, <<controller>>, etc.)
+Крок 4: Додайте підписи та стереотипи (<<view>>, <<controller>>, etc.)
 
 ### 5. Промпт для Midjourney/DALL-E (якщо потрібна більш художня версія):
 
@@ -1199,7 +1199,7 @@ VISUAL REQUIREMENTS:
 
 #### 4. Діаграма послідовності (Sequence Diagram)
 
-**Промт для генерації зображення:**
+Промт для генерації зображення:
 ```
 Create a UML sequence diagram showing the user authentication flow in the SearchJob MVC application:
 
@@ -1239,7 +1239,7 @@ VISUAL REQUIREMENTS:
 
 #### 5. Архітектурна діаграма системи
 
-**Промт для генерації зображення:**
+Промт для генерації зображення:
 ```
 Create a high-level system architecture diagram for the SearchJob web application showing:
 
@@ -1295,7 +1295,7 @@ VISUAL STYLE:
 
 ### 1. Онлайн інструменти з готовими шаблонами:
 
-**Draw.io (diagrams.net):**
+Draw.io (diagrams.net):
 ```
 1. Відкрийте diagrams.net
 2. Виберіть "Create New Diagram"
@@ -1304,7 +1304,7 @@ VISUAL STYLE:
 5. Скопіюйте структуру з Mermaid діаграм вище
 ```
 
-**Lucidchart:**
+Lucidchart:
 ```
 1. Зареєструйтеся на lucidchart.com
 2. Створіть новий документ
@@ -1315,19 +1315,19 @@ VISUAL STYLE:
 
 ### 2. Спеціалізовані AI інструменти для діаграм:
 
-**Whimsical AI:**
+Whimsical AI:
 ```
 Prompt: "Create a UML component diagram for PHP MVC architecture with these components: [вставте список компонентів]"
 ```
 
-**Miro AI:**
+Miro AI:
 ```
 Prompt: "Generate UML class diagram showing PHP models: UserModel, VacancyModel, ApplicationModel with their methods and relationships"
 ```
 
 ### 3. Генерація через код:
 
-**PlantUML код для компонентної діаграми:**
+PlantUML код для компонентної діаграми:
 ```plantuml
 @startuml SearchJob_Components
 !define RECTANGLE class
@@ -1371,17 +1371,17 @@ package "Frontend MVC Architecture" {
 
 ### 4. Детальні інструкції для ручного створення:
 
-**Крок 1:** Відкрийте будь-який графічний редактор (навіть PowerPoint)
+Крок 1: Відкрийте будь-який графічний редактор (навіть PowerPoint)
 
-**Крок 2:** Створіть прямокутники для кожного компонента:
+Крок 2: Створіть прямокутники для кожного компонента:
 - Views: світло-блакитний колір
 - Controllers: світло-фіолетовий колір  
 - Models: світло-зелений колір
 - Utils: світло-помаранчевий колір
 
-**Крок 3:** Додайте стрілки між компонентами згідно з залежностями
+Крок 3: Додайте стрілки між компонентами згідно з залежностями
 
-**Крок 4:** Додайте підписи та стереотипи (<<view>>, <<controller>>, etc.)
+Крок 4: Додайте підписи та стереотипи (<<view>>, <<controller>>, etc.)
 
 ### 5. Промпт для Midjourney/DALL-E (якщо потрібна більш художня версія):
 
