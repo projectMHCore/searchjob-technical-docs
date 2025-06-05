@@ -1,0 +1,48 @@
+# Файлы логов
+*.log
+/backend/logs/
+/frontend/logs/
+
+# Временные файлы
+*.tmp
+*.temp
+*~
+
+# Файлы резервных копий
+*.backup
+*_backup.*
+
+# Локальные конфигурационные файлы (если нужно исключить)
+# /backend/config/db.php
+
+# Загруженные файлы пользователей
+/uploads/
+
+# Кэш файлы
+/cache/
+*.cache
+
+# IDE файлы
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS файлы
+Thumbs.db
+.DS_Store
+
+# Composer
+/vendor/
+
+# Node modules (если используется)
+node_modules/
+
+# Архивы
+*.rar
+*.zip
+*.tar.gz
+
+# Тестовые файлы данных
+test_data/
+*_test_*
