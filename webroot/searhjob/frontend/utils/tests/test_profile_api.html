@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Тест API</title>
+</head>
+<body>
+    <h1>Тест API профилей кандидатов</h1>
+    <div id="output"></div>
+    
+    <script>
+        // Проверяем доступность API
+        fetch('../backend/controllers/ApiController.php?action=candidate_profile&candidate_id=1', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.text();
+        })
+        .then(text => {
+            console.log('Response:', text);
+            document.getElementById('output').innerHTML = '<pre>' + text + '</pre>';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('output').innerHTML = '<p>Ошибка: ' + error.message + '</p>';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+# Архіви
+*.rar
+*.zip
+*.tar.gz
+
+# Логи
+logs/
+*.log
+
+# Тимчасові файли
+*.tmp
+*.temp
+
+# IDE файли
+.vscode/
+.idea/
+*.sublime-*
+
+# Системні файли
+.DS_Store
+Thumbs.db
+
+# Конфігурація SFTP
+sftp.json
+
+# Backup файли
+*_backup.php
+*.bak
+
+# PDF файли (якщо не потрібні в репозиторії)
+*.pdf

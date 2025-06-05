@@ -1,0 +1,7 @@
+<?php
+// Обработка действий регистрации (MVC архитектура)
+require_once __DIR__ . '/controllers/RegisterController.php';
+
+$controller = new RegisterController();
+$controller->handleRequest();
+?>
