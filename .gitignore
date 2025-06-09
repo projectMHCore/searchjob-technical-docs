@@ -29,3 +29,7 @@ sftp.json
 
 # PDF файли (якщо не потрібні в репозиторії)
 *.pdf
+
+# Игнорируемые папки проектов
+webroot/BlockPulse/
+webroot/MHCore/
