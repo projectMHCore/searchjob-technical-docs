@@ -401,59 +401,67 @@
         [data-theme="dark"] .alert-success {
             background: rgba(40, 167, 69, 0.2);
             color: #d4edda;
-        }
-
-        /* Footer */
+        }        /* Footer */
         .footer {
-            background: var(--secondary-color);
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
             color: white;
-            padding: 3rem 0 2rem;
+            padding: 4rem 0 2rem;
             margin-top: 4rem;
         }
 
         [data-theme="dark"] .footer {
-            background: #0d1117;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
         }
 
-        .footer-content {
-            max-width: 1200px;
+        .section-container {
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 2rem;
+        }
+
+        .footer-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            gap: 3rem;
+            margin-bottom: 3rem;
         }
 
-        .footer-section h3 {
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
+        .footer-section h4 {
+            color: #eaa850;
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
         }
 
-        .footer-section ul {
+        .footer-links {
             list-style: none;
+            padding: 0;
         }
 
-        .footer-section ul li {
-            margin-bottom: 0.5rem;
+        .footer-links li {
+            margin-bottom: 0.75rem;
         }
 
-        .footer-section ul li a {
-            color: #b0b0b0;
+        .footer-links a {
+            color: #a0aec0;
             text-decoration: none;
-            transition: var(--transition);
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .footer-section ul li a:hover {
-            color: var(--primary-color);
+        .footer-links a:hover {
+            color: #eaa850;
+            transform: translateX(5px);
         }
 
         .footer-bottom {
             text-align: center;
             padding-top: 2rem;
-            margin-top: 2rem;
-            border-top: 1px solid #404040;
-            color: #888;
+            border-top: 1px solid #4a5568;
+            color: #a0aec0;
+            font-size: 0.9rem;
         }
 
         /* Animations */
@@ -588,44 +596,43 @@
             <div class="form-card">
                 <div class="form-content">
                     <form method="POST" class="vacancy-form">
-                        <!-- Basic Information Section -->
-                        <div class="form-section">
+                        <!-- Basic Information Section -->                        <div class="form-section">
                             <h2 class="section-title">
                                 <span>📋</span>
-                                Основная информация
+                                Основна інформація
                             </h2>
                             
                             <div class="form-group">
                                 <label for="title" class="form-label">
                                     <span>💼</span>
-                                    Название вакансии
+                                    Назва вакансії
                                     <span class="required">*</span>
                                 </label>
                                 <input type="text" id="title" name="title" class="form-input" required 
                                        value="<?= htmlspecialchars($vacancy->title ?? '') ?>" 
-                                       placeholder="Например: Senior PHP Developer">
-                                <div class="help-text">Укажите должность и ключевые технологии</div>
+                                       placeholder="Наприклад: Senior PHP Developer">
+                                <div class="help-text">Вкажіть посаду та ключові технології</div>
                             </div>
                             
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="company" class="form-label">
                                         <span>🏢</span>
-                                        Название компании
+                                        Назва компанії
                                     </label>
                                     <input type="text" id="company" name="company" class="form-input"
                                            value="<?= htmlspecialchars($vacancy->company ?? '') ?>" 
-                                           placeholder="Ваша компания">
+                                           placeholder="Ваша компанія">
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="location" class="form-label">
                                         <span>📍</span>
-                                        Местоположение
+                                        Місцерозташування
                                     </label>
                                     <input type="text" id="location" name="location" class="form-input"
                                            value="<?= htmlspecialchars($vacancy->location ?? '') ?>" 
-                                           placeholder="Например: Харьков, удаленно">
+                                           placeholder="Наприклад: Харків, віддалено">
                                 </div>
                             </div>
                             
@@ -637,113 +644,129 @@
                                     </label>
                                     <input type="text" id="salary" name="salary" class="form-input"
                                            value="<?= htmlspecialchars($vacancy->salary ?? '') ?>" 
-                                           placeholder="Например: 80,000 - 120,000 грн">
-                                    <div class="help-text">Укажите диапазон или конкретную сумму</div>
+                                           placeholder="Наприклад: 80,000 - 120,000 грн">
+                                    <div class="help-text">Вкажіть діапазон або конкретну суму</div>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="employment_type" class="form-label">
                                         <span>⏰</span>
-                                        Тип занятости
+                                        Тип зайнятості
                                     </label>
                                     <select id="employment_type" name="employment_type" class="form-select">
-                                        <option value="">Выберите тип</option>
-                                        <option value="Полная занятость" <?= isset($vacancy->employment_type) && $vacancy->employment_type === 'Полная занятость' ? 'selected' : '' ?>>Полная занятость</option>
-                                        <option value="Частичная занятость" <?= isset($vacancy->employment_type) && $vacancy->employment_type === 'Частичная занятость' ? 'selected' : '' ?>>Частичная занятость</option>
-                                        <option value="Удаленная работа" <?= isset($vacancy->employment_type) && $vacancy->employment_type === 'Удаленная работа' ? 'selected' : '' ?>>Удаленная работа</option>
-                                        <option value="Стажировка" <?= isset($vacancy->employment_type) && $vacancy->employment_type === 'Стажировка' ? 'selected' : '' ?>>Стажировка</option>
-                                        <option value="Фриланс" <?= isset($vacancy->employment_type) && $vacancy->employment_type === 'Фриланс' ? 'selected' : '' ?>>Фриланс</option>
+                                        <option value="">Оберіть тип</option>
+                                        <option value="Повна зайнятість" <?= isset($vacancy->employment_type) && $vacancy->employment_type === 'Повна зайнятість' ? 'selected' : '' ?>>Повна зайнятість</option>
+                                        <option value="Часткова зайнятість" <?= isset($vacancy->employment_type) && $vacancy->employment_type === 'Часткова зайнятість' ? 'selected' : '' ?>>Часткова зайнятість</option>
+                                        <option value="Віддалена робота" <?= isset($vacancy->employment_type) && $vacancy->employment_type === 'Віддалена робота' ? 'selected' : '' ?>>Віддалена робота</option>
+                                        <option value="Стажування" <?= isset($vacancy->employment_type) && $vacancy->employment_type === 'Стажування' ? 'selected' : '' ?>>Стажування</option>
+                                        <option value="Фріланс" <?= isset($vacancy->employment_type) && $vacancy->employment_type === 'Фріланс' ? 'selected' : '' ?>>Фріланс</option>
                                     </select>
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- Description Section -->
+                        </div>                        <!-- Description Section -->
                         <div class="form-section">
                             <h2 class="section-title">
                                 <span>📝</span>
-                                Подробная информация
+                                Детальна інформація
                             </h2>
                             
                             <div class="form-group">
                                 <label for="description" class="form-label">
                                     <span>📄</span>
-                                    Описание вакансии
+                                    Опис вакансії
                                     <span class="required">*</span>
                                 </label>
                                 <textarea id="description" name="description" class="form-textarea" required 
-                                          placeholder="Подробное описание позиции, обязанности, условия работы, преимущества компании..."><?= htmlspecialchars($vacancy->description ?? '') ?></textarea>
-                                <div class="help-text">Опишите основные обязанности, рабочие процессы и что делает вашу компанию особенной</div>
+                                          placeholder="Детальний опис позиції, обов'язки, умови роботи, переваги компанії..."><?= htmlspecialchars($vacancy->description ?? '') ?></textarea>
+                                <div class="help-text">Опишіть основні обов'язки, робочі процеси та що робить вашу компанію особливою</div>
                             </div>
                             
                             <div class="form-group">
                                 <label for="requirements" class="form-label">
                                     <span>✅</span>
-                                    Требования к кандидату
+                                    Вимоги до кандидата
                                 </label>
                                 <textarea id="requirements" name="requirements" class="form-textarea"
-                                          placeholder="Необходимые навыки, технологии, опыт работы, образование, личные качества..."><?= htmlspecialchars($vacancy->requirements ?? '') ?></textarea>
-                                <div class="help-text">Укажите обязательные и желательные требования к кандидату</div>
+                                          placeholder="Необхідні навички, технології, досвід роботи, освіта, особисті якості..."><?= htmlspecialchars($vacancy->requirements ?? '') ?></textarea>
+                                <div class="help-text">Вкажіть обов'язкові та бажані вимоги до кандидата</div>
                             </div>
                         </div>
-                        
-                        <!-- Form Actions -->
+                          <!-- Form Actions -->
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" style="background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);">
                                 <span><?= isset($vacancy) && $vacancy ? '💾' : '✨' ?></span>
-                                <?= isset($vacancy) && $vacancy ? 'Сохранить изменения' : 'Создать вакансию' ?>
+                                <?= isset($vacancy) && $vacancy ? 'Зберегти зміни' : 'Створити вакансію' ?>
                             </button>
                             <a href="<?= isset($vacancy) && $vacancy ? 'my_vacancies.php' : 'vacancy_list.php' ?>" class="btn btn-secondary">
                                 <span>❌</span>
-                                Отмена
+                                Скасувати
                             </a>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
-    </main>
-
-    <!-- Footer -->
+    </main>    <!-- Footer -->
     <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>SearchJob</h3>
-                <ul>
-                    <li><a href="index.php">О платформе</a></li>
-                    <li><a href="vacancy_list.php">Поиск работы</a></li>
-                    <li><a href="companies_list.php">Компании</a></li>
-                </ul>
+        <div class="section-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>SearchJob</h4>
+                    <p style="color: #a0aec0; margin-bottom: 1.5rem;">
+                        Провідна платформа для пошуку роботи в Україні
+                    </p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" style="color: #eaa850; font-size: 1.25rem;">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" style="color: #eaa850; font-size: 1.25rem;">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" style="color: #eaa850; font-size: 1.25rem;">
+                            <i class="fab fa-telegram-plane"></i>
+                        </a>
+                        <a href="#" style="color: #eaa850; font-size: 1.25rem;">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Для кандидатів</h4>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/vacancy_list.php">Пошук вакансій</a></li>
+                        <li><a href="/frontend/companies_list.php">Компанії</a></li>
+                        <li><a href="/frontend/register.php">Створити резюме</a></li>
+                        <li><a href="#">Кар'єрні поради</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Для роботодавців</h4>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/vacancy_create.php">Додати вакансію</a></li>
+                        <li><a href="/frontend/register.php">Реєстрація компанії</a></li>
+                        <li><a href="#">Пошук кандидатів</a></li>
+                        <li><a href="#">Тарифи</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Підтримка</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:support@searchjob.com">support@searchjob.com</a></li>
+                        <li><a href="tel:+380441234567">+380 44 123 45 67</a></li>
+                        <li><a href="#">Допомога</a></li>
+                        <li><a href="#">Умови використання</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="footer-section">
-                <h3>Для соискателей</h3>
-                <ul>
-                    <li><a href="vacancy_list.php">Вакансии</a></li>
-                    <li><a href="register.php">Создать резюме</a></li>
-                    <li><a href="my_applications.php">Мои отклики</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Для работодателей</h3>
-                <ul>
-                    <li><a href="vacancy_create.php">Разместить вакансию</a></li>
-                    <li><a href="my_vacancies.php">Управление вакансиями</a></li>
-                    <li><a href="register.php">Регистрация работодателя</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h3>Поддержка</h3>
-                <ul>
-                    <li><a href="#help">Помощь</a></li>
-                    <li><a href="#contact">Контакты</a></li>
-                    <li><a href="#privacy">Конфиденциальность</a></li>
-                </ul>
+            
+            <div class="footer-bottom">
+                <p>© 2025 SearchJob. Всі права захищені.</p>
             </div>
         </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 SearchJob. Платформа для поиска работы и талантов.</p>
-        </div>
-    </footer>    <script>
+    </footer><script>
         // Theme Management
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
@@ -796,11 +819,9 @@
                         } else {
                             field.style.borderColor = '';
                         }
-                    });
-
-                    if (!isValid) {
+                    });                    if (!isValid) {
                         e.preventDefault();
-                        alert('Будь ласка, заповніть усі обов\'язкові поля');
+                        alert('Будь ласка, заповніть всі обов\'язкові поля');
                     }
                 });
             }

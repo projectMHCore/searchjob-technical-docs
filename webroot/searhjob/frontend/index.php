@@ -1630,8 +1630,3 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
     </script>
 </body>
 </html>
-<?php
-// Переадресація на фронтенд, файл короткий і не має лишнього коду
-header("Location: /frontend/index.php");
-exit;
-?>

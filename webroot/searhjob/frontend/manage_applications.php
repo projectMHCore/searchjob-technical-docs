@@ -1,13 +1,13 @@
 <?php
-// Страница управления заявками для работодателя (MVC архитектура)
+// Сторінка управління заявками для роботодавця (MVC архітектура)
 require_once __DIR__ . '/controllers/ApplicationController.php';
 
-// Обработка обновления статуса через POST
+// Обробка оновлення статусу через POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_status') {
     $controller = new ApplicationController();
     $controller->updateStatus();
 } else {
-    // Отображение страницы управления заявками
+    // Відображення сторінки управління заявками
     $controller = new ApplicationController();
     $controller->manageApplications();
 }

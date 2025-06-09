@@ -32,25 +32,67 @@
             --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             --transition-normal: 0.3s ease-in-out;
+            --transition: 0.3s ease-in-out;
             --radius-md: 0.5rem;
             --radius-lg: 0.75rem;
-        }        [data-theme="dark"] {
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
+            --border-radius: 0.5rem;
+            --border-radius-lg: 0.75rem;
+            --surface-color: #ffffff;
+            --shadow-medium: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }[data-theme="dark"] {
+            --bg-primary: #1a202c;
+            --bg-secondary: #2d3748;
+            --bg-tertiary: #4a5568;
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e0;
+            --text-light: #a0aec0;
+            --border-color: #4a5568;
+            --shadow: rgba(0,0,0,0.3);
             --background-primary: #1e293b;
             --background-secondary: #334155;
-            --border-color: #475569;
+            --surface-color: #2d3748;
+        }
+
+        [data-theme="dark"] body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .navbar {
+            background: rgba(26, 32, 44, 0.95);
+            border-bottom-color: var(--border-color);
+        }
+
+        [data-theme="dark"] .nav-brand {
+            color: #eaa850;
+        }
+
+        [data-theme="dark"] .nav-link {
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .nav-link:hover {
+            color: #eaa850;
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        [data-theme="dark"] .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-color: var(--border-color);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        body {
+        }        body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--background-color);
+            background: var(--background-primary);
             color: var(--text-primary);
             line-height: 1.6;
             transition: var(--transition);
@@ -80,44 +122,122 @@
             justify-content: space-between;
             align-items: center;
             padding: 1rem 2rem;
-        }        .nav-logo {
+        }        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             font-size: 1.5rem;
             font-weight: 700;
-            background: linear-gradient(135deg, var(--primary-color), #f39c12);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #eaa850;
             text-decoration: none;
         }
 
         .nav-menu {
             display: flex;
-            list-style: none;
             align-items: center;
             gap: 2rem;
         }
 
         .nav-link {
-            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
             text-decoration: none;
+            color: var(--text-primary);
             font-weight: 500;
-            transition: var(--transition);
-            position: relative;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
         }
 
         .nav-link:hover {
             color: var(--primary-color);
+            background: rgba(234, 168, 80, 0.1);
         }
 
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--primary-color);
-            border-radius: 2px;
+        .nav-link.active {
+            color: var(--primary-color);
+            background: rgba(234, 168, 80, 0.15);
+        }
+
+        .nav-auth {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-secondary {
+            background: var(--background-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+            transform: translateY(-1px);
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: var(--background-secondary);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+            padding: 3rem 0 2rem;
+        }
+
+        [data-theme="dark"] .footer {
+            background: var(--bg-secondary);
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            text-align: center;
+            color: var(--text-secondary);
         }
 
         .theme-toggle {
@@ -600,35 +720,37 @@
         <div class="nav-container">
             <a href="/frontend/index.php" class="nav-brand">
                 <i class="fas fa-briefcase"></i>
-                <span>SearchJob</span>
+                SearchJob
             </a>
             
-            <ul class="nav-menu">
-                <li><a href="/frontend/index.php" class="nav-link">
-                    <i class="fas fa-home"></i> Головна
-                </a></li>
-                <li><a href="/frontend/vacancy_list.php" class="nav-link">
-                    <i class="fas fa-briefcase"></i> Вакансії
-                </a></li>
-                <li><a href="/frontend/companies_list.php" class="nav-link">
-                    <i class="fas fa-building"></i> Компанії
-                </a></li>
-            </ul>
-            
-            <div class="nav-actions">
-                <button class="theme-toggle" onclick="toggleTheme()">
-                    <i class="fas fa-moon"></i>
-                </button>
-                
-                <a href="/frontend/profile.php" class="nav-link">
-                    <i class="fas fa-user"></i> Профіль
+            <div class="nav-menu">
+                <a href="/frontend/index.php" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    Головна
+                </a>
+                <a href="/frontend/vacancy_list.php" class="nav-link">
+                    <i class="fas fa-search"></i>
+                    Вакансії
+                </a>
+                <a href="/frontend/companies_list.php" class="nav-link">
+                    <i class="fas fa-building"></i>
+                    Компанії
                 </a>
                 <a href="/frontend/my_vacancies.php" class="nav-link active">
-                    <i class="fas fa-list"></i> Мої вакансії
+                    <i class="fas fa-list"></i>
+                    Мої вакансії
                 </a>
-                <a href="/frontend/logout.php" class="nav-link">
-                    <i class="fas fa-sign-out-alt"></i> Вийти
+            </div>
+            
+            <div class="nav-auth">
+                <button id="theme-toggle" class="theme-toggle" title="Переключити тему">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="/frontend/profile.php" class="nav-link">
+                    <i class="fas fa-user"></i>
+                    Профіль
                 </a>
+                <a href="/frontend/logout.php" class="btn-secondary">Вихід</a>
             </div>
         </div>
     </nav>
@@ -639,25 +761,23 @@
             <div class="page-header">
                 <h1 class="animate__animated animate__fadeInDown">📋 Мої вакансії</h1>
                 <p class="subtitle animate__animated animate__fadeInUp animate__delay-1s">Керуйте своїми оголошеннями про роботу та знаходьте кращих кандидатів</p>
-            </div>
-
-            <!-- Statistics Section -->
+            </div>            <!-- Statistics Section -->
             <div class="stats-section">
                 <div class="stat-card">
                     <div class="stat-number"><?= count($vacancies ?? []) ?></div>
-                    <div class="stat-label">Всего вакансий</div>
+                    <div class="stat-label">Усього вакансій</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number"><?= count(array_filter($vacancies ?? [], fn($v) => $v['is_active'])) ?></div>
-                    <div class="stat-label">Активных</div>
+                    <div class="stat-label">Активних</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number"><?= array_sum(array_column($vacancies ?? [], 'views')) ?></div>
-                    <div class="stat-label">Всего просмотров</div>
+                    <div class="stat-label">Усього переглядів</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number"><?= count(array_filter($vacancies ?? [], fn($v) => strtotime($v['created_at']) > strtotime('-30 days'))) ?></div>
-                    <div class="stat-label">За месяц</div>
+                    <div class="stat-label">За місяць</div>
                 </div>
             </div>
             
@@ -675,9 +795,8 @@
             <?php endif; ?>
             
             <!-- Actions Header -->
-            <div class="actions-header">
-                <a href="/frontend/vacancy_create.php" class="btn btn-primary">
-                    ➕ Создать новую вакансию
+            <div class="actions-header">                <a href="/frontend/vacancy_create.php" class="btn btn-primary">
+                    ➕ Створити нову вакансію
                 </a>
             </div>            <!-- Vacancy Cards -->
             <?php if (!empty($vacancies)): ?>
@@ -688,24 +807,23 @@
                                 <?= htmlspecialchars($vacancy['title']) ?>
                             </a>
                             
-                            <div class="vacancy-actions">
-                                <span class="status <?= $vacancy['is_active'] ? 'status-active' : 'status-inactive' ?>">
+                            <div class="vacancy-actions">                                <span class="status <?= $vacancy['is_active'] ? 'status-active' : 'status-inactive' ?>">
                                     <?= $vacancy['is_active'] ? '✅ Активна' : '⏸️ Неактивна' ?>
                                 </span>
                                 
                                 <button onclick="toggleVacancyStatus(<?= $vacancy['id'] ?>, <?= $vacancy['is_active'] ? 'false' : 'true' ?>)" 
                                         class="btn btn-sm <?= $vacancy['is_active'] ? 'btn-warning' : 'btn-success' ?>">
-                                    <?= $vacancy['is_active'] ? '⏸️ Деактивировать' : '▶️ Активировать' ?>
+                                    <?= $vacancy['is_active'] ? '⏸️ Деактивувати' : '▶️ Активувати' ?>
                                 </button>
                                 
                                 <a href="vacancy_edit.php?id=<?= htmlspecialchars($vacancy['id']) ?>" class="btn btn-sm btn-secondary">
-                                    ✏️ Редактировать
+                                    ✏️ Редагувати
                                 </a>
                                 
-                                <form method="post" style="display: inline;" onsubmit="return confirm('Вы уверены, что хотите удалить эту вакансию?')">
+                                <form method="post" style="display: inline;" onsubmit="return confirm('Ви впевнені, що хочете видалити цю вакансію?')">
                                     <input type="hidden" name="action" value="delete">
                                     <input type="hidden" name="vacancy_id" value="<?= htmlspecialchars($vacancy['id']) ?>">
-                                    <button type="submit" class="btn btn-sm btn-danger">🗑️ Удалить</button>
+                                    <button type="submit" class="btn btn-sm btn-danger">🗑️ Видалити</button>
                                 </form>
                             </div>
                         </div>
@@ -745,67 +863,90 @@
                             $description = $vacancy['clean_description'] ?? $vacancy['description'];
                             echo htmlspecialchars(mb_strlen($description) > 200 ? mb_substr($description, 0, 200) . '...' : $description);
                             ?>
-                        </div>
-                          <div class="vacancy-stats">
+                        </div>                          <div class="vacancy-stats">
                             <div class="stat-item">
                                 <span>📅</span>
-                                <span>Создана: <strong><?= date('d.m.Y', strtotime($vacancy['created_at'])) ?></strong></span>
+                                <span>Створена: <strong><?= date('d.m.Y', strtotime($vacancy['created_at'])) ?></strong></span>
                             </div>
                             <?php if (!empty($vacancy['updated_at']) && $vacancy['updated_at'] !== $vacancy['created_at']): ?>
                                 <div class="stat-item">
                                     <span>🔄</span>
-                                    <span>Обновлена: <strong><?= date('d.m.Y', strtotime($vacancy['updated_at'])) ?></strong></span>
+                                    <span>Оновлена: <strong><?= date('d.m.Y', strtotime($vacancy['updated_at'])) ?></strong></span>
                                 </div>
                             <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
-            <?php else: ?>
-                <div class="empty-state">
+            <?php else: ?>                <div class="empty-state">
                     <div class="empty-state-icon">📝</div>
-                    <h3>У вас пока нет вакансий</h3>
-                    <p>Создайте свою первую вакансию, чтобы найти подходящих кандидатов для вашей компании</p>
-                    <a href="/frontend/vacancy_create.php" class="btn btn-primary">➕ Создать первую вакансию</a>
+                    <h3>У вас поки немає вакансій</h3>
+                    <p>Створіть свою першу вакансію, щоб знайти підходящих кандидатів для вашої компанії</p>
+                    <a href="/frontend/vacancy_create.php" class="btn btn-primary">➕ Створити першу вакансію</a>
                 </div>
             <?php endif; ?>
         </div>
-    </main>
-
-    <!-- Footer -->
-    <footer style="background: var(--surface-color); border-top: 1px solid var(--border-color); margin-top: 4rem; padding: 3rem 0;">
-        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
-                <div>
-                    <h3 style="color: var(--primary-color); margin-bottom: 1rem; font-size: 1.25rem;">SearchJob</h3>
-                    <p style="color: var(--text-secondary); line-height: 1.6;">Найдите работу своей мечты или идеального кандидата. Мы соединяем талантливых людей с лучшими возможностями.</p>
+    </main>    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>SearchJob</h4>
+                    <p style="color: #a0aec0; margin-bottom: 1.5rem;">
+                        Провідна платформа для пошуку роботи в Україні
+                    </p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" style="color: #eaa850; font-size: 1.25rem;">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" style="color: #eaa850; font-size: 1.25rem;">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" style="color: #eaa850; font-size: 1.25rem;">
+                            <i class="fab fa-telegram-plane"></i>
+                        </a>
+                        <a href="#" style="color: #eaa850; font-size: 1.25rem;">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
                 </div>
                 
-                <div>
-                    <h4 style="color: var(--text-primary); margin-bottom: 1rem;">Для соискателей</h4>
-                    <ul style="list-style: none; color: var(--text-secondary);">
-                        <li style="margin-bottom: 0.5rem;"><a href="/frontend/vacancy_list.php" style="color: inherit; text-decoration: none;">Поиск вакансий</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="/frontend/companies_list.php" style="color: inherit; text-decoration: none;">Компании</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="/frontend/profile.php" style="color: inherit; text-decoration: none;">Мой профиль</a></li>
+                <div class="footer-section">
+                    <h4>Для кандидатів</h4>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/vacancy_list.php">Пошук вакансій</a></li>
+                        <li><a href="/frontend/companies_list.php">Компанії</a></li>
+                        <li><a href="/frontend/register.php">Створити резюме</a></li>
+                        <li><a href="#">Кар'єрні поради</a></li>
                     </ul>
                 </div>
                 
-                <div>
-                    <h4 style="color: var(--text-primary); margin-bottom: 1rem;">Для работодателей</h4>
-                    <ul style="list-style: none; color: var(--text-secondary);">
-                        <li style="margin-bottom: 0.5rem;"><a href="/frontend/vacancy_create.php" style="color: inherit; text-decoration: none;">Разместить вакансию</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="/frontend/my_vacancies.php" style="color: inherit; text-decoration: none;">Мои вакансии</a></li>
-                        <li style="margin-bottom: 0.5rem;"><a href="/frontend/manage_applications.php" style="color: inherit; text-decoration: none;">Заявки</a></li>
+                <div class="footer-section">
+                    <h4>Для роботодавців</h4>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/vacancy_create.php">Додати вакансію</a></li>
+                        <li><a href="/frontend/register.php">Реєстрація компанії</a></li>
+                        <li><a href="#">Пошук кандидатів</a></li>
+                        <li><a href="#">Тарифи</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Підтримка</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:support@searchjob.com">support@searchjob.com</a></li>
+                        <li><a href="tel:+380441234567">+380 44 123 45 67</a></li>
+                        <li><a href="#">Допомога</a></li>
+                        <li><a href="#">Умови використання</a></li>
                     </ul>
                 </div>
             </div>
             
-            <div style="border-top: 1px solid var(--border-color); padding-top: 2rem; text-align: center; color: var(--text-secondary);">
-                <p>&copy; 2024 SearchJob. Все права защищены.</p>
+            <div class="footer-bottom">
+                <p>© 2025 SearchJob. Всі права захищені.</p>
             </div>
         </div>
-    </footer>
-
-    <script>        // Theme Toggle
+    </footer>    <script>
+        // Theme Toggle
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme') || 'light';
@@ -813,11 +954,17 @@
             
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            
-            // Update theme icon
-            const themeIcon = document.querySelector('.theme-toggle i');
-            if (themeIcon) {
-                themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.querySelector('#theme-toggle i');
+            if (icon) {
+                if (theme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                } else {
+                    icon.className = 'fas fa-moon';
+                }
             }
         }
 
@@ -825,12 +972,7 @@
         function initTheme() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            
-            // Set initial icon
-            const themeIcon = document.querySelector('.theme-toggle i');
-            if (themeIcon) {
-                themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-            }
+            updateThemeIcon(savedTheme);
         }
 
         // Mobile Menu Toggle
@@ -843,7 +985,7 @@
         function toggleVacancyStatus(vacancyId, newStatus) {
             const button = event.target;
             const originalText = button.innerHTML;
-            button.innerHTML = '⏳ Обработка...';
+            button.innerHTML = '⏳ Обробка...';
             button.disabled = true;
             
             fetch('../backend/controllers/VacancyStatusController.php?action=toggle', {
@@ -858,14 +1000,14 @@
                 if (data.success) {
                     location.reload();
                 } else {
-                    alert('Ошибка: ' + (data.error || 'Неизвестная ошибка'));
+                    alert('Помилка: ' + (data.error || 'Невідома помилка'));
                     button.innerHTML = originalText;
                     button.disabled = false;
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Ошибка соединения');
+                alert('Помилка з\'єднання');
                 button.innerHTML = originalText;
                 button.disabled = false;
             });
@@ -875,12 +1017,18 @@
         document.addEventListener('DOMContentLoaded', function() {
             initTheme();
             
+            // Theme toggle event listener
+            const themeToggle = document.getElementById('theme-toggle');
+            if (themeToggle) {
+                themeToggle.addEventListener('click', toggleTheme);
+            }
+            
             // Close mobile menu when clicking outside
             document.addEventListener('click', function(event) {
                 const navMenu = document.querySelector('.nav-menu');
                 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
                 
-                if (!navMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
+                if (navMenu && mobileMenuBtn && !navMenu.contains(event.target) && !mobileMenuBtn.contains(event.target)) {
                     navMenu.classList.remove('active');
                 }
             });
