@@ -142,13 +142,12 @@ class User {
     
     /**
      * Получение расширенных данных профиля из базы данных
-     */
-    private function getExtendedProfileData($user_id) {
+     */    private function getExtendedProfileData($user_id) {
         $user_id = intval($user_id);
         $res = $this->db->query("SELECT 
             first_name, last_name, phone, birth_date, city, experience_years, 
             education, skills, about_me, salary_expectation, company_description, 
-            company_address, company_website, company_size, company_industry 
+            company_address, company_website, company_size, company_industry, avatar
             FROM users WHERE id=$user_id");
         
         if ($res && $res->num_rows === 1) {

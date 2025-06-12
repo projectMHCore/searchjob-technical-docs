@@ -47,22 +47,29 @@ class AvatarHelper {    /**
         $allClasses = trim($baseClasses . ' ' . $cssClasses);
         
         $html = "<div class=\"{$allClasses}\" style=\"width: {$width}px; height: {$height}px;\">";
-        
-        if ($avatarPath) {
+          if ($avatarPath) {
             $avatarUrl = self::getAvatarUrl($avatarPath, $size === 'small' ? 'thumb' : 'full');
             $altText = !empty($userName) ? $userName : $login;
             
-            $html .= "<img src=\"{$avatarUrl}\" alt=\"{$altText}\" " .
-                     "style=\"width: 100%; height: 100%; object-fit: cover; border-radius: 50%;\" " .
-                     "onerror=\"this.style.display='none'; this.nextElementSibling.style.display='flex';\">";
+            // Проверяем, существует ли файл
+            $fullPath = __DIR__ . '/../../frontend/' . ($avatarPath);
+            if (strpos($avatarPath, 'frontend/') === 0) {
+                $fullPath = __DIR__ . '/../../' . $avatarPath;
+            }
             
-            // Fallback для случая, когда изображение не загружается
-            $initials = self::getInitials($userName ?: $login);
-            $html .= "<div class=\"avatar-fallback\" style=\"display: none; width: 100%; height: 100%; " .
-                     "background: linear-gradient(135deg, #eaa850, #d4922a); color: white; " .
-                     "display: flex; align-items: center; justify-content: center; " .
-                     "border-radius: 50%; font-weight: 600; font-size: " . ($width * 0.4) . "px;\">" .
-                     $initials . "</div>";
+            if (file_exists($fullPath)) {
+                $html .= "<img src=\"{$avatarUrl}\" alt=\"{$altText}\" " .
+                         "style=\"width: 100%; height: 100%; object-fit: cover; border-radius: 50%;\">";
+            } else {
+                // Файл не существует, показываем инициалы
+                $initials = self::getInitials($userName ?: $login);
+                $fontSize = $width * 0.4;
+                $html .= "<div class=\"avatar-initials\" style=\"width: 100%; height: 100%; " .
+                         "background: linear-gradient(135deg, #eaa850, #d4922a); color: white; " .
+                         "display: flex; align-items: center; justify-content: center; " .
+                         "border-radius: 50%; font-weight: 600; font-size: {$fontSize}px;\">" .
+                         $initials . "</div>";
+            }
         } else {
             // Отображаем инициалы, если нет аватара
             $initials = self::getInitials($userName ?: $login);
