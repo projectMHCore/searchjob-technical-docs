@@ -53,13 +53,12 @@ try {
         case 'GET':
             // Получение информации об аватаре
             $user = new User();
-            $avatarPath = $user->getAvatarPath($userId);
-              if ($avatarPath) {
+            $avatarPath = $user->getAvatarPath($userId);            if ($avatarPath) {
                 echo json_encode([
                     'success' => true,
                     'avatar_path' => $avatarPath,
-                    'avatar_url' => '../' . $avatarPath,
-                    'thumb_url' => '../' . dirname($avatarPath) . '/thumb_' . basename($avatarPath)
+                    'avatar_url' => './' . $avatarPath,
+                    'thumb_url' => './' . dirname($avatarPath) . '/thumb_' . basename($avatarPath)
                 ]);
             } else {
                 echo json_encode([

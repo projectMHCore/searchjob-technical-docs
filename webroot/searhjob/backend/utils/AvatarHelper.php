@@ -11,24 +11,22 @@ class AvatarHelper {    /**
             return null;
         }
         
-        // Определяем относительный путь в зависимости от текущего местоположения
-        $currentPath = $_SERVER['REQUEST_URI'] ?? '';
-        $baseUrl = '';
-        
-        // Если мы в frontend/, то идем на уровень выше
-        if (strpos($currentPath, '/frontend/') !== false) {
-            $baseUrl = './';
-        } else {
-            $baseUrl = '../';
+        // Очищаем путь от префикса frontend/, если он есть
+        $cleanPath = $avatarPath;
+        if (strpos($cleanPath, 'frontend/') === 0) {
+            $cleanPath = substr($cleanPath, 9); // удаляем 'frontend/'
         }
         
+        // Используем относительный путь от текущей страницы
+        $baseUrl = './';
+        
         if ($size === 'thumb') {
-            $dir = dirname($avatarPath);
-            $filename = basename($avatarPath);
+            $dir = dirname($cleanPath);
+            $filename = basename($cleanPath);
             return $baseUrl . $dir . '/thumb_' . $filename;
         }
         
-        return $baseUrl . $avatarPath;
+        return $baseUrl . $cleanPath;
     }
     
     /**

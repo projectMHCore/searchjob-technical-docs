@@ -62,18 +62,18 @@ class AvatarController {
             if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
                 // Создаем миниатюру
                 $this->createThumbnail($uploadPath, $uploadDir . 'thumb_' . $fileName);
-                
-                // Обновляем базу данных
+                  // Обновляем базу данных
                 $user = new User();
-                $relativePath = 'frontend/assets/uploads/avatars/' . $fileName;
+                $relativePath = 'assets/uploads/avatars/' . $fileName;
                 
                 if ($user->updateAvatar($userId, $relativePath)) {
                     Logger::info("Avatar uploaded for user $userId: $fileName");
-                      return [
+                    
+                    return [
                         'success' => true, 
                         'message' => 'Аватар успешно загружен',
                         'avatar_path' => $relativePath,
-                        'avatar_url' => '../' . $relativePath
+                        'avatar_url' => './' . $relativePath
                     ];
                 } else {
                     // Удаляем файл, если не удалось обновить БД
