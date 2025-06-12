@@ -984,6 +984,12 @@ $db->close();
             <?php endif; ?>            <!-- Edit Form -->
             <form method="post" class="edit-form">
                 <?php if ($editType === 'full' || $editType === 'personal'): ?>
+                <!-- Avatar Upload Section -->
+                <div class="form-section">
+                    <h3>📷 Фото профілю</h3>
+                    <?php include __DIR__ . '/components/avatar_upload.php'; ?>
+                </div>
+                
                 <!-- Personal Information Section -->
                 <div class="form-section">
                     <h3>👤 Особиста інформація</h3>

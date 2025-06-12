@@ -130,13 +130,11 @@ class User {
                 error_log("Ошибка чтения XML файла: " . $e->getMessage());
             }
         }
-        
-        // Получаем полные данные из базы данных
-        $res = $this->db->query("SELECT * FROM users WHERE id=$user_id");
-        if ($res && $res->num_rows === 1) {
-            $row = $res->fetch_assoc();
-            $row['created'] = $row['created_at']; // Alias для совместимости
-            return (object) $row;
+          // Получаем полные данные из базы данных
+        $fullProfile = $this->getUserProfile($user_id);
+        if ($fullProfile) {
+            $fullProfile['created'] = $fullProfile['created_at']; // Alias для совместимости
+            return (object) $fullProfile;
         }
         
         return null;
@@ -214,6 +212,56 @@ class User {
         if ($res && $res->num_rows === 1) {
             return $res->fetch_assoc();
         }
+        return null;
+    }
+    
+    /**
+     * Обновление аватара пользователя
+     */
+    public function updateAvatar($userId, $avatarPath) {
+        $userId = intval($userId);
+        $avatarPath = $avatarPath ? $this->db->real_escape_string($avatarPath) : null;
+        
+        if ($avatarPath) {
+            $sql = "UPDATE users SET avatar = '$avatarPath', updated_at = NOW() WHERE id = $userId";
+        } else {
+            $sql = "UPDATE users SET avatar = NULL, updated_at = NOW() WHERE id = $userId";
+        }
+        
+        return $this->db->query($sql);
+    }
+    
+    /**
+     * Получение пути к аватару пользователя
+     */
+    public function getAvatarPath($userId) {
+        $userId = intval($userId);
+        $res = $this->db->query("SELECT avatar FROM users WHERE id = $userId LIMIT 1");
+        
+        if ($res && $res->num_rows === 1) {
+            $row = $res->fetch_assoc();
+            return $row['avatar'];
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Получение информации о пользователе с аватаром
+     */
+    public function getUserProfile($userId) {
+        $userId = intval($userId);
+        $res = $this->db->query("SELECT id, login, email, role, company_name, created_at, 
+                                first_name, last_name, phone, birth_date, city, experience_years, 
+                                education, skills, about_me, salary_expectation, company_description, 
+                                company_address, company_website, company_size, company_industry, 
+                                avatar, updated_at 
+                                FROM users WHERE id = $userId LIMIT 1");
+        
+        if ($res && $res->num_rows === 1) {
+            return $res->fetch_assoc();
+        }
+        
         return null;
     }
 }

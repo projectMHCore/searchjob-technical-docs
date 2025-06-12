@@ -1,5 +1,6 @@
 <?php
 // View: отображение профиля пользователя
+require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
 ?><!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -10,9 +11,10 @@
     <link rel="stylesheet" href="assets/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    
+    <?= AvatarHelper::getAvatarCSS() ?>
     
     <style>
         /* Professional Modern Styles */
@@ -239,9 +241,7 @@
             padding: 2rem 0;
             border-bottom: 1px solid var(--border-color);
             margin-bottom: 2rem;
-        }
-
-        .profile-avatar {
+        }        .profile-avatar {
             width: 120px;
             height: 120px;
             border-radius: 50%;
@@ -249,12 +249,19 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            margin: 0 auto 1rem;
             font-size: 2.5rem;
             font-weight: 800;
             color: white;
-            margin: 0 auto 1rem auto;
+            border: 4px solid var(--border-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+          .profile-avatar:hover {
+            transform: scale(1.05);
+            border-color: var(--primary-color);
             box-shadow: 0 8px 25px rgba(234, 168, 80, 0.3);
-            animation: zoomIn 0.6s ease-out 0.3s both;
         }
 
         .profile-name {
@@ -548,10 +555,9 @@
                 </h1>
             </div>
               <?php if ($profile): ?>
-                <div class="profile-card">
-                    <div class="profile-header">
-                        <div class="profile-avatar">
-                            <?= strtoupper(substr($profile['login'] ?? '', 0, 2)) ?>
+                <div class="profile-card">                    <div class="profile-header">
+                        <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
+                            <?= AvatarHelper::renderAvatar($profile, 'xlarge', 'profile-main-avatar') ?>
                         </div>
                         <h2 class="profile-name"><?= htmlspecialchars($profile['login'] ?? '') ?></h2>
                         <div class="role-badge">
