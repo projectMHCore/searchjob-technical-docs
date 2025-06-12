@@ -242,8 +242,7 @@ class User {
             $row = $res->fetch_assoc();
             return $row['avatar'];
         }
-        
-        return null;
+          return null;
     }
     
     /**

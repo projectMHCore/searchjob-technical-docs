@@ -3,8 +3,7 @@
  * Утилиты для работы с аватарами пользователей
  */
 
-class AvatarHelper {
-      /**
+class AvatarHelper {    /**
      * Получение URL аватара пользователя
      */
     public static function getAvatarUrl($avatarPath, $size = 'full') {
@@ -12,8 +11,16 @@ class AvatarHelper {
             return null;
         }
         
-        // Используем относительный путь от корня проекта
-        $baseUrl = '../';
+        // Определяем относительный путь в зависимости от текущего местоположения
+        $currentPath = $_SERVER['REQUEST_URI'] ?? '';
+        $baseUrl = '';
+        
+        // Если мы в frontend/, то идем на уровень выше
+        if (strpos($currentPath, '/frontend/') !== false) {
+            $baseUrl = './';
+        } else {
+            $baseUrl = '../';
+        }
         
         if ($size === 'thumb') {
             $dir = dirname($avatarPath);

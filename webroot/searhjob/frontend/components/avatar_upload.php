@@ -187,16 +187,40 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Загрузка текущего аватара пользователя
-function loadCurrentAvatar() {    fetch('../backend/api/avatar.php', {
+function loadCurrentAvatar() {
+    // Сначала тестируем простой API
+    fetch('../backend/api/avatar_simple_test.php', {
         method: 'GET',
         credentials: 'same-origin'
     })
     .then(response => response.json())
     .then(data => {
-        if (data.success && data.avatar_url) {
+        console.log('Simple API test:', data);
+        
+        if (!data.success) {
+            console.error('Simple API test failed:', data.message);
+            showPlaceholder();
+            return;
+        }
+        
+        // Если простой тест прошел, пробуем основной API
+        return fetch('../backend/api/avatar.php', {
+            method: 'GET',
+            credentials: 'same-origin'
+        });
+    })
+    .then(response => {
+        if (!response) return null;
+        return response.json();
+    })
+    .then(data => {
+        if (data && data.success && data.avatar_url) {
             displayAvatar(data.avatar_url);
         } else {
             showPlaceholder();
+            if (data && !data.success) {
+                console.error('Avatar API error:', data.message);
+            }
         }
     })
     .catch(error => {

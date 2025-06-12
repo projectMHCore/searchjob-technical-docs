@@ -553,11 +553,20 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
                     <i class="fas fa-user-circle" style="color: var(--primary-color);"></i>
                     Профіль користувача
                 </h1>
-            </div>
-              <?php if ($profile): ?>
+            </div>              <?php if ($profile): ?>
+                <!-- Debug info for avatar -->
+                <?php 
+                $profileArray = is_object($profile) ? (array) $profile : $profile;
+                if (isset($profileArray['avatar'])) {
+                    echo "<!-- Debug: Avatar path = " . htmlspecialchars($profileArray['avatar']) . " -->";
+                } else {
+                    echo "<!-- Debug: No avatar field found -->";
+                }
+                ?>
+                
                 <div class="profile-card">                    <div class="profile-header">
                         <div style="display: flex; justify-content: center; margin-bottom: 1rem;">
-                            <?= AvatarHelper::renderAvatar($profile, 'xlarge', 'profile-main-avatar') ?>
+                            <?= AvatarHelper::renderAvatar($profileArray, 'xlarge', 'profile-main-avatar') ?>
                         </div>
                         <h2 class="profile-name"><?= htmlspecialchars($profile['login'] ?? '') ?></h2>
                         <div class="role-badge">
