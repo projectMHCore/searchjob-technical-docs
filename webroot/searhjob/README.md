@@ -59,17 +59,17 @@ searhjob/
 
 ## Роли пользователей
 
-1. Соискатель (job_seeker) - ищет работу, подает заявки
-2. Работодатель (employer) - создает вакансии, просматривает заявки
-3. Администратор (admin) - управляет системой
+1. **Соискатель (job_seeker)** - ищет работу, подает заявки
+2. **Работодатель (employer)** - создает вакансии, просматривает заявки
+3. **Администратор (admin)** - управляет системой
 
 ## Технологии
 
-- Backend: PHP, MySQL
-- Frontend: HTML, CSS, JavaScript, PHP
-- Архитектура: MVC
-- API: REST API с JSON/XML форматами
-- Логирование: Централизованная система логов
+- **Backend**: PHP, MySQL
+- **Frontend**: HTML, CSS, JavaScript, PHP
+- **Архитектура**: MVC
+- **API**: REST API с JSON/XML форматами
+- **Логирование**: Централизованная система логов
 
 ## Установка и настройка
 
@@ -95,15 +95,15 @@ searhjob/
 ## Доступ к инструментам после реорганизации
 
 ### Тестирование системы
-- Глобальный системный тест: `/frontend/utils/tests/global_system_test.php`
-- API тестирование: `/frontend/utils/tests/test_api.php`
-- Отладка сессий: `/frontend/utils/tests/debug_session.php`
-- Проверка путей: `/frontend/utils/tests/check_paths.php`
+- **Глобальный системный тест**: `/frontend/utils/tests/global_system_test.php`
+- **API тестирование**: `/frontend/utils/tests/test_api.php`
+- **Отладка сессий**: `/frontend/utils/tests/debug_session.php`
+- **Проверка путей**: `/frontend/utils/tests/check_paths.php`
 
 ### Административные инструменты
-- Управление пользователями: `/frontend/utils/admin/manage_users.php`
+- **Управление пользователями**: `/frontend/utils/admin/manage_users.php`
 
 ### Резервные копии
-- Backup редактора профиля: `/frontend/utils/edit_profile_backup.php`
+- **Backup редактора профиля**: `/frontend/utils/edit_profile_backup.php`
 
-⚠️ Важно: После перемещения файлов в новые папки все относительные пути были обновлены для корректной работы.
+⚠️ **Важно**: После перемещения файлов в новые папки все относительные пути были обновлены для корректной работы.

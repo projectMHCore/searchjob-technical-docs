@@ -2,8 +2,8 @@
 // Конфиг подключения к MySQL
 return [
     'host' => '89.35.130.223',
-    'username' => 'u66_2ExIYGHKm0',
-    'password' => 'smF!^MoLZRIq^Y6=@EeoW5So',
-    'database' => 's66_univer',
+    'username' => 'u66_W1zfOAjMtD',
+    'password' => 'Gs1thbyoKm2Wr!Hn!V^ueh5r',
+    'database' => 's66_searchjob',
     'port' => 3306
 ];

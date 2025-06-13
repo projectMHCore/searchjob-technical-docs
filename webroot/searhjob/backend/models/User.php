@@ -201,10 +201,9 @@ class User {
             return $row['user_id'];
         }
         return null;
-    }
-    public function getUserByToken($token) {
+    }    public function getUserByToken($token) {
         $token = $this->db->real_escape_string($token);
-        $res = $this->db->query("SELECT u.id, u.login, u.email, u.role, u.company_name, u.created_at 
+        $res = $this->db->query("SELECT u.id, u.login, u.email, u.role, u.company_name, u.created_at, u.company_logo, u.avatar, u.first_name, u.last_name, u.phone, u.birth_date, u.city, u.experience_years, u.education, u.skills, u.about_me, u.salary_expectation, u.company_description, u.company_address, u.company_website, u.company_size, u.company_industry
                                 FROM users u 
                                 JOIN user_tokens t ON u.id = t.user_id 
                                 WHERE t.token='$token' LIMIT 1");

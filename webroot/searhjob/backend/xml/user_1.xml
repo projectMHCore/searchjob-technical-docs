@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <user>
-    <id>1</id>
-    <login>admin</login>
-    <email>admin@jobsearch.com</email>
-    <role>admin</role>
-    <created_at>2025-06-05 12:00:00</created_at>
+  <id>1</id>
+  <login>test@nure.ua</login>
+  <email>test@nure.ua</email>
+  <role>employer</role>
+  <created_at>2025-06-13 09:21:19</created_at>
+  <company_name>Allo</company_name>
 </user>

@@ -1,23 +1,30 @@
 <?php
 // Компонент для загрузки логотипа компании
 
-// Проверяем авторизацию
-if (!isset($_SESSION['token'])) {
-    echo json_encode(['success' => false, 'error' => 'Не авторизован']);
-    exit;
+// НЕ запускаем сессию здесь - она должна быть запущена в родительской странице
+// Проверяем, что сессия уже запущена
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    echo '<p style="color: red;">Ошибка: сессия не активна. Компонент должен вызываться из страницы с активной сессией.</p>';
+    return;
 }
 
-require_once __DIR__ . '/../../backend/models/User.php';
-
-$userModel = new User();
-$userData = $userModel->getUserByToken($_SESSION['token']);
-
-if (!$userData || $userData['role'] !== 'employer') {
-    echo json_encode(['success' => false, 'error' => 'Недостаточно прав']);
-    exit;
-}
-
+// Проверяем авторизацию только для POST запросов
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_SESSION['token'])) {
+        echo json_encode(['success' => false, 'error' => 'Не авторизован']);
+        exit;
+    }
+
+    require_once __DIR__ . '/../../backend/models/User.php';
+
+    $userModel = new User();
+    $userData = $userModel->getUserByToken($_SESSION['token']);
+
+    if (!$userData || $userData['role'] !== 'employer') {
+        echo json_encode(['success' => false, 'error' => 'Недостаточно прав']);
+        exit;
+    }
+
     $action = $_POST['action'] ?? '';
     
     if ($action === 'upload_logo') {
@@ -62,28 +69,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
         $fileName = 'company_logo_' . $userData['id'] . '_' . time() . '_' . uniqid() . '.' . $extension;
         $filePath = $logoDir . $fileName;
-        
-        // Перемещаем файл
-        if (move_uploaded_file($file['tmp_name'], $filePath)) {            // Обновляем путь в базе данных
+          // Перемещаем файл
+        if (move_uploaded_file($file['tmp_name'], $filePath)) {
+            // Обновляем путь в базе данных
             $config = require __DIR__ . '/../../backend/config/db.php';
             $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
             
+            if ($db->connect_error) {
+                unlink($filePath);
+                echo json_encode(['success' => false, 'error' => 'Помилка підключення до БД: ' . $db->connect_error]);
+                exit;
+            }
+            
             $logoPath = 'assets/uploads/company_logos/' . $fileName;
             $stmt = $db->prepare("UPDATE users SET company_logo = ? WHERE id = ?");
+            
+            if (!$stmt) {
+                unlink($filePath);
+                $db->close();
+                echo json_encode(['success' => false, 'error' => 'Помилка підготовки запиту: ' . $db->error]);
+                exit;
+            }
+            
             $stmt->bind_param("si", $logoPath, $userData['id']);
             
             if ($stmt->execute()) {
-                $db->close();
-                echo json_encode([
-                    'success' => true, 
-                    'message' => 'Логотип успішно завантажено!',
-                    'logo_path' => '/' . $logoPath
-                ]);
+                // Проверяем, что запись действительно обновилась
+                $affected_rows = $stmt->affected_rows;
+                $stmt->close();
+                
+                if ($affected_rows > 0) {
+                    // Дополнительная проверка - читаем из БД
+                    $checkStmt = $db->prepare("SELECT company_logo FROM users WHERE id = ?");
+                    $checkStmt->bind_param("i", $userData['id']);
+                    $checkStmt->execute();
+                    $result = $checkStmt->get_result();
+                    $row = $result->fetch_assoc();
+                    $checkStmt->close();
+                    
+                    $db->close();
+                    
+                    echo json_encode([
+                        'success' => true, 
+                        'message' => 'Логотип успішно завантажено!',
+                        'logo_path' => '/' . $logoPath,
+                        'debug' => [
+                            'affected_rows' => $affected_rows,
+                            'db_value' => $row['company_logo'] ?? 'NULL'
+                        ]
+                    ]);
+                } else {
+                    unlink($filePath);
+                    $db->close();
+                    echo json_encode(['success' => false, 'error' => 'Запис не оновлено (affected_rows = 0)']);
+                }
             } else {
                 // Удаляем файл при ошибке БД
                 unlink($filePath);
+                $error_msg = $stmt->error;
+                $stmt->close();
                 $db->close();
-                echo json_encode(['success' => false, 'error' => 'Помилка збереження в базі даних']);
+                echo json_encode(['success' => false, 'error' => 'Помилка виконання запиту: ' . $error_msg]);
             }
         } else {
             echo json_encode(['success' => false, 'error' => 'Помилка завантаження файлу']);
@@ -121,8 +167,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Если это GET запрос, отображаем компонент
+// Проверяем авторизацию для GET запросов
+if (!isset($_SESSION['token'])) {
+    echo '<p style="color: red;">Вы не авторизованы. <a href="../login.php">Войти в систему</a></p>';
+    return;
+}
+
+require_once __DIR__ . '/../../backend/models/User.php';
+$userModel = new User();
+$userData = $userModel->getUserByToken($_SESSION['token']);
+
+if (!$userData) {
+    echo '<p style="color: red;">Пользователь не найден.</p>';
+    return;
+}
+
+if ($userData['role'] !== 'employer') {
+    echo '<p style="color: orange;">Только работодатели могут загружать логотипы компаний.</p>';
+    return;
+}
+
 $currentLogo = $userData['company_logo'] ?? '';
-$hasLogo = !empty($currentLogo) && file_exists(__DIR__ . '/../assets/' . $currentLogo);
+$hasLogo = !empty($currentLogo) && file_exists(__DIR__ . '/../' . $currentLogo);
 ?>
 
 <div class="logo-upload-component">
@@ -430,8 +496,7 @@ async function deleteCompanyLogo() {
             setTimeout(() => {
                 location.reload();
             }, 1000);
-            
-        } else {
+              } else {
             messageDiv.className = 'upload-message error';
             messageDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> ' + result.error;
         }
