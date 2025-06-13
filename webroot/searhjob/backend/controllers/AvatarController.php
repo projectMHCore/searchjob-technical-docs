@@ -41,22 +41,20 @@ class AvatarController {
             if ($imageInfo === false) {
                 return ['success' => false, 'message' => 'Файл не является изображением'];
             }
+              // Удаляем старый аватар ПЕРЕД созданием нового
+            $this->deleteOldAvatar($userId);
             
-            // Создаем уникальное имя файла
+            // Создаем уникальное имя файла с микросекундами для предотвращения дубликатов
             $extension = $this->getExtensionFromMimeType($fileType);
-            $fileName = 'avatar_' . $userId . '_' . time() . '.' . $extension;
+            $fileName = 'avatar_' . $userId . '_' . time() . '_' . uniqid() . '.' . $extension;
             
             // Путь для сохранения
             $uploadDir = __DIR__ . '/../../frontend/assets/uploads/avatars/';
             $uploadPath = $uploadDir . $fileName;
-            
-            // Убеждаемся, что папка существует
+              // Убеждаемся, что папка существует
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
             }
-            
-            // Удаляем старый аватар, если есть
-            $this->deleteOldAvatar($userId);
             
             // Перемещаем загруженный файл
             if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
@@ -92,8 +90,7 @@ class AvatarController {
             return ['success' => false, 'message' => 'Внутренняя ошибка сервера'];
         }
     }
-    
-    /**
+      /**
      * Удаление аватара пользователя
      */
     public function deleteAvatar($userId) {
@@ -103,6 +100,8 @@ class AvatarController {
             
             if ($currentAvatar) {
                 $this->deleteAvatarFiles($currentAvatar);
+                // Удаляем все аватары пользователя
+                $this->deleteAllUserAvatars($userId);
             }
             
             if ($user->updateAvatar($userId, null)) {
@@ -117,27 +116,37 @@ class AvatarController {
             return ['success' => false, 'message' => 'Внутренняя ошибка сервера'];
         }
     }
-    
-    /**
+      /**
      * Удаление старого аватара пользователя
      */
     private function deleteOldAvatar($userId) {
-        $user = new User();
-        $currentAvatar = $user->getAvatarPath($userId);
-        
-        if ($currentAvatar) {
-            $this->deleteAvatarFiles($currentAvatar);
+        try {
+            $user = new User();
+            $currentAvatar = $user->getAvatarPath($userId);
+            
+            if ($currentAvatar) {
+                Logger::info("Deleting old avatar for user $userId: $currentAvatar");
+                $this->deleteAvatarFiles($currentAvatar);
+                
+                // Дополнительно удаляем все старые аватары пользователя по маске имени файла
+                $this->deleteAllUserAvatars($userId);
+            }
+        } catch (Exception $e) {
+            Logger::error("Error deleting old avatar for user $userId: " . $e->getMessage());
         }
-    }
-    
-    /**
+    }    /**
      * Удаление файлов аватара (основной и миниатюра)
      */
     private function deleteAvatarFiles($avatarPath) {
-        $fullPath = __DIR__ . '/../../' . $avatarPath;
+        if (!$avatarPath) return;
+        
+        // Убираем "frontend/" если есть в пути, так как мы уже добавляем его
+        $cleanPath = str_replace('frontend/', '', $avatarPath);
+        $fullPath = __DIR__ . '/../../frontend/' . $cleanPath;
         
         if (file_exists($fullPath)) {
             unlink($fullPath);
+            Logger::info("Deleted avatar file: $fullPath");
         }
         
         // Удаляем миниатюру
@@ -147,6 +156,37 @@ class AvatarController {
         
         if (file_exists($thumbPath)) {
             unlink($thumbPath);
+            Logger::info("Deleted thumbnail: $thumbPath");
+        }
+    }
+    
+    /**
+     * Удаление всех аватаров пользователя по маске имени файла
+     */
+    private function deleteAllUserAvatars($userId) {
+        $avatarDir = __DIR__ . '/../../frontend/assets/uploads/avatars/';
+        
+        if (!is_dir($avatarDir)) {
+            return;
+        }
+        
+        // Ищем все файлы аватаров пользователя
+        $pattern = $avatarDir . 'avatar_' . $userId . '_*';
+        $avatarFiles = glob($pattern);
+        
+        foreach ($avatarFiles as $file) {
+            if (is_file($file)) {
+                unlink($file);
+                Logger::info("Deleted old avatar file: $file");
+                
+                // Удаляем соответствующую миниатюру
+                $filename = basename($file);
+                $thumbPath = dirname($file) . '/thumb_' . $filename;
+                if (file_exists($thumbPath)) {
+                    unlink($thumbPath);
+                    Logger::info("Deleted old thumbnail: $thumbPath");
+                }
+            }
         }
     }
     
