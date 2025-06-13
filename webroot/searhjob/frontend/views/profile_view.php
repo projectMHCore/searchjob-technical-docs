@@ -764,10 +764,14 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
                                 <h4><i class="fas fa-user-edit"></i> Редагувати профіль</h4>
                                 <p>Змінити особисті дані профілю</p>
                             </a>
-                            
-                            <a href="edit_profile.php?type=company" class="action-card">
+                              <a href="edit_profile.php?type=company" class="action-card">
                                 <h4><i class="fas fa-building"></i> Редагувати компанію</h4>
                                 <p>Змінити інформацію про компанію</p>
+                            </a>
+                            
+                            <a href="/frontend/account_settings.php" class="action-card">
+                                <h4><i class="fas fa-shield-alt"></i> Налаштування акаунту</h4>
+                                <p>Змінити email та пароль</p>
                             </a>
                         <?php else: ?>
                             <a href="/frontend/vacancy_list.php" class="action-card">
@@ -779,10 +783,14 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
                                 <h4><i class="fas fa-paper-plane"></i> Мої відгуки</h4>
                                 <p>Переглядайте свої відгуки на вакансії</p>
                             </a>
-                            
-                            <a href="/frontend/edit_profile.php" class="action-card">
+                              <a href="/frontend/edit_profile.php" class="action-card">
                                 <h4><i class="fas fa-cog"></i> Редагувати профіль</h4>
                                 <p>Змінити дані профілю</p>
+                            </a>
+                            
+                            <a href="/frontend/account_settings.php" class="action-card">
+                                <h4><i class="fas fa-shield-alt"></i> Налаштування акаунту</h4>
+                                <p>Змінити email та пароль</p>
                             </a>
                         <?php endif; ?>
                     </div>

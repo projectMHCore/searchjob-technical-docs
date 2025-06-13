@@ -6,17 +6,17 @@
                 <img id="avatarImage" src="" alt="Аватар" style="display: none;">
                 <div class="avatar-placeholder" id="avatarPlaceholder">
                     <i class="fas fa-user"></i>
-                    <span>Нет фото</span>
+                    <span>Немає фото</span>
                 </div>
             </div>
             
             <div class="avatar-controls">
                 <input type="file" id="avatarInput" accept="image/*" style="display: none;">
                 <button type="button" class="btn btn-primary btn-sm" onclick="selectAvatar()">
-                    <i class="fas fa-camera"></i> Выбрать фото
+                    <i class="fas fa-camera"></i> Вибрати фото
                 </button>
                 <button type="button" class="btn btn-danger btn-sm" id="deleteAvatarBtn" onclick="deleteAvatar()" style="display: none;">
-                    <i class="fas fa-trash"></i> Удалить
+                    <i class="fas fa-trash"></i> Видалити
                 </button>
             </div>
         </div>
@@ -25,13 +25,12 @@
             <div class="progress">
                 <div class="progress-bar" role="progressbar" style="width: 0%"></div>
             </div>
-            <small class="text-muted">Загрузка...</small>
-        </div>
-        
+            <small class="text-muted">Завантаження...</small>
+        </div>        
         <div class="upload-info">
             <small class="text-muted">
-                Допустимые форматы: JPG, PNG, GIF<br>
-                Максимальный размер: 5MB
+                Допустимі формати: JPG, PNG, GIF<br>
+                Максимальний розмір: 5MB
             </small>
         </div>
     </div>
@@ -222,9 +221,8 @@ function loadCurrentAvatar() {
                 console.error('Avatar API error:', data.message);
             }
         }
-    })
-    .catch(error => {
-        console.error('Ошибка загрузки аватара:', error);
+    })    .catch(error => {
+        console.error('Помилка завантаження аватара:', error);
         showPlaceholder();
     });
 }
@@ -295,27 +293,25 @@ function uploadAvatar(file) {
         
         if (xhr.status === 200) {
             try {
-                const response = JSON.parse(xhr.responseText);
-                if (response.success) {
-                    showAlert('Аватар успешно загружен!', 'success');
+                const response = JSON.parse(xhr.responseText);                if (response.success) {
+                    showAlert('Аватар успішно завантажено!', 'success');
                     displayAvatar(response.avatar_url);
                 } else {
-                    showAlert('Ошибка загрузки: ' + response.message, 'error');
+                    showAlert('Помилка завантаження: ' + response.message, 'error');
                     loadCurrentAvatar(); // Восстанавливаем предыдущий аватар
                 }
             } catch (e) {
-                showAlert('Ошибка обработки ответа сервера', 'error');
+                showAlert('Помилка обробки відповіді сервера', 'error');
                 loadCurrentAvatar();
             }
         } else {
-            showAlert('Ошибка загрузки файла', 'error');
+            showAlert('Помилка завантаження файлу', 'error');
             loadCurrentAvatar();
         }
     };
-    
-    xhr.onerror = function() {
+      xhr.onerror = function() {
         progressContainer.style.display = 'none';
-        showAlert('Ошибка сети', 'error');
+        showAlert('Помилка мережі', 'error');
         loadCurrentAvatar();
     };
     
@@ -325,25 +321,23 @@ function uploadAvatar(file) {
 
 // Удаление аватара
 function deleteAvatar() {
-    if (!confirm('Вы уверены, что хотите удалить аватар?')) {
+    if (!confirm('Ви впевнені, що хочете видалити аватар?')) {
         return;
     }
       fetch('../backend/api/avatar.php', {
         method: 'DELETE',
         credentials: 'same-origin'
     })
-    .then(response => response.json())
-    .then(data => {
+    .then(response => response.json())    .then(data => {
         if (data.success) {
-            showAlert('Аватар успешно удален', 'success');
+            showAlert('Аватар успішно видалено', 'success');
             showPlaceholder();
         } else {
-            showAlert('Ошибка удаления: ' + data.message, 'error');
+            showAlert('Помилка видалення: ' + data.message, 'error');
         }
-    })
-    .catch(error => {
-        console.error('Ошибка удаления аватара:', error);
-        showAlert('Ошибка удаления аватара', 'error');
+    })    .catch(error => {
+        console.error('Помилка видалення аватара:', error);
+        showAlert('Помилка видалення аватара', 'error');
     });
 }
 
