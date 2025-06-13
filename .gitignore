@@ -33,3 +33,4 @@ sftp.json
 # Игнорируемые папки проектов
 webroot/BlockPulse/
 webroot/MHCore/
+bot/
