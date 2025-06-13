@@ -67,6 +67,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $error = 'Невірний поточний пароль!';
             }
+        }    } elseif ($action === 'change_login') {
+        $newLogin = trim($_POST['new_login'] ?? '');
+        $password = $_POST['current_password'] ?? '';
+        
+        if (!$newLogin || !$password) {
+            $error = 'Заповніть всі поля!';
+        } elseif (strlen($newLogin) < 3) {
+            $error = 'Логін повинен містити мінімум 3 символи!';
+        } else {
+            // Проверяем текущий пароль
+            $result = $userModel->login($userData['login'], $password);
+            if ($result['success']) {
+                // Проверяем, что логин не занят
+                $config = require __DIR__ . '/../backend/config/db.php';
+                $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
+                
+                $stmt = $db->prepare("SELECT id FROM users WHERE login = ? AND id != ?");
+                $stmt->bind_param("si", $newLogin, $userData['id']);
+                $stmt->execute();
+                $existingUser = $stmt->get_result();
+                
+                if ($existingUser->num_rows > 0) {
+                    $error = 'Цей логін вже використовується!';
+                } else {
+                    // Обновляем логин
+                    $stmt = $db->prepare("UPDATE users SET login = ? WHERE id = ?");
+                    $stmt->bind_param("si", $newLogin, $userData['id']);
+                    
+                    if ($stmt->execute()) {
+                        $success = true;
+                        $message = 'Логін успішно змінено!';
+                        $userData['login'] = $newLogin; // Обновляем в текущих данных
+                    } else {
+                        $error = 'Помилка оновлення логіна!';
+                    }
+                }
+                $db->close();
+            } else {
+                $error = 'Невірний поточний пароль!';
+            }
         }
     } elseif ($action === 'change_password') {
         $currentPassword = $_POST['current_password'] ?? '';
@@ -536,6 +576,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?= htmlspecialchars($error) ?>
                 </div>
             <?php endif; ?>
+
+            <!-- Login Settings -->
+            <div class="settings-section">
+                <h3>
+                    <i class="fas fa-user"></i>
+                    Змінити логін
+                </h3>
+                
+                <div class="current-info">
+                    <div class="current-info-label">Поточний логін:</div>
+                    <div class="current-info-value"><?= htmlspecialchars($userData['login']) ?></div>
+                </div>
+
+                <form method="POST">
+                    <input type="hidden" name="action" value="change_login">
+                    
+                    <div class="form-group">
+                        <label for="new_login" class="form-label">Новий логін:</label>
+                        <input type="text" id="new_login" name="new_login" class="form-input" required minlength="3" placeholder="Мінімум 3 символи">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="current_password_login" class="form-label">Поточний пароль для підтвердження:</label>
+                        <input type="password" id="current_password_login" name="current_password" class="form-input" required>
+                    </div>
+                    
+                    <button type="submit" class="btn">
+                        <i class="fas fa-save"></i>
+                        Змінити логін
+                    </button>
+                </form>
+            </div>
 
             <!-- Email Settings -->
             <div class="settings-section">

@@ -1074,12 +1074,23 @@ $db->close();
                 <!-- Company Information Section -->
                 <div class="form-section">
                     <h3>🏢 Інформація про компанію</h3>
-                    
-                    <div class="form-group">
+                      <div class="form-group">
                         <label for="company_name">Назва компанії</label>
                         <input type="text" id="company_name" name="company_name" 
                                value="<?= htmlspecialchars($currentData['company_name'] ?? '') ?>"
                                placeholder="Введіть назву компанії">
+                    </div>
+                    
+                    <!-- Company Logo Section -->
+                    <div class="form-group">
+                        <label>Логотип компанії</label>
+                        <div class="logo-upload-section">
+                            <?php 
+                            // Подготавливаем данные для компонента логотипа
+                            $userData = $currentData; // Используем текущие данные из БД
+                            include __DIR__ . '/components/company_logo_upload.php';
+                            ?>
+                        </div>
                     </div>
                     
                     <div class="form-group">

@@ -507,9 +507,60 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
                 grid-template-columns: 1fr;
             }
 
-            .container {
-                padding: 1rem;
+            .container {            padding: 1rem;
             }
+        }
+
+        /* Footer Styles */
+        .footer {
+            background: #1a202c;
+            color: white;
+            padding: 60px 0 30px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .footer-section h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #eaa850;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+        
+        .footer-links a {
+            color: #a0aec0;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #eaa850;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid #2d3748;
+            padding-top: 2rem;
+            text-align: center;
+            color: #a0aec0;
+        }
+        
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
     </style>
 </head>
@@ -675,17 +726,14 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
                         <?php endif; ?>
                         
                         <!-- Поля для роботодавців -->
-                        <?php if (($profile['role'] ?? '') == 'employer'): ?>
-                            <?php if (!empty($profile['company_name'])): ?>
+                        <?php if (($profile['role'] ?? '') == 'employer'): ?>                            <?php if (!empty($profile['company_name'])): ?>
                             <div class="info-item">
                                 <div class="info-label">
                                     <i class="fas fa-building"></i> Компанія
                                 </div>
                                 <div class="info-value"><?= htmlspecialchars($profile['company_name']) ?></div>
                             </div>
-                            <?php endif; ?>
-                            
-                            <?php if (!empty($profile['company_description'])): ?>
+                            <?php endif; ?>                            <?php if (!empty($profile['company_description'])): ?>
                             <div class="info-item" style="grid-column: 1 / -1;">
                                 <div class="info-label">
                                     <i class="fas fa-file-alt"></i> Опис компанії
@@ -800,9 +848,70 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
                     <h3><i class="fas fa-exclamation-triangle"></i> Профіль не знайдено</h3>
                     <p>Не вдалося завантажити дані профілю.</p>
                 </div>
-            <?php endif; ?>
-        </div>
+            <?php endif; ?>        </div>
     </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="section-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h4>SearchJob</h4>
+                    <p style="color: #a0aec0; margin-bottom: 1.5rem;">
+                        Провідна платформа для пошуку роботи в Україні
+                    </p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" style="color: #eaa850; font-size: 1.25rem;">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" style="color: #eaa850; font-size: 1.25rem;">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" style="color: #eaa850; font-size: 1.25rem;">
+                            <i class="fab fa-telegram-plane"></i>
+                        </a>
+                        <a href="#" style="color: #eaa850; font-size: 1.25rem;">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Для кандидатів</h4>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/vacancy_list.php">Пошук вакансій</a></li>
+                        <li><a href="/frontend/companies_list.php">Компанії</a></li>
+                        <li><a href="/frontend/register.php">Створити резюме</a></li>
+                        <li><a href="#">Кар'єрні поради</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Для роботодавців</h4>
+                    <ul class="footer-links">
+                        <li><a href="/frontend/vacancy_create.php">Додати вакансію</a></li>
+                        <li><a href="/frontend/register.php">Реєстрація компанії</a></li>
+                        <li><a href="#">Пошук кандидатів</a></li>
+                        <li><a href="#">Тарифи</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Підтримка</h4>
+                    <ul class="footer-links">
+                        <li><a href="mailto:support@searchjob.com">support@searchjob.com</a></li>
+                        <li><a href="tel:+380441234567">+380 44 123 45 67</a></li>
+                        <li><a href="#">Допомога</a></li>
+                        <li><a href="#">Умови використання</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 SearchJob. Всі права захищені.</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
         // Theme Toggle
