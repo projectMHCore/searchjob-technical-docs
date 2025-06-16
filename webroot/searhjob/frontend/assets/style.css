@@ -1,6 +1,3 @@
-/* Modern Orange Job Portal Styles - SearchJob Platform */
-/* Inspired by Fiverr, Upwork, Work.ua */
-
 * {
     margin: 0;
     padding: 0;
@@ -8,10 +5,10 @@
 }
 
 :root {
-    /* SearchJob Brand Colors */
+    /* Brand Colors */
     --primary-orange: #eaa850;
     --primary-dark: #d4922a;
-    --primary-light: #f4c272; /* Used for dark theme orange accents */
+    --primary-light: #f4c272; 
     --primary-color: #eaa850;
     --primary-hover: #d4922a;
     --secondary-color: #f97316;
@@ -20,41 +17,34 @@
     --warning-color: #f59e0b;
     --error-color: #ef4444;
     
-    /* Text Colors */
-    --text-primary: #2c3e50; /* MODIFIED from #1e293b */
+    --text-primary: #2c3e50; 
     --text-secondary: #64748b;
     --text-light: #94a3b8;
     --text-white: #ffffff;
     
-    /* Background Colors */
-    --background-primary: #ffffff; /* Default body bg for light theme */
-    --background-secondary: #f8fafc; /* For sections in light theme */
+    --background-primary: #ffffff; 
+    --background-secondary: #f8fafc; 
     --background-light: #f1f5f9;
     
-    /* Border Colors */
-    --border-color: #e2e8f0; /* Light theme default border */
+    --border-color: #e2e8f0; 
     --border-light: #f1f5f9;
-    --border-dark: #334155; /* Original dark border */
-
-    /* Shadow Definitions */
+    --border-dark: #334155;
+    
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     
-    /* Transitions */
     --transition-fast: 0.15s ease-in-out;
     --transition-normal: 0.3s ease-in-out;
     --transition-slow: 0.5s ease-in-out;
     
-    /* Border Radius */
     --radius-sm: 0.375rem;
     --radius-md: 0.5rem;
     --radius-lg: 0.75rem;
     --radius-xl: 1rem;
     --radius-2xl: 1.5rem;
     
-    /* Spacing */
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
     --spacing-md: 1rem;
@@ -62,39 +52,35 @@
     --spacing-xl: 2rem;
     --spacing-2xl: 3rem;
 
-    /* NEW Dark Theme Variables */
-    --dark-bg-primary: #1e293b; /* Body background */
-    --dark-bg-secondary: #161e2b; /* Section backgrounds */
-    --dark-text-primary: #e2e8f0; /* Primary text */
-    --dark-text-secondary: #cbd5e1; /* Secondary text */
-    --dark-border-color: #4a5568; /* Default border in dark theme */
-    --dark-card-bg: #2c3e50; /* Card/input backgrounds */
-    --dark-nav-bg: rgba(30, 41, 59, 0.95); /* Navbar background */
+    /* Dark Theme */
+    --dark-bg-primary: #1e293b; 
+    --dark-bg-secondary: #161e2b; 
+    --dark-text-primary: #e2e8f0; 
+    --dark-text-secondary: #cbd5e1; 
+    --dark-border-color: #4a5568; 
+    --dark-card-bg: #2c3e50; 
+    --dark-nav-bg: rgba(30, 41, 59, 0.95); 
     --dark-theme-toggle-border: #4a5568;
-    --dark-theme-nav-link-hover-bg: rgba(244, 194, 114, 0.1); /* Uses --primary-light for color part */
-
-    /* NEW Variable for nav link hover */
+    --dark-theme-nav-link-hover-bg: rgba(244, 194, 114, 0.1); 
     --primary-orange-hover-bg: rgba(234, 168, 80, 0.1);
 }
 
 body {
     font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
-    background-color: var(--background-primary); /* MODIFIED from --background-secondary */
+    background-color: var(--background-primary); 
     color: var(--text-primary);
     line-height: 1.6;
     font-size: 16px;
     min-height: 100vh;
     overflow-x: hidden;
-    position: relative; /* ADDED */
+    position: relative; 
 }
 
-/* NEW Dark theme base for body */
 body.dark-theme {
     background-color: var(--dark-bg-primary);
     color: var(--dark-text-primary);
 }
 
-/* Typography */
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     line-height: 1.3;
@@ -122,7 +108,6 @@ h6 { font-size: 1rem; }
     padding: 0 var(--spacing-lg);
 }
 
-/* Modern Card Component */
 .card {
     background: var(--background-primary);
     border-radius: var(--radius-xl);
@@ -158,7 +143,7 @@ h6 { font-size: 1rem; }
     line-height: 1.6;
 }
 
-/* Modern Form Components */
+/* Form Components */
 .form-group {
     margin-bottom: var(--spacing-lg);
 }
@@ -196,9 +181,9 @@ input:focus,
 textarea:focus, 
 select:focus {
     outline: none;
-    border-color: var(--primary-orange); /* MODIFIED from --ukraine-blue */
+    border-color: var(--primary-orange); 
     background: var(--background-primary);
-    box-shadow: 0 0 0 3px rgba(234, 168, 80, 0.1); /* MODIFIED to orange theme */
+    box-shadow: 0 0 0 3px rgba(234, 168, 80, 0.1); 
 }
 
 .form-input::placeholder,
@@ -213,7 +198,7 @@ textarea {
     font-family: inherit;
 }
 
-/* Modern Button Components */
+/* Button Components */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -291,35 +276,33 @@ textarea {
     font-size: 1.125rem;
 }
 
-/* Modern Navigation - Assuming .main-navigation is the primary navbar */
+/* Navigation */
 .main-navigation,
 .navbar {
-    position: fixed; /* MODIFIED from sticky */
+    position: fixed;
     top: 0;
-    width: 100%; /* ADDED */
-    background: rgba(255, 255, 255, 0.95); /* MODIFIED for light theme navbar */
-    backdrop-filter: blur(10px); /* ADDED */
+    width: 100%; 
+    background: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(10px); 
     z-index: 1000;
-    transition: background 0.3s ease, box-shadow 0.3s ease; /* MODIFIED */
-    box-shadow: 0 2px 20px rgba(0,0,0,0.1); /* MODIFIED */
-    border-bottom: none; /* REMOVED border */
+    transition: background 0.3s ease, box-shadow 0.3s ease; 
+    box-shadow: 0 2px 20px rgba(0,0,0,0.1); 
+    border-bottom: none; 
 }
 
-/* Main content spacing for fixed navbar */
 .main-content,
 body {
-    padding-top: 80px; /* Add space for fixed navbar */
+    padding-top: 80px; 
 }
 
 .nav-container {
-    max-width: 1400px; /* MODIFIED from 1200px */
+    max-width: 1400px; 
     margin: 0 auto;
-    padding: var(--spacing-md) var(--spacing-xl); /* MODIFIED to 1rem 2rem using variables */
+    padding: var(--spacing-md) var(--spacing-xl); 
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* height: 70px; */ /* REMOVED fixed height */
-    background: transparent; /* ADDED to ensure transparency */
+    background: transparent; 
 }
 
 .nav-brand,
@@ -366,19 +349,19 @@ body {
     font-weight: 500;
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--radius-md);
-    transition: color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast); /* MODIFIED */
+    transition: color var(--transition-fast), background-color var(--transition-fast), transform var(--transition-fast); 
     position: relative;
 }
 
 .nav-link:hover {
     color: var(--primary-orange);
-    background-color: var(--primary-orange-hover-bg); /* MODIFIED */
-    transform: translateY(-2px); /* MODIFIED */
+    background-color: var(--primary-orange-hover-bg); 
+    transform: translateY(-2px); 
 }
 
 .nav-link.active {
     color: var(--primary-orange);
-    background-color: var(--primary-orange-hover-bg); /* MODIFIED */
+    background-color: var(--primary-orange-hover-bg); 
 }
 
 /* Navigation actions */
@@ -681,7 +664,6 @@ body {
     transform: translateY(-2px);
 }
 
-/* Сообщения */
 .message {
     padding: 15px;
     border-radius: 10px;
@@ -707,7 +689,6 @@ body {
     border: 1px solid #bee5eb;
 }
 
-/* Список вакансий */
 .vacancy-card {
     background: white;
     border-radius: 15px;
@@ -756,7 +737,6 @@ body {
     color: #6c757d;
 }
 
-/* Профиль */
 .profile-header {
     text-align: center;
     margin-bottom: 30px;
@@ -800,7 +780,6 @@ body {
     color: #495057;
 }
 
-/* Действия в профиле */
 .profile-actions {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -833,7 +812,6 @@ body {
     opacity: 0.9;
 }
 
-/* Поиск */
 .search-form {
     display: flex;
     gap: 10px;
@@ -850,7 +828,6 @@ body {
     margin: 0;
 }
 
-/* Дополнительные стили для управления вакансиями */
 .vacancy-header {
     display: flex;
     justify-content: space-between;
@@ -1001,7 +978,6 @@ body {
     margin-bottom: 15px;
 }
 
-/* Responsive Design */
 @media (max-width: 1200px) {
     .container {
         max-width: 960px;
@@ -1088,7 +1064,6 @@ body {
     h3 { font-size: 1.25rem; }
 }
 
-/* Accessibility Improvements */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -1099,13 +1074,11 @@ body {
     }
 }
 
-/* Focus Styles */
 *:focus {
     outline: 2px solid var(--ukraine-blue);
     outline-offset: 2px;
 }
 
-/* High Contrast Mode Support */
 @media (prefers-contrast: high) {
     :root {
         --border-color: #000000;
@@ -1113,7 +1086,6 @@ body {
     }
 }
 
-/* Dark Mode Support (Future Enhancement) */
 @media (prefers-color-scheme: dark) {
     :root {
         --text-primary: #f8fafc;
@@ -1124,7 +1096,6 @@ body {
     }
 }
 
-/* Print Styles */
 @media print {
     .nav,
     .main-navigation,
@@ -1144,7 +1115,6 @@ body {
     }
 }
 
-/* Utility Classes */
 .text-center { text-align: center; }
 .text-left { text-align: left; }
 .text-right { text-align: right; }
@@ -1178,7 +1148,6 @@ body {
 .shadow-lg { box-shadow: var(--shadow-lg); }
 .shadow-xl { box-shadow: var(--shadow-xl); }
 
-/* Loading States */
 .loading {
     position: relative;
     color: transparent;
@@ -1204,7 +1173,6 @@ body {
     }
 }
 
-/* Modern Table Styles */
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -1232,7 +1200,6 @@ body {
     background: var(--background-light);
 }
 
-/* Form Validation Styles */
 .form-input.error {
     border-color: var(--error-color);
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
@@ -1257,7 +1224,6 @@ body {
     display: block;
 }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -1275,7 +1241,6 @@ body {
     background: var(--text-light);
 }
 
-/* NEW Theme Toggle Button Styles */
 .theme-toggle {
     background: none;
     border: 2px solid var(--border-color); 
@@ -1297,8 +1262,7 @@ body {
     transform: scale(1.1);
 }
 
-/* NEW Dark Theme Overrides */
-body.dark-theme .main-navigation { /* Or .navbar if class name changes in HTML */
+body.dark-theme .main-navigation { 
     background: var(--dark-nav-bg); 
     box-shadow: 0 2px 20px rgba(0,0,0,0.3);
 }
@@ -1309,7 +1273,7 @@ body.dark-theme .nav-link {
 
 body.dark-theme .nav-link:hover,
 body.dark-theme .nav-link.active {
-    color: var(--primary-light); /* #f4c272 */
+    color: var(--primary-light); 
     background-color: var(--dark-theme-nav-link-hover-bg); 
 }
 
@@ -1323,14 +1287,13 @@ body.dark-theme .theme-toggle:hover {
     color: var(--primary-light);
 }
 
-/* Dark theme for cards */
 body.dark-theme .card {
     background: var(--dark-card-bg);
     border-color: var(--dark-border-color);
-    /* color: var(--dark-text-primary); Ensure text inside card inherits or is set */
+    
 }
 body.dark-theme .card-title,
-body.dark-theme .card-header h1, /* Assuming titles in headers */
+body.dark-theme .card-header h1, 
 body.dark-theme .card-header h2,
 body.dark-theme .card-header h3,
 body.dark-theme .card-header h4,
@@ -1346,7 +1309,6 @@ body.dark-theme .card-header {
     border-bottom-color: var(--dark-border-color);
 }
 
-/* Dark theme for form elements */
 body.dark-theme .form-input,
 body.dark-theme input[type="text"], 
 body.dark-theme input[type="email"], 
@@ -1364,9 +1326,9 @@ body.dark-theme .form-input:focus,
 body.dark-theme input:focus, 
 body.dark-theme textarea:focus, 
 body.dark-theme select:focus {
-    border-color: var(--primary-light); /* Dark theme accent orange */
+    border-color: var(--primary-light); 
     background: var(--dark-card-bg); 
-    box-shadow: 0 0 0 3px var(--dark-theme-nav-link-hover-bg); /* Similar to nav link hover bg for consistency */
+    box-shadow: 0 0 0 3px var(--dark-theme-nav-link-hover-bg); 
 }
 
 body.dark-theme .form-input::placeholder,
@@ -1375,7 +1337,6 @@ body.dark-theme textarea::placeholder {
     color: var(--dark-text-secondary);
 }
 
-/* Ensure headings also adopt dark theme colors if not inheriting */
 body.dark-theme h1, 
 body.dark-theme h2, 
 body.dark-theme h3, 
@@ -1385,7 +1346,6 @@ body.dark-theme h6 {
     color: var(--dark-text-primary);
 }
 
-/* Ensure .nav-brand text color is appropriate in dark mode */
 body.dark-theme .nav-brand {
-    color: var(--primary-orange); /* Keep brand color consistent or use --primary-light if preferred for dark */
+    color: var(--primary-orange); 
 }

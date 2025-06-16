@@ -1,13 +1,6 @@
 <?php
-/**
- * Утилита управления базой данных
- * Позволяет просматривать структуру БД, создавать бэкапы и переустанавливать базу
- */
-
-// Подключение конфигурации
 $config = require __DIR__ . '/../config/db.php';
 
-// Обработка AJAX запросов
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json');
     
@@ -65,11 +58,9 @@ function getTablesList($db) {
     while ($row = $result->fetch_array()) {
         $tableName = $row[0];
         
-        // Получаем количество записей
         $countResult = $db->query("SELECT COUNT(*) as count FROM `$tableName`");
         $count = $countResult->fetch_assoc()['count'];
         
-        // Получаем структуру таблицы
         $structureResult = $db->query("DESCRIBE `$tableName`");
         $structure = [];
         while ($field = $structureResult->fetch_assoc()) {
@@ -94,7 +85,6 @@ function getTableData($db, $table) {
         return ['success' => false, 'message' => 'Не указана таблица'];
     }
     
-    // Защита от SQL инъекций - проверяем что таблица существует
     $tablesResult = $db->query("SHOW TABLES LIKE '$table'");
     if ($tablesResult->num_rows === 0) {
         return ['success' => false, 'message' => 'Таблица не найдена'];
@@ -122,7 +112,6 @@ function createBackup($db, $config) {
     $filename = 'backup_' . date('Y-m-d_H-i-s') . '.sql';
     $filepath = $backupDir . '/' . $filename;
     
-    // Получаем список таблиц
     $tables = [];
     $result = $db->query("SHOW TABLES");
     while ($row = $result->fetch_array()) {
@@ -133,14 +122,11 @@ function createBackup($db, $config) {
     $sql .= "-- Database: " . $config['database'] . "\n\n";
     
     foreach ($tables as $table) {
-        // Структура таблицы
         $result = $db->query("SHOW CREATE TABLE `$table`");
         $row = $result->fetch_assoc();
         $sql .= "-- Table: $table\n";
         $sql .= "DROP TABLE IF EXISTS `$table`;\n";
         $sql .= $row['Create Table'] . ";\n\n";
-        
-        // Данные таблицы
         $result = $db->query("SELECT * FROM `$table`");
         if ($result->num_rows > 0) {
             $sql .= "-- Data for table $table\n";
@@ -166,21 +152,16 @@ function createBackup($db, $config) {
  * Переустановка БД
  */
 function reinstallDatabase($db) {
-    // Получаем список таблиц
     $result = $db->query("SHOW TABLES");
     $tables = [];
     while ($row = $result->fetch_array()) {
         $tables[] = $row[0];
     }
-    
-    // Удаляем все таблицы
     $db->query("SET FOREIGN_KEY_CHECKS = 0");
     foreach ($tables as $table) {
         $db->query("DROP TABLE IF EXISTS `$table`");
     }
     $db->query("SET FOREIGN_KEY_CHECKS = 1");
-    
-    // Запускаем скрипт инициализации
     ob_start();
     include __DIR__ . '/init_database.php';
     $output = ob_get_clean();
@@ -193,12 +174,8 @@ function reinstallDatabase($db) {
  */
 function getDatabaseStats($db) {
     $stats = [];
-    
-    // Общая информация о БД
     $result = $db->query("SELECT VERSION() as version");
     $stats['mysql_version'] = $result->fetch_assoc()['version'];
-    
-    // Размер БД
     $result = $db->query("
         SELECT 
             ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) AS size_mb
@@ -206,8 +183,6 @@ function getDatabaseStats($db) {
         WHERE table_schema = DATABASE()
     ");
     $stats['size_mb'] = $result->fetch_assoc()['size_mb'];
-    
-    // Количество таблиц
     $result = $db->query("SHOW TABLES");
     $stats['tables_count'] = $result->num_rows;
     
@@ -512,7 +487,6 @@ function getDatabaseStats($db) {
     </div>
 
     <script>
-        // Загрузка статистики при открытии страницы
         document.addEventListener('DOMContentLoaded', function() {
             loadStats();
         });

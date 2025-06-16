@@ -1,9 +1,8 @@
 <?php
-// Страница управления вакансиями для работодателя (MVC архитектура)
 require_once __DIR__ . '/controllers/VacancyController.php';
 session_start();
 
-// Проверяем авторизацию
+// авторизация
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'employer') {
     header('Location: login.php');
     exit;

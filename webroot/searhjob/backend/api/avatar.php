@@ -10,14 +10,12 @@ require_once __DIR__ . '/../models/User.php';
 
 header('Content-Type: application/json');
 
-// Проверяем авторизацию
 if (!isset($_SESSION['token'])) {
     http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Требуется авторизация']);
     exit;
 }
 
-// Получаем пользователя по токену
 $user = new User();
 $userData = $user->getUserByToken($_SESSION['token']);
 
@@ -35,7 +33,6 @@ try {
     
     switch ($method) {
         case 'POST':
-            // Загрузка нового аватара
             if (isset($_FILES['avatar'])) {
                 $result = $avatarController->uploadAvatar($userId, $_FILES['avatar']);
                 echo json_encode($result);
@@ -45,13 +42,11 @@ try {
             break;
             
         case 'DELETE':
-            // Удаление аватара
             $result = $avatarController->deleteAvatar($userId);
             echo json_encode($result);
             break;
             
         case 'GET':
-            // Получение информации об аватаре
             $user = new User();
             $avatarPath = $user->getAvatarPath($userId);            if ($avatarPath) {
                 echo json_encode([

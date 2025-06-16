@@ -431,7 +431,6 @@ async function uploadCompanyLogo(input) {
             messageDiv.className = 'upload-message success';
             messageDiv.innerHTML = '<i class="fas fa-check"></i> ' + result.message;
             
-            // Обновляем интерфейс
             const placeholder = document.getElementById('logoPlaceholder');
             if (placeholder) {
                 placeholder.outerHTML = `
@@ -448,7 +447,6 @@ async function uploadCompanyLogo(input) {
                 document.getElementById('logoImage').src = result.logo_path;
             }
             
-            // Обновляем кнопки
             location.reload();
             
         } else {
@@ -460,10 +458,8 @@ async function uploadCompanyLogo(input) {
         messageDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Помилка мережі';
     }
     
-    // Очищаем input
     input.value = '';
     
-    // Скрываем сообщение через 5 секунд
     setTimeout(() => {
         messageDiv.style.display = 'none';
     }, 5000);
@@ -492,7 +488,6 @@ async function deleteCompanyLogo() {
             messageDiv.className = 'upload-message success';
             messageDiv.innerHTML = '<i class="fas fa-check"></i> ' + result.message;
             
-            // Перезагружаем страницу для обновления интерфейса
             setTimeout(() => {
                 location.reload();
             }, 1000);

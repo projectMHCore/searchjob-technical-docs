@@ -1,9 +1,4 @@
 <?php
-/**
- * Скрипт для добавления поля avatar в таблицу users
- */
-
-// Подключение к БД
 $config = require __DIR__ . '/../backend/config/db.php';
 $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database'], $config['port']);
 
@@ -13,7 +8,6 @@ if ($db->connect_error) {
 
 echo "<h1>Добавление поля avatar в таблицу users</h1>";
 
-// Проверяем, существует ли уже поле avatar
 $result = $db->query("SHOW COLUMNS FROM users LIKE 'avatar'");
 
 if ($result->num_rows > 0) {
@@ -21,7 +15,6 @@ if ($result->num_rows > 0) {
 } else {
     echo "<h2>Добавляем поле avatar...</h2>";
     
-    // Добавляем поле avatar
     $sql = "ALTER TABLE users ADD COLUMN avatar VARCHAR(255) NULL AFTER company_industry";
     
     if ($db->query($sql)) {
@@ -30,8 +23,6 @@ if ($result->num_rows > 0) {
         echo "<p style='color: red;'>❌ Ошибка добавления поля: " . $db->error . "</p>";
     }
 }
-
-// Показываем структуру таблицы
 echo "<h2>Текущая структура таблицы users:</h2>";
 $result = $db->query("DESCRIBE users");
 

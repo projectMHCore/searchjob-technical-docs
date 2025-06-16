@@ -1,5 +1,4 @@
 <?php
-// Контроллер для авторизации пользователя (MVC архитектура)
 require_once __DIR__ . '/../models/UserModel.php';
 session_start();
 
@@ -48,7 +47,6 @@ class LoginController {
         } else {
             $error = 'Некорректный запрос!';
         }
-          // Перенаправляем с ошибкой
         header('Location: login.php?error=' . urlencode($error ?? 'Неизвестная ошибка'));
         exit;
     }
@@ -65,15 +63,12 @@ class LoginController {
      * Рендеринг представления
      */
     private function render($view, $data = []) {
-        // Извлекаем переменные для использования в представлении
         extract($data);
         
-        // Подключаем новую профессиональную версию представления
         $viewFile = __DIR__ . "/../views/{$view}_view_new.php";
         if (file_exists($viewFile)) {
             include $viewFile;
         } else {
-            // Fallback на старую версию, если новая не найдена
             $fallbackFile = __DIR__ . "/../views/{$view}_view.php";
             if (file_exists($fallbackFile)) {
                 include $fallbackFile;

@@ -8,8 +8,6 @@ echo "</pre>";
 if (isset($_SESSION['token'])) {
     echo "<h3>Тестирование API с токеном</h3>";
     $token = $_SESSION['token'];
-    
-    // Тестируем API вакансий
     $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
     $host = $_SERVER['HTTP_HOST'];
     $currentDir = dirname($_SERVER['REQUEST_URI']);

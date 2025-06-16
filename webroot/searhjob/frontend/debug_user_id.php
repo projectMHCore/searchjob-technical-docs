@@ -7,7 +7,6 @@ echo "<style>body { font-family: Arial, sans-serif; margin: 20px; } .debug-secti
 echo "</head><body>";
 echo "<h1>🔍 User ID Debug Analysis</h1>";
 
-// Проверяем сессию
 echo "<div class='debug-section'>";
 echo "<h2>1. Session Data</h2>";
 if (empty($_SESSION)) {
@@ -22,7 +21,6 @@ print_r($_SESSION);
 echo "</pre>";
 echo "</div>";
 
-// Проверяем, есть ли токен
 if (!isset($_SESSION['token'])) {
     echo "<div class='debug-section'>";
     echo "<div class='error'>❌ No token in session</div>";
@@ -30,7 +28,6 @@ if (!isset($_SESSION['token'])) {
     exit;
 }
 
-// Подключаем модель User
 require_once __DIR__ . '/../backend/models/User.php';
 $user = new User();
 
@@ -62,7 +59,6 @@ if ($userData) {
 }
 echo "</div>";
 
-// Проверяем аватар
 echo "<div class='debug-section'>";
 echo "<h2>3. Avatar File Check</h2>";
 
@@ -70,7 +66,6 @@ if (isset($tokenUserId)) {
     $avatarPath = $user->getAvatarPath($tokenUserId);
     echo "<strong>Avatar path from DB:</strong> " . ($avatarPath ? $avatarPath : 'NULL') . "<br>";
     
-    // Проверяем файлы аватаров в директории
     $uploadsDir = __DIR__ . '/../uploads/avatars/';
     if (is_dir($uploadsDir)) {
         $files = scandir($uploadsDir);
@@ -85,7 +80,6 @@ if (isset($tokenUserId)) {
             foreach ($avatarFiles as $file) {
                 echo "- $file<br>";
                 
-                // Проверяем, содержит ли имя файла ID пользователя
                 if (strpos($file, (string)$tokenUserId) !== false) {
                     echo "  ✅ Contains correct user ID ($tokenUserId)<br>";
                 } elseif (strpos($file, (string)$sessionUserId) !== false) {
@@ -101,13 +95,11 @@ if (isset($tokenUserId)) {
 }
 echo "</div>";
 
-// Проверяем таблицу user_tokens
 echo "<div class='debug-section'>";
 echo "<h2>4. Token Table Check</h2>";
 
 $token = $_SESSION['token'];
 
-// Используем отдельное соединение с БД, так как $user->db приватное
 $config = require __DIR__ . '/../backend/config/db.php';
 $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database'], $config['port']);
 
@@ -136,7 +128,6 @@ if ($db->connect_error) {
 }
 echo "</div>";
 
-// Проверяем все токены пользователя
 if (isset($sessionUserId) && is_numeric($sessionUserId) && isset($db)) {
     echo "<div class='debug-section'>";
     echo "<h2>5. All Tokens for Session User ID ($sessionUserId)</h2>";
@@ -160,7 +151,6 @@ if (isset($sessionUserId) && is_numeric($sessionUserId) && isset($db)) {
     echo "</div>";
 }
 
-// Закрываем соединение с базой данных
 if (isset($db)) {
     $db->close();
 }

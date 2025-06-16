@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Проверяем авторизацию
 if (!isset($_SESSION['token'])) {
     header('Location: login.php');
     exit;

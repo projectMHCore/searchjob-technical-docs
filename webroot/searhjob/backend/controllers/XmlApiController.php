@@ -1,12 +1,11 @@
 <?php
-// XML API-контроллер для работы с вакансиями (согласно требованиям Lab-2)
+// XML API-контроллер для работы с вакансиями
 require_once __DIR__ . '/../models/Vacancy.php';
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/ApiLogController.php';
 
 header('Content-Type: application/xml; charset=utf-8');
 
-// Логируем запрос
 log_api([
     'request' => $_SERVER['REQUEST_URI'],
     'method' => $_SERVER['REQUEST_METHOD'],
@@ -15,14 +14,12 @@ log_api([
     'format' => 'XML'
 ]);
 
-// Совместимая функция для получения заголовков
 function getRequestHeaders() {
     $headers = [];
     if (function_exists('getallheaders')) {
         return getallheaders();
     }
     
-    // Альтернативный способ для хостингов без getallheaders
     foreach ($_SERVER as $key => $value) {
         if (strpos($key, 'HTTP_') === 0) {
             $header = str_replace('_', '-', substr($key, 5));
@@ -37,11 +34,7 @@ function getRequestHeaders() {
  */
 function sendXmlResponse($data, $statusCode = 200) {
     global $path, $method;
-    
-    // Устанавливаем код статуса
     http_response_code($statusCode);
-    
-    // Преобразуем данные в XML
     $xml = new DOMDocument('1.0', 'UTF-8');
     $xml->formatOutput = true;
     
@@ -51,8 +44,6 @@ function sendXmlResponse($data, $statusCode = 200) {
     arrayToXml($data, $xml, $root);
     
     $xmlResponse = $xml->saveXML();
-    
-    // Логируем ответ
     log_api([
         'response' => $data,
         'path' => $path,
@@ -100,8 +91,6 @@ function parseXmlInput() {
         if ($xml === false) {
             return [];
         }
-        
-        // Преобразуем SimpleXMLElement в массив
         return json_decode(json_encode($xml), true);
     } catch (Exception $e) {
         error_log("Ошибка парсинга XML: " . $e->getMessage());
@@ -109,7 +98,6 @@ function parseXmlInput() {
     }
 }
 
-// Получаем токен авторизации
 $headers = getRequestHeaders();
 $authToken = null;
 if (isset($headers['Authorization'])) {
@@ -118,19 +106,14 @@ if (isset($headers['Authorization'])) {
         $authToken = substr($authHeader, 7);
     }
 }
-
-// Определяем действие
 $action = $_GET['action'] ?? '';
 $method = $_SERVER['REQUEST_METHOD'];
 $path = $_SERVER['REQUEST_URI'];
 
 $vacancyModel = new Vacancy();
 $userModel = new User();
-
-// Маршрутизация запросов
 switch ($action) {
     case 'list':
-        // GET /xml-api?action=list - получение списка вакансий
         if ($method === 'GET') {
             $vacancies = $vacancyModel->getAll();
             sendXmlResponse(['success' => true, 'vacancies' => $vacancies]);
@@ -138,7 +121,6 @@ switch ($action) {
         break;
         
     case 'list_xml':
-        // GET /xml-api?action=list_xml - получение вакансий из XML файлов
         if ($method === 'GET') {
             $vacancies = $vacancyModel->getAllVacanciesFromXML();
             sendXmlResponse(['success' => true, 'vacancies' => $vacancies, 'source' => 'xml']);
@@ -146,14 +128,11 @@ switch ($action) {
         break;
         
     case 'get':
-        // GET /xml-api?action=get&id=123 - получение конкретной вакансии
         if ($method === 'GET') {
             $id = intval($_GET['id'] ?? 0);
             if ($id > 0) {
-                // Сначала пытаемся получить из XML
                 $vacancy = $vacancyModel->getVacancyFromXML($id);
                 if (!$vacancy) {
-                    // Если нет в XML, получаем из БД
                     $vacancy = $vacancyModel->getById($id);
                 }
                 
@@ -169,9 +148,7 @@ switch ($action) {
         break;
         
     case 'create':
-        // POST /xml-api?action=create - создание вакансии
         if ($method === 'POST') {
-            // Проверяем авторизацию
             if (!$authToken) {
                 sendXmlResponse(['success' => false, 'error' => 'Требуется авторизация'], 401);
             }
@@ -181,8 +158,7 @@ switch ($action) {
             }
             
             $user_id = $user['id'];
-            
-            // Парсим XML данные
+    
             $data = parseXmlInput();
             
             $title = trim($data['title'] ?? '');
@@ -217,9 +193,7 @@ switch ($action) {
         break;
         
     case 'update':
-        // PUT /xml-api?action=update&id=123 - обновление вакансии
         if ($method === 'PUT') {
-            // Проверяем авторизацию
             if (!$authToken) {
                 sendXmlResponse(['success' => false, 'error' => 'Требуется авторизация'], 401);
             }
@@ -233,7 +207,6 @@ switch ($action) {
                 sendXmlResponse(['success' => false, 'error' => 'Некорректный ID'], 400);
             }
             
-            // Парсим XML данные
             $data = parseXmlInput();
             
             $updateData = [
@@ -260,9 +233,7 @@ switch ($action) {
         break;
         
     case 'delete':
-        // DELETE /xml-api?action=delete&id=123 - удаление вакансии
         if ($method === 'DELETE') {
-            // Проверяем авторизацию
             if (!$authToken) {
                 sendXmlResponse(['success' => false, 'error' => 'Требуется авторизация'], 401);
             }

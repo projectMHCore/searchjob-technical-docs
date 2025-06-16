@@ -541,12 +541,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Theme toggle functionality
             const themeToggle = document.getElementById('theme-toggle');
             const html = document.documentElement;
             const icon = themeToggle.querySelector('i');
-            
-            // Load saved theme
             const savedTheme = localStorage.getItem('theme') || 'light';
             html.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
@@ -558,8 +555,6 @@
                 html.setAttribute('data-theme', newTheme);
                 localStorage.setItem('theme', newTheme);
                 updateThemeIcon(newTheme);
-                
-                // Add animation
                 themeToggle.style.transform = 'rotate(360deg)';
                 setTimeout(() => {
                     themeToggle.style.transform = '';
@@ -573,8 +568,6 @@
                     icon.className = 'fas fa-moon';
                 }
             }
-
-            // Enhanced form animations
             const formInputs = document.querySelectorAll('.form-input');
             formInputs.forEach(input => {
                 input.addEventListener('focus', function() {
@@ -585,8 +578,6 @@
                     this.parentElement.style.transform = 'scale(1)';
                 });
             });
-
-            // Button hover effects
             document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
                 button.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-2px) scale(1.05)';

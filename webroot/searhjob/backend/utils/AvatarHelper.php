@@ -3,21 +3,16 @@
  * Утилиты для работы с аватарами пользователей
  */
 
-class AvatarHelper {    /**
-     * Получение URL аватара пользователя
-     */
+class AvatarHelper {    
     public static function getAvatarUrl($avatarPath, $size = 'full') {
         if (empty($avatarPath)) {
             return null;
         }
-        
-        // Очищаем путь от префикса frontend/, если он есть
         $cleanPath = $avatarPath;
         if (strpos($cleanPath, 'frontend/') === 0) {
-            $cleanPath = substr($cleanPath, 9); // удаляем 'frontend/'
+            $cleanPath = substr($cleanPath, 9); 
         }
         
-        // Используем относительный путь от текущей страницы
         $baseUrl = './';
         
         if ($size === 'thumb') {
@@ -37,12 +32,10 @@ class AvatarHelper {    /**
         $userName = trim(($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? ''));
         $login = $user['login'] ?? 'User';
         
-        // Определяем размеры
         $dimensions = self::getSizeDimensions($size);
         $width = $dimensions['width'];
         $height = $dimensions['height'];
         
-        // Базовые CSS классы
         $baseClasses = "user-avatar avatar-{$size}";
         $allClasses = trim($baseClasses . ' ' . $cssClasses);
         
@@ -51,7 +44,6 @@ class AvatarHelper {    /**
             $avatarUrl = self::getAvatarUrl($avatarPath, $size === 'small' ? 'thumb' : 'full');
             $altText = !empty($userName) ? $userName : $login;
             
-            // Проверяем, существует ли файл
             $fullPath = __DIR__ . '/../../frontend/' . ($avatarPath);
             if (strpos($avatarPath, 'frontend/') === 0) {
                 $fullPath = __DIR__ . '/../../' . $avatarPath;
@@ -61,7 +53,6 @@ class AvatarHelper {    /**
                 $html .= "<img src=\"{$avatarUrl}\" alt=\"{$altText}\" " .
                          "style=\"width: 100%; height: 100%; object-fit: cover; border-radius: 50%;\">";
             } else {
-                // Файл не существует, показываем инициалы
                 $initials = self::getInitials($userName ?: $login);
                 $fontSize = $width * 0.4;
                 $html .= "<div class=\"avatar-initials\" style=\"width: 100%; height: 100%; " .
@@ -71,7 +62,6 @@ class AvatarHelper {    /**
                          $initials . "</div>";
             }
         } else {
-            // Отображаем инициалы, если нет аватара
             $initials = self::getInitials($userName ?: $login);
             $fontSize = $width * 0.4;
             
@@ -128,9 +118,8 @@ class AvatarHelper {    /**
                 return ['width' => 48, 'height' => 48];
         }
     }
-    
     /**
-     * CSS стили для аватаров (можно включить в head)
+     * Генерация CSS для аватаров
      */
     public static function getAvatarCSS() {
         return "

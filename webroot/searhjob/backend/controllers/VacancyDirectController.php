@@ -5,7 +5,6 @@ require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/ApiLogController.php';
 header('Content-Type: application/json; charset=utf-8');
 
-// Логируем запрос
 log_api([
     'request' => $_SERVER['REQUEST_URI'],
     'method' => $_SERVER['REQUEST_METHOD'],
@@ -17,20 +16,15 @@ log_api([
  * Функция для отправки JSON ответа с логированием
  */
 function sendJsonResponse($data, $statusCode = 200) {
-    // Устанавливаем код статуса
     http_response_code($statusCode);
-    
-    // Преобразуем данные в JSON
     $jsonResponse = json_encode($data);
     
-    // Логируем ответ
     log_api([
         'response' => $data,
         'status_code' => $statusCode,
         'time' => date('Y-m-d H:i:s')
     ]);
     
-    // Отправляем ответ
     echo $jsonResponse;
 }
 
@@ -42,7 +36,6 @@ function getAuthToken() {
     if (function_exists('getallheaders')) {
         $headers = getallheaders();
     } else {
-        // Альтернативный способ для хостингов без getallheaders
         foreach ($_SERVER as $key => $value) {
             if (strpos($key, 'HTTP_') === 0) {
                 $header = str_replace('_', '-', substr($key, 5));
@@ -60,8 +53,6 @@ function getAuthToken() {
     
     return $token;
 }
-
-// Обрабатываем запрос
 try {
     $method = $_SERVER['REQUEST_METHOD'];
     $path = $_GET['action'] ?? '';
@@ -72,7 +63,6 @@ try {
     switch ($path) {
         case 'create':
             if ($method === 'POST') {
-                // Получаем токен и проверяем авторизацию
                 $token = getAuthToken();
                 $user_id = $userModel->getUserIdByToken($token);
                 
@@ -80,8 +70,6 @@ try {
                     sendJsonResponse(['success' => false, 'error' => 'Неавторизовано'], 401);
                     break;
                 }
-                
-                // Получаем данные из POST запроса
                 $data = json_decode(file_get_contents('php://input'), true);
                 $title = trim($data['title'] ?? '');
                 $description = trim($data['description'] ?? '');
@@ -132,7 +120,6 @@ try {
             
         case 'update':
             if ($method === 'PUT' || $method === 'POST') {
-                // Получаем токен и проверяем авторизацию
                 $token = getAuthToken();
                 $user_id = $userModel->getUserIdByToken($token);
                 
@@ -143,7 +130,6 @@ try {
                 
                 $id = intval($_GET['id'] ?? 0);
                 if ($id > 0) {
-                    // Получаем данные из запроса
                     $data = json_decode(file_get_contents('php://input'), true);
                     $title = trim($data['title'] ?? '');
                     $description = trim($data['description'] ?? '');
@@ -172,7 +158,6 @@ try {
             
         case 'my_vacancies':
             if ($method === 'GET') {
-                // Получаем токен и проверяем авторизацию
                 $token = getAuthToken();
                 $user_id = $userModel->getUserIdByToken($token);
                 
@@ -188,7 +173,6 @@ try {
             
         case 'delete':
             if ($method === 'DELETE' || $method === 'POST') {
-                // Получаем токен и проверяем авторизацию
                 $token = getAuthToken();
                 $user_id = $userModel->getUserIdByToken($token);
                 
@@ -215,7 +199,6 @@ try {
             sendJsonResponse(['success' => false, 'error' => 'Маршрут не найден'], 404);
     }
 } catch (Exception $e) {
-    // Логируем ошибку
     error_log("API Error: " . $e->getMessage());
     sendJsonResponse(['success' => false, 'error' => 'Внутренняя ошибка сервера: ' . $e->getMessage()], 500);
 }

@@ -1,5 +1,4 @@
 <?php
-// Контроллер для профиля пользователя
 require_once __DIR__ . '/../models/User.php';
 session_start();
 if (!isset($_SESSION['user_id'])) {
@@ -9,4 +8,3 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $userModel = new User();
 $profile = $userModel->getProfile($user_id);
-// Можно добавить обработку обновления профиля через POST (если потребуется)

@@ -1,14 +1,10 @@
 <?php
-// Клиентская модель для работы с заявками на вакансии
 class ApplicationModel {
     private $apiBaseUrl;
       public function __construct() {
-        // Определяем базовый URL для API запросов
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
         $host = $_SERVER['HTTP_HOST'];
         $currentDir = dirname($_SERVER['REQUEST_URI']);
-        
-        // Строим путь к backend API
         $this->apiBaseUrl = $protocol . $host . str_replace('/frontend', '/backend', $currentDir) . '/controllers';
     }
       /**
@@ -24,7 +20,6 @@ class ApplicationModel {
     public function getUserApplications($token, $filters = []) {
         $url = $this->apiBaseUrl . '/ApiController.php?action=my_applications';
         
-        // Добавляем фильтры к URL
         if (!empty($filters['status'])) {
             $url .= '&status=' . urlencode($filters['status']);
         }
@@ -41,7 +36,6 @@ class ApplicationModel {
     public function getEmployerApplications($token, $filters = []) {
         $url = $this->apiBaseUrl . '/ApiController.php?action=employer_applications';
         
-        // Добавляем фильтры к URL
         if (!empty($filters['status'])) {
             $url .= '&status=' . urlencode($filters['status']);
         }
@@ -79,12 +73,10 @@ class ApplicationModel {
             ]
         ];
         
-        // Добавляем токен авторизации если есть
         if ($token) {
             $context['http']['header'][] = 'Authorization: Bearer ' . $token;
         }
-        
-        // Добавляем данные для POST/PUT запросов
+
         if ($data && in_array($method, ['POST', 'PUT'])) {
             $context['http']['content'] = json_encode($data);
         }

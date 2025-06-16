@@ -1,5 +1,4 @@
 <?php
-// Контроллер для регистрации пользователей (MVC архитектура)
 require_once __DIR__ . '/../models/UserModel.php';
 session_start();
 
@@ -25,7 +24,6 @@ class RegisterController {
      * Обработка регистрации
      */
     public function store() {
-        // Включаем буферизацию для предотвращения проблем с заголовками
         ob_start();
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -56,7 +54,7 @@ class RegisterController {
                   $result = $this->userModel->register($data);
                 
                 if ($result['success']) {
-                    ob_end_clean(); // Очищаем буфер перед редиректом
+                    ob_end_clean(); 
                     header('Location: register.php?success=registered');
                     exit;
                 } else {
@@ -66,9 +64,7 @@ class RegisterController {
         } else {
             $error = 'Некорректный запрос!';        }
         
-        // Очищаем буфер перед редиректом
         ob_end_clean();
-        // Передаём ошибку обратно на форму
         header('Location: register.php?error=' . urlencode($error));
         exit;
     }
@@ -88,19 +84,14 @@ class RegisterController {
                 break;
         }
     }
-
-    /**
-     * Рендеринг представления
-     */    private function render($view, $data = []) {
-        // Извлекаем переменные для использования в представлении
+     private function render($view, $data = []) {
+        
         extract($data);
         
-        // Подключаем новую профессиональную версию представления
         $viewFile = __DIR__ . "/../views/{$view}_view_new.php";
         if (file_exists($viewFile)) {
             include $viewFile;
         } else {
-            // Fallback на старую версию, если новая не найдена
             $fallbackFile = __DIR__ . "/../views/{$view}_view.php";
             if (file_exists($fallbackFile)) {
                 include $fallbackFile;

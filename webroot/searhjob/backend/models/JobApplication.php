@@ -1,5 +1,4 @@
 <?php
-// Модель для работы с откликами на вакансии
 class JobApplication {
     private $db;
     
@@ -18,8 +17,6 @@ class JobApplication {
         $vacancy_id = intval($vacancy_id);
         $user_id = intval($user_id);
         $cover_letter = $this->db->real_escape_string($cover_letter);
-        
-        // Проверяем, что пользователь еще не откликался на эту вакансию
         $check = $this->db->query("SELECT id FROM job_applications WHERE vacancy_id = $vacancy_id AND user_id = $user_id");
         if ($check && $check->num_rows > 0) {
             return ['success' => false, 'error' => 'Вы уже откликнулись на эту вакансию'];
@@ -41,14 +38,10 @@ class JobApplication {
         $user_id = intval($user_id);
         
         $where_conditions = ["ja.user_id = $user_id"];
-        
-        // Добавляем фильтр по статусу
         if (!empty($filters['status'])) {
             $status = $this->db->real_escape_string($filters['status']);
             $where_conditions[] = "ja.status = '$status'";
         }
-        
-        // Добавляем фильтр по вакансии
         if (!empty($filters['vacancy'])) {
             $vacancy_title = $this->db->real_escape_string($filters['vacancy']);
             $where_conditions[] = "v.title LIKE '%$vacancy_title%'";
@@ -86,13 +79,10 @@ class JobApplication {
         
         $where_conditions = ["v.employer_id = $employer_id"];
         
-        // Добавляем фильтр по статусу
         if (!empty($filters['status'])) {
             $status = $this->db->real_escape_string($filters['status']);
             $where_conditions[] = "ja.status = '$status'";
         }
-        
-        // Добавляем фильтр по вакансии
         if (!empty($filters['vacancy'])) {
             $vacancy_title = $this->db->real_escape_string($filters['vacancy']);
             $where_conditions[] = "v.title LIKE '%$vacancy_title%'";
@@ -130,8 +120,6 @@ class JobApplication {
         $application_id = intval($application_id);
         $status = $this->db->real_escape_string($status);
         $employer_id = intval($employer_id);
-        
-        // Проверяем, что отклик принадлежит вакансии этого работодателя
         $check = $this->db->query("
             SELECT ja.id FROM job_applications ja
             JOIN vacancies v ON ja.vacancy_id = v.id
@@ -184,8 +172,6 @@ class JobApplication {
     public function hasEmployerAccessToCandidate($employer_id, $candidate_id) {
         $employer_id = intval($employer_id);
         $candidate_id = intval($candidate_id);
-        
-        // Проверяем, что кандидат подавал заявку на одну из вакансий работодателя
         $sql = "
             SELECT COUNT(*) as count
             FROM job_applications ja

@@ -1,11 +1,9 @@
 <?php
-// Страница настроек аккаунта пользователя
 session_start();
 
 require_once __DIR__ . '/../backend/config/db.php';
 require_once __DIR__ . '/../backend/models/User.php';
 
-// Проверяем авторизацию
 if (!isset($_SESSION['token'])) {
     header('Location: login.php');
     exit;
@@ -23,7 +21,6 @@ $message = '';
 $success = false;
 $error = '';
 
-// Обработка формы
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     
@@ -36,10 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
             $error = 'Некоректний формат email!';
         } else {
-            // Проверяем текущий пароль
             $result = $userModel->login($userData['login'], $password);
             if ($result['success']) {
-                // Проверяем, что email не занят
                 $config = require __DIR__ . '/../backend/config/db.php';
                 $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
                 
@@ -51,14 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($existingUser->num_rows > 0) {
                     $error = 'Цей email вже використовується!';
                 } else {
-                    // Обновляем email
                     $stmt = $db->prepare("UPDATE users SET email = ? WHERE id = ?");
                     $stmt->bind_param("si", $newEmail, $userData['id']);
                     
                     if ($stmt->execute()) {
                         $success = true;
                         $message = 'Email успішно змінено!';
-                        $userData['email'] = $newEmail; // Обновляем в текущих данных
+                        $userData['email'] = $newEmail;
                     } else {
                         $error = 'Помилка оновлення email!';
                     }
@@ -76,10 +70,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif (strlen($newLogin) < 3) {
             $error = 'Логін повинен містити мінімум 3 символи!';
         } else {
-            // Проверяем текущий пароль
             $result = $userModel->login($userData['login'], $password);
             if ($result['success']) {
-                // Проверяем, что логин не занят
                 $config = require __DIR__ . '/../backend/config/db.php';
                 $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
                 
@@ -91,14 +83,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($existingUser->num_rows > 0) {
                     $error = 'Цей логін вже використовується!';
                 } else {
-                    // Обновляем логин
                     $stmt = $db->prepare("UPDATE users SET login = ? WHERE id = ?");
                     $stmt->bind_param("si", $newLogin, $userData['id']);
                     
                     if ($stmt->execute()) {
                         $success = true;
                         $message = 'Логін успішно змінено!';
-                        $userData['login'] = $newLogin; // Обновляем в текущих данных
+                        $userData['login'] = $newLogin; 
                     } else {
                         $error = 'Помилка оновлення логіна!';
                     }
@@ -120,10 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif (strlen($newPassword) < 6) {
             $error = 'Пароль повинен містити мінімум 6 символів!';
         } else {
-            // Проверяем текущий пароль
             $result = $userModel->login($userData['login'], $currentPassword);
             if ($result['success']) {
-                // Обновляем пароль
                 $config = require __DIR__ . '/../backend/config/db.php';
                 $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
                 
@@ -161,7 +150,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <style>
-        /* Base styles and theme variables */
         * {
             margin: 0;
             padding: 0;
@@ -191,8 +179,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: var(--bg-primary);
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-
-        /* Dark Theme */
         [data-theme="dark"] {
             --bg-primary: #1a202c;
             --bg-secondary: #2d3748;
@@ -203,8 +189,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             --border-color: #4a5568;
             --shadow: rgba(0,0,0,0.3);
         }
-
-        /* Navigation */
         .navbar {
             position: fixed;
             top: 0;
@@ -283,8 +267,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: var(--primary-color);
             transform: scale(1.1);
         }
-
-        /* Main content */
         .main-content {
             margin-top: 80px;
             min-height: calc(100vh - 80px);
@@ -331,8 +313,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             opacity: 0.9;
             position: relative;
         }
-
-        /* Settings Cards */
         .settings-section {
             background: var(--bg-primary);
             border: 1px solid var(--border-color);
@@ -362,8 +342,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: var(--primary-color);
             font-size: 1.75rem;
         }
-
-        /* Form Styles */
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -427,8 +405,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: var(--border-color);
             transform: translateY(-1px);
         }
-
-        /* Alert Messages */
         .alert {
             padding: 1rem 1.5rem;
             border-radius: 8px;
@@ -471,8 +447,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: var(--text-primary);
             font-weight: 600;
         }
-
-        /* Back Link */
         .back-link {
             display: inline-flex;
             align-items: center;
@@ -488,8 +462,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transform: translateX(-5px);
             color: var(--primary-dark);
         }
-
-        /* Responsive */
         @media (max-width: 768px) {
             .nav-menu {
                 display: none;
@@ -704,7 +676,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </main>
 
     <script>
-        // Theme Toggle
         function toggleTheme() {
             const body = document.body;
             const currentTheme = body.getAttribute('data-theme');
@@ -716,16 +687,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             const themeIcon = document.querySelector('.theme-toggle i');
             themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
-
-        // Load saved theme
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.body.setAttribute('data-theme', savedTheme);
             
             const themeIcon = document.querySelector('.theme-toggle i');
             themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-
-            // Password confirmation validation
             const newPassword = document.getElementById('new_password');
             const confirmPassword = document.getElementById('confirm_password');
             

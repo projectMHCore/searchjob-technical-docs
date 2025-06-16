@@ -767,7 +767,6 @@
             </div>
         </div>
     </footer><script>
-        // Theme Management
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
@@ -775,28 +774,20 @@
             document.documentElement.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
             
-            // Update theme icon
             const themeIcon = document.querySelector('.theme-toggle i');
             if (themeIcon) {
                 themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
             }
         }
-
-        // Initialize theme on page load
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            
-            // Set initial icon
             const themeIcon = document.querySelector('.theme-toggle i');
             if (themeIcon) {
                 themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
             }
         });
-
-        // Form enhancements
         document.addEventListener('DOMContentLoaded', function() {
-            // Auto-resize textareas
             const textareas = document.querySelectorAll('textarea');
             textareas.forEach(textarea => {
                 textarea.addEventListener('input', function() {
@@ -804,8 +795,6 @@
                     this.style.height = (this.scrollHeight) + 'px';
                 });
             });
-
-            // Form validation feedback
             const form = document.querySelector('.vacancy-form');
             if (form) {
                 form.addEventListener('submit', function(e) {

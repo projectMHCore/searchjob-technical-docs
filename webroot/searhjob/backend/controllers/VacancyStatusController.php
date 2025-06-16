@@ -5,7 +5,6 @@ session_start();
 require_once __DIR__ . '/../models/Vacancy.php';
 require_once __DIR__ . '/../models/User.php';
 
-// Проверяем авторизацию
 if (!isset($_SESSION['token']) || $_SESSION['user_role'] !== 'employer') {
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Неавторизовано']);

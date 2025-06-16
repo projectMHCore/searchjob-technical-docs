@@ -341,7 +341,6 @@
     </main>
 
     <script>
-        // Theme toggle functionality
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
@@ -349,13 +348,9 @@
             
             html.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
-            
-            // Update theme icon
             const themeIcon = document.querySelector('.theme-icon');
             themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
         }
-
-        // Load saved theme
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
@@ -363,8 +358,6 @@
             const themeIcon = document.querySelector('.theme-icon');
             themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
         });
-
-        // Auto-redirect on success after 5 seconds
         <?php if ($success): ?>
         setTimeout(function() {
             if (confirm('Перейти к списку ваших откликов?')) {

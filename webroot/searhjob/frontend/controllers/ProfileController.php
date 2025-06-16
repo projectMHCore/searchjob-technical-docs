@@ -1,5 +1,4 @@
 <?php
-// Контроллер для работы с профилем пользователя (MVC архитектура)
 require_once __DIR__ . '/../models/UserModel.php';
 session_start();
 
@@ -14,13 +13,10 @@ class ProfileController {
      * Отображение профиля пользователя
      */
     public function index() {
-        // Проверяем авторизацию
         if (!isset($_SESSION['user_id'])) {
             header('Location: login.php');
             exit;
         }
-        
-        // Получаем профиль пользователя
         $result = $this->userModel->getProfile($_SESSION['token']);
           $data = [
             'profile' => $result['success'] ? ($result['profile'] ?? null) : null,
@@ -41,15 +37,12 @@ class ProfileController {
     /**
      * Рендеринг представления
      */    private function render($view, $data = []) {
-        // Извлекаем переменные для использования в представлении
         extract($data);
         
-        // Подключаем новую профессиональную версию представления
         $viewFile = __DIR__ . "/../views/{$view}_view_new.php";
         if (file_exists($viewFile)) {
             include $viewFile;
         } else {
-            // Fallback на старую версию, если новая не найдена
             $fallbackFile = __DIR__ . "/../views/{$view}_view.php";
             if (file_exists($fallbackFile)) {
                 include $fallbackFile;

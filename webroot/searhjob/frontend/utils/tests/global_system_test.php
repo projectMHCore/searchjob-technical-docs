@@ -1,28 +1,26 @@
 <?php
 /**
- * ГЛОБАЛЬНЫЙ СИСТЕМНЫЙ ТЕСТ SearchJob
- * Комплексная проверка всех компонентов системы
- * Создано: 5 июня 2025 г.
+ * ГЛОБАЛЬНИЙ СИСТЕМНИЙ ТЕСТ SearchJob
+ * Комплексна перевірка всіх компонентів системи
  */
 
-// Запускаем сессию в самом начале, до вывода контента
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Настройки для безопасности (отключаем отображение ошибок для продакшена)
+
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // Отключаем для безопасности
-ini_set('expose_php', 0); // Скрываем версию PHP
-ini_set('max_execution_time', 300); // 5 минут
+ini_set('display_errors', 0); 
+ini_set('expose_php', 0); 
+ini_set('max_execution_time', 300); 
 
 ?>
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Глобальный системный тест SearchJob</title>
+    <title>Глобальний системний тест SearchJob</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -214,10 +212,9 @@ ini_set('max_execution_time', 300); // 5 минут
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🔍 Глобальный системный тест</h1>
-            <p>SearchJob Application - Комплексная диагностика системы</p>
+    <div class="container">        <div class="header">
+            <h1>🔍 Глобальний системний тест</h1>
+            <p>SearchJob Application - Комплексна діагностика системи</p>
         </div>
         
         <div class="content">
@@ -250,32 +247,30 @@ ini_set('max_execution_time', 300); // 5 минут
                     <h2>🐘 PHP Environment</h2>
                 </div>
                 <div class="test-body">
-                    <?php
-                    displayStatus(version_compare(PHP_VERSION, '7.4.0', '>='), 
-                        'PHP версия: ' . PHP_VERSION, 
-                        'PHP версия устарела: ' . PHP_VERSION);
+                    <?php                    displayStatus(version_compare(PHP_VERSION, '7.4.0', '>='), 
+                        'PHP версія: ' . PHP_VERSION, 
+                        'PHP версія застаріла: ' . PHP_VERSION);
                     
                     echo '<br>';
                     displayStatus(extension_loaded('mysqli'), 
-                        'MySQL расширение загружено', 
-                        'MySQL расширение отсутствует');
+                        'MySQL розширення завантажено', 
+                        'MySQL розширення відсутнє');
                     
                     echo '<br>';
                     displayStatus(extension_loaded('curl'), 
-                        'CURL расширение загружено', 
-                        'CURL расширение отсутствует');
+                        'CURL розширення завантажено', 
+                        'CURL розширення відсутнє');
                     
                     echo '<br>';
                     displayStatus(extension_loaded('xml'), 
-                        'XML расширение загружено', 
-                        'XML расширение отсутствует');
+                        'XML розширення завантажено', 
+                        'XML розширення відсутнє');
                     ?>
                     
-                    <div class="info-grid">
-                        <div class="info-card">
-                            <h4>📊 PHP Конфигурация</h4>
+                    <div class="info-grid">                        <div class="info-card">
+                            <h4>📊 PHP Конфігурація</h4>
                             <div class="metric">
-                                <span>Версия PHP:</span>
+                                <span>Версія PHP:</span>
                                 <strong><?= PHP_VERSION ?></strong>
                             </div>
                             <div class="metric">
@@ -293,7 +288,7 @@ ini_set('max_execution_time', 300); // 5 минут
                         </div>
                         
                         <div class="info-card">
-                            <h4>🔧 Загруженные расширения</h4>
+                            <h4>🔧 Завантажені розширення</h4>
                             <?php
                             $required_extensions = ['mysqli', 'curl', 'xml', 'json', 'session'];
                             foreach ($required_extensions as $ext) {
@@ -324,7 +319,6 @@ ini_set('max_execution_time', 300); // 5 минут
                         $dbInfo = [];
                         $conn = null;
                         
-                        // Создаем подключение к базе данных
                         $conn = new mysqli($config['host'], $config['username'], $config['password'], $config['database'], $config['port']);
                         
                         if ($conn->connect_error) {
@@ -332,7 +326,6 @@ ini_set('max_execution_time', 300); // 5 минут
                         } else {
                             $dbConnected = true;
                             
-                            // Получаем информацию о базе данных
                                 $result = $conn->query("SELECT VERSION() as version");
                                 if ($result && $row = $result->fetch_assoc()) {
                                     $dbInfo['version'] = $row['version'];
@@ -345,15 +338,14 @@ ini_set('max_execution_time', 300); // 5 минут
                                   $dbInfo['host'] = $conn->host_info;
                                 $dbInfo['charset'] = $conn->character_set_name();
                         }
-                        
-                        displayStatus($dbConnected, 
-                            'Подключение к базе данных успешно', 
-                            'Ошибка подключения к БД: ' . $dbError);
+                          displayStatus($dbConnected, 
+                            'Підключення до бази даних успішне', 
+                            'Помилка підключення до БД: ' . $dbError);
                         
                         if ($dbConnected) {
                             echo '<div class="info-grid">';
                             echo '<div class="info-card">';
-                            echo '<h4>📈 Информация о базе данных</h4>';
+                            echo '<h4>📈 Інформація про базу даних</h4>';
                             foreach ($dbInfo as $key => $value) {
                                 echo '<div class="metric">';
                                 echo '<span>' . ucfirst($key) . ':</span>';
@@ -363,9 +355,8 @@ ini_set('max_execution_time', 300); // 5 минут
                             echo '</div>';
                             echo '</div>';
                         }
-                        
-                    } catch (Exception $e) {
-                        displayStatus(false, '', 'Ошибка подключения к БД: ' . $e->getMessage());
+                          } catch (Exception $e) {
+                        displayStatus(false, '', 'Помилка підключення до БД: ' . $e->getMessage());
                     }
                     ?>
                 </div>
@@ -388,9 +379,8 @@ ini_set('max_execution_time', 300); // 5 минут
                             }
                         }
                         
-                        echo '<div class="table-container">';
-                        echo '<table>';
-                        echo '<thead><tr><th>Таблица</th><th>Статус</th><th>Записей</th><th>Действия</th></tr></thead>';
+                        echo '<div class="table-container">';                        echo '<table>';
+                        echo '<thead><tr><th>Таблиця</th><th>Статус</th><th>Записів</th><th>Дії</th></tr></thead>';
                         echo '<tbody>';
                         
                         foreach ($expectedTables as $table) {
@@ -408,17 +398,17 @@ ini_set('max_execution_time', 300); // 5 минут
                             echo '<td><strong>' . $table . '</strong></td>';
                             echo '<td>';
                             if ($exists) {
-                                echo '<span class="status success">✅ Существует</span>';
+                                echo '<span class="status success">✅ Існує</span>';
                             } else {
-                                echo '<span class="status error">❌ Отсутствует</span>';
+                                echo '<span class="status error">❌ Відсутня</span>';
                             }
                             echo '</td>';
                             echo '<td>' . ($exists ? number_format($count) : 'N/A') . '</td>';
                             echo '<td>';
                             if ($exists) {
-                                echo '<span class="status info">👀 Просмотр</span>';
+                                echo '<span class="status info">👀 Перегляд</span>';
                             } else {
-                                echo '<span class="status warning">🔧 Создать</span>';
+                                echo '<span class="status warning">🔧 Створити</span>';
                             }
                             echo '</td>';
                             echo '</tr>';
@@ -427,13 +417,12 @@ ini_set('max_execution_time', 300); // 5 минут
                         echo '</tbody>';
                         echo '</table>';
                         echo '</div>';
-                        
-                        $allTablesExist = count(array_intersect($expectedTables, $existingTables)) === count($expectedTables);
+                          $allTablesExist = count(array_intersect($expectedTables, $existingTables)) === count($expectedTables);
                         displayStatus($allTablesExist, 
-                            'Все необходимые таблицы присутствуют', 
-                            'Отсутствуют некоторые таблицы БД');
+                            'Всі необхідні таблиці присутні', 
+                            'Відсутні деякі таблиці БД');
                     } else {
-                        echo '<span class="status error">❌ Невозможно проверить таблицы - нет подключения к БД</span>';
+                        echo '<span class="status error">❌ Неможливо перевірити таблиці - немає підключення до БД</span>';
                     }
                     ?>
                 </div>
@@ -452,9 +441,8 @@ ini_set('max_execution_time', 300); // 5 минут
                         'ProfileController.php' => '../../../backend/controllers/ProfileController.php'
                     ];
                     
-                    echo '<div class="table-container">';
-                    echo '<table>';
-                    echo '<thead><tr><th>API Контроллер</th><th>Статус файла</th><th>Размер</th><th>Последнее изменение</th></tr></thead>';
+                    echo '<div class="table-container">';                    echo '<table>';
+                    echo '<thead><tr><th>API Контролер</th><th>Статус файлу</th><th>Розмір</th><th>Остання зміна</th></tr></thead>';
                     echo '<tbody>';
                     
                     foreach ($apiEndpoints as $name => $path) {
@@ -465,11 +453,11 @@ ini_set('max_execution_time', 300); // 5 минут
                         echo '<td><strong>' . $name . '</strong></td>';
                         echo '<td>';
                         if ($exists) {
-                            echo '<span class="status success">✅ Доступен</span>';
+                            echo '<span class="status success">✅ Доступний</span>';
                             displayStatus(true, '', '');
                         } else {
-                            echo '<span class="status error">❌ Отсутствует</span>';
-                            displayStatus(false, '', 'API файл не найден: ' . $name);
+                            echo '<span class="status error">❌ Відсутній</span>';
+                            displayStatus(false, '', 'API файл не знайдено: ' . $name);
                         }
                         echo '</td>';
                         echo '<td>' . ($exists ? number_format(filesize($fullPath)) . ' байт' : 'N/A') . '</td>';
@@ -504,13 +492,12 @@ ini_set('max_execution_time', 300); // 5 минут
                         
                         echo '<div style="margin: 10px 0;">';
                         echo '<strong>' . $name . ':</strong> ';
-                        
-                        if ($exists && $writable) {
-                            displayStatus(true, 'Существует и доступна для записи', '');
+                          if ($exists && $writable) {
+                            displayStatus(true, 'Існує і доступна для запису', '');
                         } elseif ($exists) {
-                            displayStatus(false, '', 'Директория существует, но не доступна для записи: ' . $name);
+                            displayStatus(false, '', 'Директорія існує, але не доступна для запису: ' . $name);
                         } else {
-                            displayStatus(false, '', 'Директория не существует: ' . $name);
+                            displayStatus(false, '', 'Директорія не існує: ' . $name);
                         }
                         echo '</div>';
                     }
@@ -527,24 +514,22 @@ ini_set('max_execution_time', 300); // 5 минут
                     <?php
                     $xmlApiFile = __DIR__ . '/../../../backend/controllers/XmlApiController.php';
                     $xmlExists = file_exists($xmlApiFile);
-                    
-                    displayStatus($xmlExists, 
-                        'XML API контроллер найден', 
-                        'XML API контроллер отсутствует');
+                      displayStatus($xmlExists, 
+                        'XML API контролер знайдено', 
+                        'XML API контролер відсутній');
                     
                     if ($xmlExists) {                        echo '<br>';
                         $xmlDir = __DIR__ . '/../../../backend/xml';
                         $xmlDirExists = is_dir($xmlDir);
                         
                         displayStatus($xmlDirExists, 
-                            'XML директория существует', 
-                            'XML директория отсутствует');
+                            'XML директорія існує', 
+                            'XML директорія відсутня');
                           if ($xmlDirExists) {
-                            $xmlFiles = glob($xmlDir . '/*.xml');
-                            echo '<div class="info-card" style="margin-top: 20px;">';
-                            echo '<h4>📄 XML файлы в системе</h4>';
+                            $xmlFiles = glob($xmlDir . '/*.xml');                            echo '<div class="info-card" style="margin-top: 20px;">';
+                            echo '<h4>📄 XML файли в системі</h4>';
                             echo '<div class="metric">';
-                            echo '<span>Количество XML файлов:</span>';
+                            echo '<span>Кількість XML файлів:</span>';
                             echo '<strong>' . count($xmlFiles) . '</strong>';
                             echo '</div>';
                             if (count($xmlFiles) > 0) {
@@ -553,7 +538,7 @@ ini_set('max_execution_time', 300); // 5 минут
                                     echo basename($file) . ' (' . number_format(filesize($file)) . ' байт)<br>';
                                 }
                                 if (count($xmlFiles) > 5) {
-                                    echo '... и еще ' . (count($xmlFiles) - 5) . ' файлов';
+                                    echo '... і ще ' . (count($xmlFiles) - 5) . ' файлів';
                                 }
                                 echo '</div>';
                             }
@@ -570,10 +555,9 @@ ini_set('max_execution_time', 300); // 5 минут
                     <h2>🔒 Security</h2>
                 </div>
                 <div class="test-body">
-                    <?php                    // Проверка настроек безопасности
-                    $securityChecks = [
-                        'display_errors' => ['off', 'Отображение ошибок отключено', 'Отображение ошибок включено'],
-                        'allow_url_include' => ['off', 'URL include отключен', 'URL include включен (небезопасно)']
+                    <?php                    $securityChecks = [
+                        'display_errors' => ['off', 'Відображення помилок вимкнено', 'Відображення помилок увімкнено'],
+                        'allow_url_include' => ['off', 'URL include вимкнено', 'URL include увімкнено (небезпечно)']
                     ];
                       foreach ($securityChecks as $setting => $check) {
                         $value = ini_get($setting);
@@ -582,29 +566,25 @@ ini_set('max_execution_time', 300); // 5 минут
                         displayStatus($secure, $check[1], $check[2]);
                         echo '<br>';
                     }
-                    
-                    // Проверка сессий
-                    displayStatus(session_status() === PHP_SESSION_ACTIVE, 
-                        'Сессии работают корректно', 
-                        'Проблемы с сессиями');
+                      displayStatus(session_status() === PHP_SESSION_ACTIVE, 
+                        'Сесії працюють коректно', 
+                        'Проблеми з сесіями');
                     ?>
                 </div>
             </div>            
             <!-- Summary -->
-            <div class="test-section">
-                <div class="test-header">
-                    <h2>📊 Итоговый результат</h2>
+            <div class="test-section">                <div class="test-header">
+                    <h2>📊 Підсумковий результат</h2>
                 </div>
                 <div class="test-body">
                     <?php
                     $successRate = $totalTests > 0 ? round(($passedTests / $totalTests) * 100) : 0;
                     ?>
                     
-                    <div class="info-grid">
-                        <div class="info-card">
-                            <h4>📈 Статистика тестов</h4>
+                    <div class="info-grid">                        <div class="info-card">
+                            <h4>📈 Статистика тестів</h4>
                             <div class="metric">
-                                <span>Всего тестов:</span>
+                                <span>Всього тестів:</span>
                                 <strong><?= $totalTests ?></strong>
                             </div>
                             <div class="metric">
@@ -616,7 +596,7 @@ ini_set('max_execution_time', 300); // 5 минут
                                 <strong style="color: #dc2626;"><?= $totalTests - $passedTests ?></strong>
                             </div>
                             <div class="metric">
-                                <span>Успешность:</span>
+                                <span>Успішність:</span>
                                 <strong><?= $successRate ?>%</strong>
                             </div>
                             
@@ -624,27 +604,25 @@ ini_set('max_execution_time', 300); // 5 минут
                                 <div class="progress-fill" style="width: <?= $successRate ?>%;"></div>
                             </div>
                         </div>
-                        
-                        <div class="info-card">
-                            <h4>🎯 Общая оценка</h4>
+                          <div class="info-card">
+                            <h4>🎯 Загальна оцінка</h4>
                             <?php
                             if ($successRate >= 90) {
-                                echo '<span class="status success">🏆 Отлично</span>';
-                                echo '<p>Система работает стабильно, все ключевые компоненты функционируют корректно.</p>';
+                                echo '<span class="status success">🏆 Відмінно</span>';
+                                echo '<p>Система працює стабільно, всі ключові компоненти функціонують коректно.</p>';
                             } elseif ($successRate >= 70) {
-                                echo '<span class="status warning">⚠️ Хорошо</span>';
-                                echo '<p>Система работает, но есть несколько проблем, которые стоит исправить.</p>';
+                                echo '<span class="status warning">⚠️ Добре</span>';
+                                echo '<p>Система працює, але є кілька проблем, які варто виправити.</p>';
                             } else {
-                                echo '<span class="status error">🚨 Требует внимания</span>';
-                                echo '<p>Обнаружены критические проблемы, система требует диагностики.</p>';
+                                echo '<span class="status error">🚨 Потребує уваги</span>';
+                                echo '<p>Виявлено критичні проблеми, система потребує діагностики.</p>';
                             }
                             ?>
                         </div>
                     </div>
-                    
-                    <?php if (!empty($errors)): ?>
+                      <?php if (!empty($errors)): ?>
                     <div style="margin-top: 30px;">
-                        <h4>🚨 Обнаруженные проблемы:</h4>
+                        <h4>🚨 Виявлені проблеми:</h4>
                         <div class="code-block" style="background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;">
                             <?php foreach ($errors as $error): ?>
                                 • <?= htmlspecialchars($error) ?><br>
@@ -654,10 +632,9 @@ ini_set('max_execution_time', 300); // 5 минут
                     <?php endif; ?>
                 </div>
             </div>
-            
-            <div class="timestamp">
-                <strong>Тест выполнен:</strong> <?= date('Y-m-d H:i:s') ?><br>
-                <strong>Время выполнения:</strong> <?= round(microtime(true) - $startTime, 3) ?> секунд<br>
+              <div class="timestamp">
+                <strong>Тест виконано:</strong> <?= date('Y-m-d H:i:s') ?><br>
+                <strong>Час виконання:</strong> <?= round(microtime(true) - $startTime, 3) ?> секунд<br>
                 <strong>Сервер:</strong> <?= $_SERVER['SERVER_NAME'] ?? 'localhost' ?> | 
                 <strong>PHP:</strong> <?= PHP_VERSION ?>
             </div>
@@ -665,10 +642,6 @@ ini_set('max_execution_time', 300); // 5 минут
     </div>
 
     <script>
-        // Автообновление каждые 30 секунд (опционально)
-        // setInterval(() => location.reload(), 30000);
-        
-        // Подсветка при загрузке
         document.addEventListener('DOMContentLoaded', function() {
             const sections = document.querySelectorAll('.test-section');
             sections.forEach((section, index) => {

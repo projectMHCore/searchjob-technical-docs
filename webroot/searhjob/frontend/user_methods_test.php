@@ -1,38 +1,33 @@
 <?php
-/**
- * Тест методов User для работы с аватарами
- */
 
 session_start();
 
-// Проверка авторизации
 if (!isset($_SESSION['user_id'])) {
-    echo "Ошибка: Пользователь не авторизован";
+    echo "Помилка: Користувач не авторизований";
     exit;
 }
 
-echo "<h1>User Model Methods Test</h1>";
+echo "<h1>Тест методів моделі User</h1>";
 
-// Подключаем модель User
 require_once __DIR__ . '/../backend/models/User.php';
 
-echo "<h2>1. Создание объекта User</h2>";
+echo "<h2>1. Створення об'єкта User</h2>";
 try {
     $user = new User();
-    echo "✅ Объект User создан успешно<br>";
+    echo "✅ Об'єкт User створено успішно<br>";
 } catch (Exception $e) {
-    echo "❌ Ошибка создания объекта User: " . $e->getMessage() . "<br>";
+    echo "❌ Помилка створення об'єкта User: " . $e->getMessage() . "<br>";
     exit;
 }
 
-echo "<h2>2. Проверка существования методов</h2>";
+echo "<h2>2. Перевірка існування методів</h2>";
 
 $methods = ['getAvatarPath', 'updateAvatar', 'getUserProfile'];
 foreach ($methods as $method) {
     if (method_exists($user, $method)) {
-        echo "✅ Метод {$method} существует<br>";
+        echo "✅ Метод {$method} існує<br>";
     } else {
-        echo "❌ Метод {$method} НЕ существует<br>";
+        echo "❌ Метод {$method} НЕ існує<br>";
     }
 }
 
@@ -40,21 +35,21 @@ echo "<h2>3. Тест getAvatarPath</h2>";
 $userId = $_SESSION['user_id'];
 try {
     $avatarPath = $user->getAvatarPath($userId);
-    echo "✅ Метод getAvatarPath выполнен успешно<br>";
+    echo "✅ Метод getAvatarPath виконано успішно<br>";
     echo "Результат: " . ($avatarPath ? $avatarPath : 'null') . "<br>";
 } catch (Exception $e) {
-    echo "❌ Ошибка выполнения getAvatarPath: " . $e->getMessage() . "<br>";
+    echo "❌ Помилка виконання getAvatarPath: " . $e->getMessage() . "<br>";
 }
 
-echo "<h2>4. Информация о классе User</h2>";
+echo "<h2>4. Інформація про клас User</h2>";
 $reflection = new ReflectionClass($user);
-echo "Файл класса: " . $reflection->getFileName() . "<br>";
-echo "Методы класса:<br>";
+echo "Файл класу: " . $reflection->getFileName() . "<br>";
+echo "Методи класу:<br>";
 foreach ($reflection->getMethods() as $method) {
     echo "- " . $method->getName() . "<br>";
 }
 
-echo "<h2>5. Содержимое файла User.php (последние 50 строк)</h2>";
+echo "<h2>5. Вміст файлу User.php (останні 50 рядків)</h2>";
 $userFilePath = __DIR__ . '/../backend/models/User.php';
 $lines = file($userFilePath);
 $totalLines = count($lines);
@@ -66,5 +61,5 @@ for ($i = $startLine; $i < $totalLines; $i++) {
 }
 echo "</pre>";
 
-echo "<a href='avatar_test.php'>← Вернуться к тесту аватаров</a>";
+echo "<a href='avatar_test.php'>← Повернутися до тесту аватарів</a>";
 ?>

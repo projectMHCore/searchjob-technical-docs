@@ -1,14 +1,8 @@
 <?php
-/**
- * Простой тест API аватаров
- */
-
 session_start();
 
-// Устанавливаем заголовки
 header('Content-Type: application/json');
 
-// Проверяем авторизацию
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Не авторизован', 'session' => $_SESSION]);
     exit;

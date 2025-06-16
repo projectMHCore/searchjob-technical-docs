@@ -12,7 +12,6 @@ if ($db->connect_error) {
 
 echo "<h2>Управление пользователями</h2>";
 
-// Показываем всех пользователей
 $result = $db->query("SELECT id, login, email, role FROM users");
 echo "<h3>Существующие пользователи:</h3>";
 echo "<table border='1'>";
@@ -35,7 +34,6 @@ while ($row = $result->fetch_assoc()) {
 }
 echo "</table>";
 
-// Обработка действий
 if (isset($_GET['action'])) {
     if ($_GET['action'] === 'make_employer' && isset($_GET['id'])) {
         $userId = intval($_GET['id']);

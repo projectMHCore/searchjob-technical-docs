@@ -7,7 +7,6 @@ echo "<style>body { font-family: Arial, sans-serif; margin: 20px; } .debug-secti
 echo "</head><body>";
 echo "<h1>🔍 Database Structure Analysis</h1>";
 
-// Подключение к БД
 $config = require __DIR__ . '/../backend/config/db.php';
 $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database'], $config['port']);
 
@@ -16,7 +15,6 @@ if ($db->connect_error) {
     exit;
 }
 
-// 1. Проверяем AUTO_INCREMENT значение
 echo "<div class='debug-section'>";
 echo "<h2>1. AUTO_INCREMENT Settings</h2>";
 
@@ -31,7 +29,6 @@ if ($result && $result->num_rows > 0) {
 }
 echo "</div>";
 
-// 2. Показываем структуру таблицы
 echo "<div class='debug-section'>";
 echo "<h2>2. Users Table Structure</h2>";
 
@@ -55,7 +52,6 @@ if ($result) {
 }
 echo "</div>";
 
-// 3. Показываем всех пользователей
 echo "<div class='debug-section'>";
 echo "<h2>3. All Users in Database</h2>";
 
@@ -85,7 +81,6 @@ if ($result) {
 }
 echo "</div>";
 
-// 4. Проверяем пропуски в ID
 echo "<div class='debug-section'>";
 echo "<h2>4. ID Sequence Analysis</h2>";
 
@@ -111,7 +106,6 @@ if ($result && $result->num_rows > 0) {
         if ($expectedCount != $actualCount) {
             echo "<div class='error'>⚠️ There are gaps in the ID sequence!</div>";
             
-            // Найдем пропущенные ID
             $missing = [];
             for ($i = $minId; $i <= $maxId; $i++) {
                 if (!in_array($i, $ids)) {
@@ -128,11 +122,9 @@ if ($result && $result->num_rows > 0) {
 }
 echo "</div>";
 
-// 5. Проверяем историю удалений (если есть лог таблица)
 echo "<div class='debug-section'>";
 echo "<h2>5. Database History Check</h2>";
 
-// Проверяем, есть ли таблицы с историей
 $tables = [];
 $result = $db->query("SHOW TABLES");
 if ($result) {
@@ -146,7 +138,6 @@ foreach ($tables as $table) {
     echo "- $table<br>";
 }
 
-// Проверяем, есть ли записи о том, что база была очищена
 if (in_array('user_tokens', $tables)) {
     echo "<h3>Token History:</h3>";
     $result = $db->query("SELECT COUNT(*) as count, MIN(created_at) as first_token, MAX(created_at) as last_token FROM user_tokens");
@@ -159,7 +150,6 @@ if (in_array('user_tokens', $tables)) {
 }
 echo "</div>";
 
-// 6. Анализ и рекомендации
 echo "<div class='debug-section'>";
 echo "<h2>6. Analysis & Recommendations</h2>";
 

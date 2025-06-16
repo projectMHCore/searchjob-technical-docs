@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Простая диагностика API аватаров
 echo "<!DOCTYPE html>";
 echo "<html><head><title>Avatar API Diagnostics</title></head><body>";
 echo "<h1>Avatar API Diagnostics</h1>";

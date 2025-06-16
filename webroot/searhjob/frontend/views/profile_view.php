@@ -1,5 +1,4 @@
 <?php
-// View: отображение профиля пользователя
 require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
 ?><!DOCTYPE html>
 <html lang="uk">
@@ -17,7 +16,6 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
     <?= AvatarHelper::getAvatarCSS() ?>
     
     <style>
-        /* Professional Modern Styles */
         :root {
             --primary-color: #eaa850;
             --primary-dark: #d4922a;
@@ -48,7 +46,7 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
             padding: 0;
             box-sizing: border-box;
         }        body {
-            background-color: var(--background-primary); /* Заменено на переменную */
+            background-color: var(--background-primary); 
             color: var(--text-primary);
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
@@ -57,15 +55,15 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
         }
 
         body[data-theme="dark"] {
-            background-color: var(--dark-bg-primary); /* Заменено на переменную */
+            background-color: var(--dark-bg-primary); 
             color: var(--dark-text-primary);
         }
 
         .navbar {
-            background: rgba(255, 255, 255, 0.95); /* Приведено к стандарту */
-            backdrop-filter: blur(10px); /* Приведено к стандарту */
-            border-bottom: none; /* Убрана граница */
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1); /* Приведено к стандарту */
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(10px); 
+            border-bottom: none; 
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1); 
             position: fixed;
             top: 0;
             width: 100%;
@@ -74,14 +72,14 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
         }
 
         body[data-theme="dark"] .navbar {
-            background: var(--dark-nav-bg); /* Приведено к стандарту */
+            background: var(--dark-nav-bg); 
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
         }
 
         .nav-container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 1rem 2rem; /* Приведено к стандарту */
+            padding: 1rem 2rem; 
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -914,7 +912,6 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
     </footer>
 
     <script>
-        // Theme Toggle
         function toggleTheme() {
             const body = document.body;
             const currentTheme = body.getAttribute('data-theme');
@@ -926,15 +923,13 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
             const themeIcon = document.querySelector('.theme-toggle i');
             themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
-
-        // Load saved theme
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.body.setAttribute('data-theme', savedTheme);
             
             const themeIcon = document.querySelector('.theme-toggle i');
             themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-        });        // Smooth animations on scroll
+        });  
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -950,15 +945,12 @@ require_once __DIR__ . '/../../backend/utils/AvatarHelper.php';
         }, observerOptions);
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Observe cards for scroll animations
             const cards = document.querySelectorAll('.action-card, .info-item');
             cards.forEach((card, index) => {
                 card.style.opacity = '0';
                 card.style.animationDelay = `${index * 0.1}s`;
                 observer.observe(card);
             });
-
-            // Enhanced hover effects for action cards
             document.querySelectorAll('.action-card').forEach(card => {
                 card.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-8px) scale(1.02)';

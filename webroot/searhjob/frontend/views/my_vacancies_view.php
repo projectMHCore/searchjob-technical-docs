@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="/frontend/assets/style.css">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💼%3C/text%3E%3C/svg%3E">
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -946,7 +945,6 @@
             </div>
         </div>
     </footer>    <script>
-        // Theme Toggle
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme') || 'light';
@@ -967,21 +965,15 @@
                 }
             }
         }
-
-        // Initialize theme
         function initTheme() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
         }
-
-        // Mobile Menu Toggle
         function toggleMobileMenu() {
             const navMenu = document.querySelector('.nav-menu');
             navMenu.classList.toggle('active');
         }
-
-        // Toggle Vacancy Status
         function toggleVacancyStatus(vacancyId, newStatus) {
             const button = event.target;
             const originalText = button.innerHTML;
@@ -1012,18 +1004,12 @@
                 button.disabled = false;
             });
         }
-
-        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
             initTheme();
-            
-            // Theme toggle event listener
             const themeToggle = document.getElementById('theme-toggle');
             if (themeToggle) {
                 themeToggle.addEventListener('click', toggleTheme);
             }
-            
-            // Close mobile menu when clicking outside
             document.addEventListener('click', function(event) {
                 const navMenu = document.querySelector('.nav-menu');
                 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');

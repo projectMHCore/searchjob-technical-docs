@@ -1,5 +1,4 @@
 <?php
-// Контроллер для работы с заявками на вакансии (MVC архитектура)
 require_once __DIR__ . '/../models/ApplicationModel.php';
 require_once __DIR__ . '/../models/VacancyModel.php';
 session_start();
@@ -11,11 +10,8 @@ class ApplicationController {
     public function __construct() {
         $this->applicationModel = new ApplicationModel();
         $this->vacancyModel = new VacancyModel();
-    }    /**
-     * Подача заявки на вакансию
-     */
+    }  
     public function apply() {
-        // Проверяем авторизацию как соискатель
         if (!isset($_SESSION['token']) || $_SESSION['user_role'] !== 'job_seeker') {
             header('Location: login.php');
             exit;
@@ -46,7 +42,6 @@ class ApplicationController {
             
             $this->render('application_result', $data);
         } else {
-            // GET запрос - показываем форму подачи заявки
             $vacancyId = intval($_GET['id'] ?? 0);
             
             if ($vacancyId <= 0) {
@@ -54,7 +49,6 @@ class ApplicationController {
                 exit;
             }
             
-            // Получаем информацию о вакансии
             $vacancyResult = $this->vacancyModel->getVacancy($vacancyId);
             
             if (!$vacancyResult['success'] || !isset($vacancyResult['vacancy'])) {
@@ -69,17 +63,12 @@ class ApplicationController {
             
             $this->render('apply_form', $data);
         }
-    }    /**
-     * Мои заявки (для соискателя)
-     */
+    }   
     public function myApplications() {
-        // Проверяем авторизацию как соискатель
         if (!isset($_SESSION['token']) || $_SESSION['user_role'] !== 'job_seeker') {
             header('Location: login.php');
             exit;
         }
-        
-        // Получаем фильтры
         $filters = [
             'status' => $_GET['status'] ?? '',
             'vacancy' => $_GET['vacancy'] ?? ''
@@ -95,18 +84,11 @@ class ApplicationController {
         
         $this->render('my_applications', $data);
     }
-    
-    /**
-     * Управление заявками (для работодателя)
-     */
     public function manageApplications() {
-        // Проверяем авторизацию как работодатель
         if (!isset($_SESSION['token']) || $_SESSION['user_role'] !== 'employer') {
             header('Location: login.php');
             exit;
         }
-        
-        // Получаем фильтры
         $filters = [
             'status' => $_GET['status'] ?? '',
             'vacancy' => $_GET['vacancy'] ?? ''
@@ -122,12 +104,8 @@ class ApplicationController {
         
         $this->render('manage_applications', $data);
     }
-    
-    /**
-     * Обновление статуса заявки
-     */
+
     public function updateStatus() {
-        // Проверяем авторизацию как работодатель
         if (!isset($_SESSION['token']) || $_SESSION['user_role'] !== 'employer') {
             header('Location: login.php');
             exit;
@@ -154,18 +132,14 @@ class ApplicationController {
         exit;
     }
     
-    /**
-     * Рендеринг представления
-     */    private function render($view, $data = []) {
-        // Извлекаем переменные для использования в представлении
+   private function render($view, $data = []) {
+
         extract($data);
         
-        // Подключаем новую профессиональную версию представления
         $viewFile = __DIR__ . "/../views/{$view}_view_new.php";
         if (file_exists($viewFile)) {
             include $viewFile;
         } else {
-            // Fallback на старую версию, если новая не найдена
             $fallbackFile = __DIR__ . "/../views/{$view}_view.php";
             if (file_exists($fallbackFile)) {
                 include $fallbackFile;

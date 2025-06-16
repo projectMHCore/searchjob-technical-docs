@@ -615,7 +615,6 @@
     </footer>
 
     <script>
-        // Theme Management
         function toggleTheme() {
             const currentTheme = document.documentElement.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -626,16 +625,12 @@
             const themeIcon = document.querySelector('.theme-icon');
             themeIcon.textContent = newTheme === 'dark' ? '☀️' : '🌙';
         }
-
-        // Initialize theme
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', savedTheme);
             
             const themeIcon = document.querySelector('.theme-icon');
             themeIcon.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-
-            // Auto-resize textarea
             const textarea = document.getElementById('cover_letter');
             if (textarea) {
                 textarea.addEventListener('input', function() {
@@ -643,8 +638,6 @@
                     this.style.height = (this.scrollHeight) + 'px';
                 });
             }
-
-            // Form submission enhancement
             const form = document.querySelector('.application-form');
             if (form) {
                 form.addEventListener('submit', function(e) {
@@ -655,8 +648,6 @@
                         alert('Будь ласка, напишіть детальніший супровідний лист (мінімум 50 символів)');
                         return;
                     }
-
-                    // Show loading state
                     const submitBtn = form.querySelector('button[type="submit"]');
                     submitBtn.innerHTML = '<span>⏳</span> Надсилання...';
                     submitBtn.disabled = true;                });

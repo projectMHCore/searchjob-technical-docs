@@ -1,11 +1,9 @@
 <?php
-// Страница редактирования профиля пользователя
 session_start();
 
 require_once __DIR__ . '/../backend/config/db.php';
 require_once __DIR__ . '/../backend/models/User.php';
 
-// Проверяем авторизацию
 if (!isset($_SESSION['token'])) {
     header('Location: login.php');
     exit;
@@ -19,12 +17,10 @@ if (!$userData) {
     exit;
 }
 
-// Определяем тип редактирования
-$editType = $_GET['type'] ?? 'full'; // full, personal, company
+$editType = $_GET['type'] ?? 'full'; 
 $message = '';
 $success = false;
 
-// Получаем текущие данные профиля из базы данных
 $config = require __DIR__ . '/../backend/config/db.php';
 $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
 
@@ -32,19 +28,16 @@ if ($db->connect_error) {
     die("Ошибка подключения: " . $db->connect_error);
 }
 
-// Получаем текущие данные пользователя
 $userId = intval($userData['id']);
 $result = $db->query("SELECT * FROM users WHERE id = $userId");
 $currentData = $result->fetch_assoc();
 
-// Обработка формы
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $updates = [];
         $params = [];
         $types = '';
         
-        // Общие поля
         if (!empty($_POST['first_name'])) {
             $updates[] = "first_name = ?";
             $params[] = trim($_POST['first_name']);
@@ -75,7 +68,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $types .= 's';
         }
         
-        // Поля для соискателей
         if ($userData['role'] === 'job_seeker') {
             if (isset($_POST['experience_years']) && $_POST['experience_years'] !== '') {
                 $updates[] = "experience_years = ?";
@@ -108,7 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         
-        // Поля для работодателей
         if ($userData['role'] === 'employer') {
             if (!empty($_POST['company_name'])) {
                 $updates[] = "company_name = ?";
@@ -159,7 +150,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $success = true;
                     $message = 'Профіль успішно оновлено!';
                     
-                    // Оновлюємо дані для відображення
                     $result = $db->query("SELECT * FROM users WHERE id = $userId");
                     $currentData = $result->fetch_assoc();
                 } else {
@@ -219,7 +209,6 @@ $db->close();
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* Dark Theme */
         [data-theme="dark"] {
             --bg-primary: #1a202c;
             --bg-secondary: #2d3748;
@@ -231,7 +220,6 @@ $db->close();
             --shadow: rgba(0,0,0,0.3);
         }
 
-        /* Navigation */
         .navbar {
             position: fixed;
             top: 0;
@@ -365,7 +353,6 @@ $db->close();
             border-color: var(--border-color);
         }
 
-        /* Main content */
         .main-content {
             margin-top: 80px;
             min-height: calc(100vh - 80px);
@@ -378,7 +365,6 @@ $db->close();
             padding: 0 2rem;
         }
 
-        /* Footer */
         .footer {
             background: #1a202c;
             color: white;
@@ -424,7 +410,6 @@ $db->close();
             color: #a0aec0;
         }
 
-        /* Page-specific styles for profile editing */
         .edit-profile-container {
             max-width: 1000px;
             margin: 0 auto;
@@ -470,7 +455,6 @@ $db->close();
             border-bottom: 2px solid var(--primary-orange);
         }
         
-        /* Form styles override */
         .form-grid {
             display: grid;
             gap: 1.5rem;
@@ -487,7 +471,6 @@ $db->close();
             display: block;
         }
         
-        /* Mobile responsive */
         @media (max-width: 768px) {
             .edit-profile-container {
                 padding: 1rem;
@@ -505,7 +488,6 @@ $db->close();
                 grid-template-columns: 1fr;
             }        }
         
-        /* Исправление стилей для корректного отображения */
         .navbar {
             border-bottom: 1px solid var(--border-color);
             position: fixed;
@@ -588,7 +570,6 @@ $db->close();
             transform: scale(1.1);
         }
 
-        /* Main Content */
         .main-content {
             margin-top: 80px;
             min-height: calc(100vh - 80px);
@@ -632,7 +613,7 @@ $db->close();
             font-size: 1.1rem;
             opacity: 0.9;
             position: relative;
-        }        /* Form Styles */
+        }
         .edit-form {
             max-width: 100%;
             margin: 0 auto;
@@ -722,7 +703,6 @@ $db->close();
             margin-top: 0.25rem;
         }
 
-        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -775,7 +755,6 @@ $db->close();
             transform: translateY(-1px);
         }
 
-        /* Alerts */
         .message {
             padding: 1rem 1.5rem;
             border-radius: var(--border-radius);
@@ -822,7 +801,6 @@ $db->close();
             font-size: 1rem;
         }
 
-        /* Mobile Menu */
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -832,7 +810,6 @@ $db->close();
             color: var(--text-primary);
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .nav-container {
                 padding: 1rem;
@@ -886,7 +863,6 @@ $db->close();
             }
         }
 
-        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -1085,9 +1061,8 @@ $db->close();
                     <div class="form-group">
                         <label>Логотип компанії</label>
                         <div class="logo-upload-section">
-                            <?php 
-                            // Подготавливаем данные для компонента логотипа
-                            $userData = $currentData; // Используем текущие данные из БД
+                            <?php
+                            $userData = $currentData;
                             include __DIR__ . '/components/company_logo_upload.php';
                             ?>
                         </div>
@@ -1218,14 +1193,11 @@ $db->close();
             </div>
         </div>
     </footer>    <script>
-        // Enhanced animations and interactions
         document.addEventListener('DOMContentLoaded', function() {
-            // Theme toggle functionality
             const themeToggle = document.getElementById('theme-toggle');
             const html = document.documentElement;
             const icon = themeToggle.querySelector('i');
             
-            // Load saved theme
             const savedTheme = localStorage.getItem('theme') || 'light';
             html.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
@@ -1238,7 +1210,6 @@ $db->close();
                 localStorage.setItem('theme', newTheme);
                 updateThemeIcon(newTheme);
                 
-                // Update navbar background immediately
                 const navbar = document.querySelector('.navbar');
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 
@@ -1256,7 +1227,6 @@ $db->close();
                     }
                 }
                 
-                // Add theme transition effect
                 themeToggle.style.transform = 'rotate(360deg)';
                 setTimeout(() => {
                     themeToggle.style.transform = '';
@@ -1270,9 +1240,7 @@ $db->close();
                 }
             }
 
-            // Form Enhancements
             function enhanceForm() {
-                // Add character counter for textareas
                 const textareas = document.querySelectorAll('textarea');
                 textareas.forEach(textarea => {
                     const maxLength = textarea.getAttribute('maxlength');
@@ -1293,7 +1261,6 @@ $db->close();
                     }
                 });
 
-                // Phone number formatting
                 const phoneInput = document.getElementById('phone');
                 if (phoneInput) {
                     phoneInput.addEventListener('input', function(e) {
@@ -1317,7 +1284,7 @@ $db->close();
                 }
             }
             
-            enhanceForm();// Enhanced navbar scroll effect
+            enhanceForm();
             let lastScrollTop = 0;
             let isScrolling = false;
             
@@ -1346,7 +1313,6 @@ $db->close();
                             navbar.style.backdropFilter = 'blur(5px)';
                         }
                         
-                        // Hide/show navbar on scroll
                         if (scrollTop > lastScrollTop && scrollTop > 200) {
                             navbar.style.transform = 'translateY(-100%)';
                         } else {
@@ -1358,17 +1324,13 @@ $db->close();
                     });
                 }
                 isScrolling = true;
-            });        // Mobile Menu Toggle
+            });  
         function toggleMobileMenu() {
             const navMenu = document.querySelector('.nav-menu');
             navMenu.classList.toggle('active');
         }
 
-        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Form Enhancements already initialized above
-            
-            // Close mobile menu when clicking outside
             document.addEventListener('click', function(event) {
                 const navMenu = document.querySelector('.nav-menu');
                 const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
@@ -1378,23 +1340,19 @@ $db->close();
                 }
             });
 
-            // Auto-save form data to localStorage
             const form = document.querySelector('.edit-form');
             if (form) {
                 const inputs = form.querySelectorAll('input, textarea, select');
                 
                 inputs.forEach(input => {
-                    // Load saved data
                     const savedValue = localStorage.getItem(`form_${input.name}`);
                     if (savedValue && !input.value) {
                         input.value = savedValue;
                     }
-                    
-                    // Save on change
                     input.addEventListener('change', function() {
                         localStorage.setItem(`form_${input.name}`, input.value);
                     });
-                });                // Clear saved data on successful submit
+                });        
                 form.addEventListener('submit', function() {
                     inputs.forEach(input => {
                         localStorage.removeItem(`form_${input.name}`);
@@ -1403,7 +1361,7 @@ $db->close();
             }
         });
         
-        }); // Закрывающая скобка для основного DOMContentLoaded
+        });
     </script>
 </body>
 </html>

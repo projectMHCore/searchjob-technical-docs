@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
       
     <style>
-        /* Navigation styles from index.php */
         .navbar {
             position: fixed;
             top: 0;
@@ -144,7 +143,6 @@
             padding-top: 80px;
         }
         
-        /* Page-specific styles for my applications */
         .page-header {
             text-align: center;
             margin-bottom: 3rem;
@@ -758,13 +756,11 @@
             <p>&copy; 2025 SearchJob. Всі права захищені.</p>
         </div>
     </footer>    <script>
-        // Theme Toggle functionality
         document.addEventListener('DOMContentLoaded', function() {
             const themeToggle = document.getElementById('theme-toggle');
             const html = document.documentElement;
             const icon = themeToggle.querySelector('i');
             
-            // Load saved theme
             const savedTheme = localStorage.getItem('theme') || 'light';
             html.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
@@ -776,8 +772,6 @@
                 html.setAttribute('data-theme', newTheme);
                 localStorage.setItem('theme', newTheme);
                 updateThemeIcon(newTheme);
-                
-                // Update navbar background immediately
                 const navbar = document.querySelector('.navbar');
                 if (newTheme === 'dark') {
                     navbar.style.background = 'rgba(26, 32, 44, 0.95)';
@@ -785,7 +779,6 @@
                     navbar.style.background = 'rgba(255, 255, 255, 0.95)';
                 }
                 
-                // Add theme transition effect
                 themeToggle.style.transform = 'rotate(360deg)';
                 setTimeout(() => {
                     themeToggle.style.transform = '';
@@ -800,14 +793,10 @@
                 }
             }
         });
-
-        // Mobile Menu
         function toggleMobileMenu() {
             const navMenu = document.querySelector('.nav-menu');
             navMenu.classList.toggle('active');
         }
-
-        // Auto-refresh status for pending applications
         document.addEventListener('DOMContentLoaded', function() {
             const pendingApplications = document.querySelectorAll('.application-card .status-pending');
             if (pendingApplications.length > 0) {

@@ -5,7 +5,6 @@ require_once __DIR__ . '/../../models/UserModel.php';
 echo "<h2>Тест API соединения SearchJob</h2>";
 echo "<hr>";
 
-// Создаем экземпляр модели
 $userModel = new UserModel();
 
 // Получаем информацию о соединении

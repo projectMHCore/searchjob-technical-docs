@@ -1,4 +1,3 @@
-<!-- Компонент загрузки аватара -->
 <div class="avatar-upload-component">
     <div class="avatar-section">
         <div class="avatar-container">
@@ -137,8 +136,6 @@
     opacity: 0.9;
     transform: translateY(-1px);
 }
-
-/* Анимации */
 .avatar-preview {
     transition: all 0.3s ease;
 }
@@ -147,8 +144,6 @@
     border-color: #007bff;
     box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
 }
-
-/* Адаптивность */
 @media (max-width: 576px) {
     .avatar-preview {
         width: 120px;
@@ -167,15 +162,9 @@
 </style>
 
 <script>
-/**
- * Функции для работы с аватаром
- */
-
-// Инициализация компонента аватара
 document.addEventListener('DOMContentLoaded', function() {
     loadCurrentAvatar();
     
-    // Обработчик изменения файла
     document.getElementById('avatarInput').addEventListener('change', function(event) {
         const file = event.target.files[0];
         if (file) {
@@ -185,9 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Загрузка текущего аватара пользователя
 function loadCurrentAvatar() {
-    // Сначала тестируем простой API
     fetch('../backend/api/avatar_simple_test.php', {
         method: 'GET',
         credentials: 'same-origin'
@@ -201,8 +188,6 @@ function loadCurrentAvatar() {
             showPlaceholder();
             return;
         }
-        
-        // Если простой тест прошел, пробуем основной API
         return fetch('../backend/api/avatar.php', {
             method: 'GET',
             credentials: 'same-origin'
@@ -227,7 +212,6 @@ function loadCurrentAvatar() {
     });
 }
 
-// Отображение аватара
 function displayAvatar(avatarUrl) {
     const avatarImage = document.getElementById('avatarImage');
     const avatarPlaceholder = document.getElementById('avatarPlaceholder');
@@ -239,7 +223,6 @@ function displayAvatar(avatarUrl) {
     deleteBtn.style.display = 'inline-block';
 }
 
-// Отображение заглушки
 function showPlaceholder() {
     const avatarImage = document.getElementById('avatarImage');
     const avatarPlaceholder = document.getElementById('avatarPlaceholder');
@@ -250,12 +233,10 @@ function showPlaceholder() {
     deleteBtn.style.display = 'none';
 }
 
-// Выбор файла аватара
 function selectAvatar() {
     document.getElementById('avatarInput').click();
 }
 
-// Предварительный просмотр выбранного файла
 function previewAvatar(file) {
     if (file && file.type.startsWith('image/')) {
         const reader = new FileReader();
@@ -266,12 +247,10 @@ function previewAvatar(file) {
     }
 }
 
-// Загрузка аватара на сервер
 function uploadAvatar(file) {
     const progressContainer = document.getElementById('uploadProgress');
     const progressBar = progressContainer.querySelector('.progress-bar');
     
-    // Показываем прогресс
     progressContainer.style.display = 'block';
     progressBar.style.width = '0%';
     
@@ -280,7 +259,6 @@ function uploadAvatar(file) {
     
     const xhr = new XMLHttpRequest();
     
-    // Отслеживание прогресса загрузки
     xhr.upload.addEventListener('progress', function(e) {
         if (e.lengthComputable) {
             const percentComplete = (e.loaded / e.total) * 100;
@@ -298,7 +276,7 @@ function uploadAvatar(file) {
                     displayAvatar(response.avatar_url);
                 } else {
                     showAlert('Помилка завантаження: ' + response.message, 'error');
-                    loadCurrentAvatar(); // Восстанавливаем предыдущий аватар
+                    loadCurrentAvatar(); 
                 }
             } catch (e) {
                 showAlert('Помилка обробки відповіді сервера', 'error');
@@ -318,8 +296,6 @@ function uploadAvatar(file) {
     xhr.open('POST', '../backend/api/avatar.php');
     xhr.send(formData);
 }
-
-// Удаление аватара
 function deleteAvatar() {
     if (!confirm('Ви впевнені, що хочете видалити аватар?')) {
         return;
@@ -341,9 +317,7 @@ function deleteAvatar() {
     });
 }
 
-// Функция для отображения уведомлений
 function showAlert(message, type = 'info') {
-    // Создаем элемент уведомления
     const alert = document.createElement('div');
     alert.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show`;
     alert.style.position = 'fixed';
@@ -358,13 +332,10 @@ function showAlert(message, type = 'info') {
     `;
     
     document.body.appendChild(alert);
-    
-    // Автоматическое удаление через 5 секунд
     setTimeout(() => {
         alert.remove();
     }, 5000);
     
-    // Обработчик кнопки закрытия
     alert.querySelector('.btn-close').addEventListener('click', () => {
         alert.remove();
     });

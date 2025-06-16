@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
-        /* Professional Modern Styles */
         * {
             margin: 0;
             padding: 0;
@@ -151,8 +150,6 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
         }
-        
-        /* Theme Toggle */
         .theme-toggle {
             background: none;
             border: 2px solid #e1e8ed;
@@ -173,8 +170,6 @@
             color: #eaa850;
             transform: scale(1.1);
         }
-        
-        /* Main Content */
         .main-content {
             padding-top: 100px;
             min-height: 100vh;
@@ -206,8 +201,6 @@
             max-width: 600px;
             margin: 0 auto;
         }
-        
-        /* Filter Info */
         .filter-info {
             background: linear-gradient(135deg, #dbeafe, #bfdbfe);
             border: 1px solid #3b82f6;
@@ -224,8 +217,6 @@
             font-weight: 600;
             font-size: 1.1rem;
         }
-        
-        /* Search Form */
         .search-filters {
             background: white;
             padding: 2rem;
@@ -263,8 +254,6 @@
             border-color: #eaa850;
             box-shadow: 0 0 0 3px rgba(234, 168, 80, 0.1);
         }
-        
-        /* Vacancy Cards */
         .vacancies-grid {
             display: grid;
             gap: 2rem;
@@ -353,8 +342,6 @@
             gap: 1rem;
             flex-wrap: wrap;
         }
-        
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -383,8 +370,6 @@
             margin-left: auto;
             margin-right: auto;
         }
-        
-        /* Footer */
         .footer {
             background: #1a202c;
             color: white;
@@ -438,8 +423,6 @@
             padding-left: 2rem;
             padding-right: 2rem;
         }
-        
-        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -461,8 +444,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-        
-        /* Theme variables */
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
@@ -509,8 +490,6 @@
         [data-theme="dark"] .filter-group label {
             color: var(--text-primary);
         }
-        
-        /* Responsive */
         @media (max-width: 768px) {
             .nav-menu {
                 display: none;
@@ -816,12 +795,9 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Theme toggle functionality
             const themeToggle = document.getElementById('theme-toggle');
             const html = document.documentElement;
             const icon = themeToggle.querySelector('i');
-            
-            // Load saved theme
             const savedTheme = localStorage.getItem('theme') || 'light';
             html.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
@@ -833,8 +809,7 @@
                 html.setAttribute('data-theme', newTheme);
                 localStorage.setItem('theme', newTheme);
                 updateThemeIcon(newTheme);
-                
-                // Add animation
+        
                 themeToggle.style.transform = 'rotate(360deg)';
                 setTimeout(() => {
                     themeToggle.style.transform = '';
@@ -848,8 +823,6 @@
                     icon.className = 'fas fa-moon';
                 }
             }
-
-            // Enhanced animations
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -862,13 +835,9 @@
                     }
                 });
             }, observerOptions);
-
-            // Animate vacancy cards
             document.querySelectorAll('.animate-on-scroll').forEach(element => {
                 observer.observe(element);
             });
-
-            // Enhanced hover effects
             document.querySelectorAll('.vacancy-card').forEach(card => {
                 card.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-8px) scale(1.02)';
@@ -878,8 +847,6 @@
                     this.style.transform = 'translateY(0) scale(1)';
                 });
             });
-
-            // Button animations
             document.querySelectorAll('.btn-primary, .btn-secondary, .btn-success').forEach(button => {
                 button.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-2px) scale(1.05)';

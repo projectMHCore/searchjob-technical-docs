@@ -17,18 +17,14 @@ class AvatarController {
      */
     public function uploadAvatar($userId, $file) {
         try {
-            // Проверяем, что файл был загружен
             if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
                 return ['success' => false, 'message' => 'Ошибка загрузки файла'];
             }
             
-            // Проверяем размер файла (максимум 5MB)
             $maxSize = 5 * 1024 * 1024; // 5MB
             if ($file['size'] > $maxSize) {
                 return ['success' => false, 'message' => 'Размер файла не должен превышать 5MB'];
             }
-            
-            // Проверяем тип файла
             $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
             $fileType = mime_content_type($file['tmp_name']);
             
@@ -36,31 +32,23 @@ class AvatarController {
                 return ['success' => false, 'message' => 'Допустимы только файлы JPEG, PNG, GIF'];
             }
             
-            // Проверяем, что это действительно изображение
             $imageInfo = getimagesize($file['tmp_name']);
             if ($imageInfo === false) {
                 return ['success' => false, 'message' => 'Файл не является изображением'];
             }
-              // Удаляем старый аватар ПЕРЕД созданием нового
             $this->deleteOldAvatar($userId);
             
-            // Создаем уникальное имя файла с микросекундами для предотвращения дубликатов
             $extension = $this->getExtensionFromMimeType($fileType);
             $fileName = 'avatar_' . $userId . '_' . time() . '_' . uniqid() . '.' . $extension;
             
-            // Путь для сохранения
             $uploadDir = __DIR__ . '/../../frontend/assets/uploads/avatars/';
             $uploadPath = $uploadDir . $fileName;
-              // Убеждаемся, что папка существует
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
             }
             
-            // Перемещаем загруженный файл
             if (move_uploaded_file($file['tmp_name'], $uploadPath)) {
-                // Создаем миниатюру
                 $this->createThumbnail($uploadPath, $uploadDir . 'thumb_' . $fileName);
-                  // Обновляем базу данных
                 $user = new User();
                 $relativePath = 'assets/uploads/avatars/' . $fileName;
                 
@@ -74,7 +62,6 @@ class AvatarController {
                         'avatar_url' => './' . $relativePath
                     ];
                 } else {
-                    // Удаляем файл, если не удалось обновить БД
                     unlink($uploadPath);
                     if (file_exists($uploadDir . 'thumb_' . $fileName)) {
                         unlink($uploadDir . 'thumb_' . $fileName);
@@ -100,7 +87,6 @@ class AvatarController {
             
             if ($currentAvatar) {
                 $this->deleteAvatarFiles($currentAvatar);
-                // Удаляем все аватары пользователя
                 $this->deleteAllUserAvatars($userId);
             }
             
@@ -127,20 +113,17 @@ class AvatarController {
             if ($currentAvatar) {
                 Logger::info("Deleting old avatar for user $userId: $currentAvatar");
                 $this->deleteAvatarFiles($currentAvatar);
-                
-                // Дополнительно удаляем все старые аватары пользователя по маске имени файла
                 $this->deleteAllUserAvatars($userId);
             }
         } catch (Exception $e) {
             Logger::error("Error deleting old avatar for user $userId: " . $e->getMessage());
         }
-    }    /**
+    }    
+    /**
      * Удаление файлов аватара (основной и миниатюра)
      */
     private function deleteAvatarFiles($avatarPath) {
         if (!$avatarPath) return;
-        
-        // Убираем "frontend/" если есть в пути, так как мы уже добавляем его
         $cleanPath = str_replace('frontend/', '', $avatarPath);
         $fullPath = __DIR__ . '/../../frontend/' . $cleanPath;
         
@@ -148,8 +131,6 @@ class AvatarController {
             unlink($fullPath);
             Logger::info("Deleted avatar file: $fullPath");
         }
-        
-        // Удаляем миниатюру
         $dir = dirname($fullPath);
         $filename = basename($fullPath);
         $thumbPath = $dir . '/thumb_' . $filename;
@@ -169,8 +150,6 @@ class AvatarController {
         if (!is_dir($avatarDir)) {
             return;
         }
-        
-        // Ищем все файлы аватаров пользователя
         $pattern = $avatarDir . 'avatar_' . $userId . '_*';
         $avatarFiles = glob($pattern);
         
@@ -178,8 +157,6 @@ class AvatarController {
             if (is_file($file)) {
                 unlink($file);
                 Logger::info("Deleted old avatar file: $file");
-                
-                // Удаляем соответствующую миниатюру
                 $filename = basename($file);
                 $thumbPath = dirname($file) . '/thumb_' . $filename;
                 if (file_exists($thumbPath)) {
@@ -199,12 +176,10 @@ class AvatarController {
         $originalHeight = $imageInfo[1];
         $mimeType = $imageInfo['mime'];
         
-        // Вычисляем новые размеры с сохранением пропорций
         $ratio = min($maxWidth / $originalWidth, $maxHeight / $originalHeight);
         $newWidth = intval($originalWidth * $ratio);
         $newHeight = intval($originalHeight * $ratio);
         
-        // Создаем изображение из источника
         switch ($mimeType) {
             case 'image/jpeg':
                 $sourceImage = imagecreatefromjpeg($sourcePath);
@@ -219,10 +194,8 @@ class AvatarController {
                 return false;
         }
         
-        // Создаем новое изображение
         $thumbImage = imagecreatetruecolor($newWidth, $newHeight);
         
-        // Для PNG и GIF сохраняем прозрачность
         if ($mimeType === 'image/png' || $mimeType === 'image/gif') {
             imagealphablending($thumbImage, false);
             imagesavealpha($thumbImage, true);
@@ -230,10 +203,8 @@ class AvatarController {
             imagefilledrectangle($thumbImage, 0, 0, $newWidth, $newHeight, $transparent);
         }
         
-        // Изменяем размер
         imagecopyresampled($thumbImage, $sourceImage, 0, 0, 0, 0, $newWidth, $newHeight, $originalWidth, $originalHeight);
         
-        // Сохраняем миниатюру
         switch ($mimeType) {
             case 'image/jpeg':
                 imagejpeg($thumbImage, $thumbPath, 90);
@@ -246,7 +217,6 @@ class AvatarController {
                 break;
         }
         
-        // Освобождаем память
         imagedestroy($sourceImage);
         imagedestroy($thumbImage);
         

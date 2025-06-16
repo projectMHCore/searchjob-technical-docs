@@ -1,6 +1,6 @@
 <?php
 /**
- * Централизованная система логирования для SearchJob
+ * Централизованная система логирования для 
  */
 class Logger {
     private static $logDir;
@@ -8,7 +8,6 @@ class Logger {
     public static function init() {
         self::$logDir = __DIR__ . '/../logs';
         
-        // Создаем директорию логов если не существует
         if (!is_dir(self::$logDir)) {
             mkdir(self::$logDir, 0755, true);
         }
@@ -68,10 +67,7 @@ class Logger {
             !empty($context) ? ' | Context: ' . json_encode($context) : ''
         );
         
-        // Записываем в файл
         file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
-        
-        // Также записываем в стандартный error_log для критических ошибок
         if ($level === 'error') {
             error_log($message);
         }
@@ -95,6 +91,4 @@ class Logger {
         }
     }
 }
-
-// Инициализируем при загрузке
 Logger::init();

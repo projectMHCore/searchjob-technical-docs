@@ -1,27 +1,22 @@
 <?php
-// API-контроллер для работы с пользователями (регистрация, авторизация, профиль)
+
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/ApiLogController.php';
 
-// Заголовки для работы с CORS и API
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Обработка preflight запросов
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// Совместимая функция для получения заголовков
 function getRequestHeaders() {
     $headers = [];
     if (function_exists('getallheaders')) {
         return getallheaders();
     }
-    
-    // Альтернативный способ для хостингов без getallheaders
     foreach ($_SERVER as $key => $value) {
         if (strpos($key, 'HTTP_') === 0) {
             $header = str_replace('_', '-', substr($key, 5));
@@ -76,7 +71,6 @@ switch ($path) {    case 'register':
                 $result = $userModel->login($login, $password);
                 
                 if ($result['success']) {
-                    // Генерация токена (примитивно)
                     $token = bin2hex(random_bytes(16));
                     $userModel->saveToken($result['user_id'], $token);
                     
@@ -104,12 +98,10 @@ switch ($path) {    case 'register':
         if ($method === 'GET') {
             $headers = getallheaders();
             $authHeader = $headers['Authorization'] ?? '';
-            // Удаляем префикс "Bearer " из токена
             $token = str_replace('Bearer ', '', $authHeader);            $user_id = $userModel->getUserIdByToken($token);
             if ($user_id) {
                 $profile = $userModel->getProfile($user_id);
                 if ($profile) {
-                    // Преобразуем объект в массив для совместимости с frontend
                     $profileArray = is_object($profile) ? (array)$profile : $profile;
                     echo json_encode(['success' => true, 'profile' => $profileArray]);
                     log_api(['response' => json_encode(['success' => true, 'profile' => $profileArray])]);
@@ -129,7 +121,6 @@ switch ($path) {    case 'register':
             $token = str_replace('Bearer ', '', $authHeader);
             $user_id = $userModel->getUserIdByToken($token);
             if ($user_id) {
-                // Получаем фильтры из GET параметров
                 $filters = [
                     'status' => $_GET['status'] ?? '',
                     'vacancy' => $_GET['vacancy'] ?? ''
@@ -210,13 +201,10 @@ switch ($path) {    case 'register':
             $token = str_replace('Bearer ', '', $authHeader);
             $user_id = $userModel->getUserIdByToken($token);
             if ($user_id) {
-                // Получаем фильтры из GET параметров
                 $filters = [
                     'status' => $_GET['status'] ?? '',
                     'vacancy' => $_GET['vacancy'] ?? ''
                 ];
-                
-                // Загружаем модель заявок
                 require_once __DIR__ . '/../models/JobApplication.php';
                 $applicationModel = new JobApplication();                $applications = $applicationModel->getEmployerApplications($user_id, $filters);
                 echo json_encode(['success' => true, 'applications' => $applications]);
@@ -229,7 +217,6 @@ switch ($path) {    case 'register':
         }
         break;    case 'candidate_profile':
         if ($method === 'GET') {
-            // Отладка - логируем все входящие данные
             error_log("candidate_profile endpoint called");
             error_log("GET params: " . print_r($_GET, true));
             error_log("Session: " . print_r($_SESSION ?? [], true));
@@ -251,7 +238,6 @@ switch ($path) {    case 'register':
                 error_log("Candidate ID: " . $candidate_id);
                 
                 if ($candidate_id > 0) {
-                    // Проверяем, что работодатель имеет право просматривать этого кандидата
                     require_once __DIR__ . '/../models/JobApplication.php';
                     $applicationModel = new JobApplication();
                     
@@ -288,7 +274,6 @@ switch ($path) {    case 'register':
         break;
         
     case 'test':
-        // Тестовый endpoint для проверки доступности API
         http_response_code(200);
         echo json_encode([
             'success' => true, 

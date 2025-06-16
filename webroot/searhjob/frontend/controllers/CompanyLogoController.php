@@ -5,8 +5,6 @@
 session_start();
 
 header('Content-Type: application/json');
-
-// Проверяем авторизацию
 if (!isset($_SESSION['token'])) {
     echo json_encode(['success' => false, 'message' => 'Не авторизован']);
     exit;
@@ -80,19 +78,15 @@ function uploadCompanyLogo($userData) {
         echo json_encode(['success' => false, 'message' => $validation['message']]);
         return;
     }
-      // Создаем директорию для логотипов если не существует
     $logoDir = __DIR__ . '/../assets/uploads/company_logos/';
     if (!is_dir($logoDir)) {
         if (!mkdir($logoDir, 0755, true)) {
             echo json_encode(['success' => false, 'message' => 'Не вдалося створити директорію для логотипів']);
             return;
         }
-        
-        // Создаем .htaccess для безопасности
         createLogoSecurityFile($logoDir);
     }
-    
-    // Удаляем старый логотип если есть
+
     removeOldLogo($userData);
     
     // Генерируем имя файла
@@ -100,9 +94,7 @@ function uploadCompanyLogo($userData) {
     $fileName = 'company_logo_' . $userData['id'] . '_' . time() . '_' . uniqid() . '.' . $extension;
     $filePath = $logoDir . $fileName;
     
-    // Перемещаем файл
     if (move_uploaded_file($file['tmp_name'], $filePath)) {
-        // Обновляем путь в базе данных
         $success = updateLogoInDatabase($userData['id'], 'assets/uploads/company_logos/' . $fileName);
           if ($success) {
             echo json_encode([
@@ -111,7 +103,6 @@ function uploadCompanyLogo($userData) {
                 'logo_path' => 'assets/uploads/company_logos/' . $fileName
             ]);
         } else {
-            // Удаляем файл при ошибке БД
             unlink($filePath);
             echo json_encode(['success' => false, 'message' => 'Помилка збереження в базі даних']);
         }
@@ -124,10 +115,7 @@ function uploadCompanyLogo($userData) {
  * Удаление логотипа компании
  */
 function removeCompanyLogo($userData) {
-    // Удаляем файл логотипа
     removeOldLogo($userData);
-    
-    // Обновляем базу данных
     $success = updateLogoInDatabase($userData['id'], null);
     
     if ($success) {
@@ -141,7 +129,6 @@ function removeCompanyLogo($userData) {
  * Валидация файла логотипа
  */
 function validateLogoFile($file) {
-    // Проверяем тип файла
     $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
     $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
     
@@ -151,8 +138,6 @@ function validateLogoFile($file) {
     if (!in_array($fileType, $allowedTypes) || !in_array($fileExtension, $allowedExtensions)) {
         return ['valid' => false, 'message' => 'Недопустимий тип файлу. Дозволені: JPG, PNG, GIF, WEBP'];
     }
-    
-    // Проверяем размер файла (2MB максимум)
     $maxSize = 2 * 1024 * 1024;
     if ($file['size'] > $maxSize) {
         return ['valid' => false, 'message' => 'Файл занадто великий. Максимальний розмір: 2MB'];
@@ -164,7 +149,6 @@ function validateLogoFile($file) {
         return ['valid' => false, 'message' => 'Файл не є зображенням'];
     }
     
-    // Проверяем разрешение изображения
     $maxWidth = 1000;
     $maxHeight = 500;
     if ($imageInfo[0] > $maxWidth || $imageInfo[1] > $maxHeight) {
@@ -234,8 +218,7 @@ function createLogoSecurityFile($logoDir) {
     $htaccessContent .= "Options -Indexes\n";
     
     file_put_contents($logoDir . '.htaccess', $htaccessContent);
-    
-    // Создаем index.php для дополнительной защиты
+
     $indexContent = "<?php\n";
     $indexContent .= "// Доступ запрещен\n";
     $indexContent .= "http_response_code(403);\n";

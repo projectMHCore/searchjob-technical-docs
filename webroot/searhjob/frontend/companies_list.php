@@ -1,8 +1,6 @@
 <?php
-// Страница просмотра зарегистрированных компаний
 session_start();
 
-// Подключение к базе данных
 $config = require __DIR__ . '/../backend/config/db.php';
 $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
 
@@ -10,7 +8,6 @@ if ($db->connect_error) {
     die("Ошибка подключения: " . $db->connect_error);
 }
 
-// Получаем список всех компаний (работодателей)
 $query = "SELECT 
     id, login, email, company_name, company_description, 
     company_address, company_website, company_size, 
@@ -23,7 +20,6 @@ $query = "SELECT
 
 $result = $db->query($query);
 
-// Получаем статистику
 $totalCompanies = $result->num_rows;
 $totalVacanciesQuery = $db->query("SELECT COUNT(*) as count FROM vacancies WHERE is_active = 1");
 $totalVacancies = $totalVacanciesQuery->fetch_assoc()['count'];
@@ -44,7 +40,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">    <style>
-        /* Professional Modern Styles */
         :root {
             --primary-color: #eaa850;
             --primary-hover: #d4941e;
@@ -89,7 +84,7 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
             background: var(--background-color);
             min-height: 100vh;
             transition: var(--transition);
-        }        /* Navigation */
+        } 
         .navbar {
             position: fixed;
             top: 0;
@@ -195,7 +190,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
             color: var(--primary-color);
             transform: translateY(-2px);
         }
-          /* Theme Toggle */
         .theme-toggle {
             background: none;
             border: 2px solid var(--border-color);
@@ -216,8 +210,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
             color: var(--primary-color);
             transform: scale(1.1);
         }
-
-        /* Main Content */
         .main-content {
             padding-top: 100px;
             min-height: 100vh;
@@ -249,7 +241,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
             margin: 0 auto;
         }
 
-        /* Statistics Section */
         .stats-section {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
@@ -283,7 +274,7 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
         .stat-label {
             font-size: 1rem;
             opacity: 0.9;
-        }        /* Search Filters */
+        }      
         .search-filters {
             background: var(--surface-color);
             padding: 2rem;
@@ -330,7 +321,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
             box-shadow: 0 0 0 3px rgba(234, 168, 80, 0.1);
         }
 
-        /* Companies Grid */
         .companies-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -502,7 +492,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
             transform: translateY(-2px);
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -532,7 +521,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
             margin-right: auto;
         }
 
-        /* Footer */
         .footer {
             background: #1a202c;
             color: white;
@@ -586,8 +574,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
             padding-left: 2rem;
             padding-right: 2rem;
         }
-
-        /* Dark Theme Adjustments */
         [data-theme="dark"] .navbar {
             background: rgba(26, 32, 44, 0.95);
         }
@@ -618,7 +604,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
             background: var(--bg-secondary);
         }
 
-        /* Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -630,7 +615,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
             }
         }
         
-        /* Responsive */
         @media (max-width: 768px) {
             .nav-menu {
                 display: none;
@@ -928,7 +912,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
     </footer>
 
     <script>
-        // Theme Toggle
         function toggleTheme() {
             const body = document.body;
             const currentTheme = body.getAttribute('data-theme');
@@ -940,8 +923,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
             const themeIcon = document.querySelector('.theme-toggle i');
             themeIcon.className = newTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         }
-
-        // Load saved theme
         document.addEventListener('DOMContentLoaded', function() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             document.body.setAttribute('data-theme', savedTheme);
@@ -949,8 +930,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
             const themeIcon = document.querySelector('.theme-toggle i');
             themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
         });
-
-        // Company Filtering
         function filterCompanies() {
             const industry = document.getElementById('industry').value.toLowerCase();
             const size = document.getElementById('company_size').value.toLowerCase();
@@ -976,8 +955,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
                     card.style.display = 'none';
                 }
             });
-
-            // Show/hide empty state
             const emptyState = document.querySelector('.empty-state');
             const companiesGrid = document.getElementById('companiesGrid');
             
@@ -998,8 +975,6 @@ $totalApplications = $totalApplicationsQuery->fetch_assoc()['count'];
                 emptyState.remove();
             }
         }
-
-        // Smooth animations on scroll
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'

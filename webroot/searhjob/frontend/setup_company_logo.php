@@ -1,10 +1,8 @@
 <?php
-// Простой скрипт для добавления поля company_logo в таблицу users
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 try {
-    // Подключаемся к базе данных
     $config = require __DIR__ . '/../backend/config/db.php';
     $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database']);
     
@@ -14,13 +12,11 @@ try {
     
     echo "<h2>Настройка поля company_logo</h2>";
     
-    // Проверяем, существует ли уже поле
     $result = $db->query("DESCRIBE users company_logo");
     
     if ($result && $result->num_rows > 0) {
         echo "<p style='color: orange;'>✓ Поле company_logo уже существует в таблице users</p>";
     } else {
-        // Добавляем поле
         $sql = "ALTER TABLE users ADD COLUMN company_logo VARCHAR(255) NULL";
         
         if ($db->query($sql)) {
@@ -30,7 +26,6 @@ try {
         }
     }
     
-    // Проверяем структуру таблицы
     echo "<h3>Текущая структура таблицы users:</h3>";
     $result = $db->query("DESCRIBE users");
     
@@ -52,7 +47,6 @@ try {
         echo "</table>";
     }
     
-    // Создаем директорию для логотипов
     $logoDir = __DIR__ . '/assets/uploads/company_logos/';
     
     if (!is_dir($logoDir)) {

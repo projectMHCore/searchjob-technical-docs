@@ -4,7 +4,6 @@ require_once __DIR__ . '/../models/Vacancy.php';
 require_once __DIR__ . '/../models/User.php';
 require_once __DIR__ . '/ApiLogController.php';
 
-// Определяем формат ответа (JSON или XML)
 $format = $_GET['format'] ?? 'json';
 $format = strtolower($format);
 
@@ -14,7 +13,6 @@ if ($format === 'xml') {
     header('Content-Type: application/json; charset=utf-8');
 }
 
-// Логируем запрос
 log_api([
     'request' => $_SERVER['REQUEST_URI'],
     'method' => $_SERVER['REQUEST_METHOD'],
@@ -23,14 +21,12 @@ log_api([
     'time' => date('Y-m-d H:i:s')
 ]);
 
-// Совместимая функция для получения заголовков
 function getRequestHeaders() {
     $headers = [];
     if (function_exists('getallheaders')) {
         return getallheaders();
     }
     
-    // Альтернативный способ для хостингов без getallheaders
     foreach ($_SERVER as $key => $value) {
         if (strpos($key, 'HTTP_') === 0) {
             $header = str_replace('_', '-', substr($key, 5));
@@ -90,7 +86,6 @@ function sendXmlResponse($data, $statusCode = 200) {
     $xml = arrayToXml($data);
     $xmlResponse = $xml->asXML();
     
-    // Логируем ответ в XML формате
     log_api([
         'response' => $data,
         'response_xml' => $xmlResponse,
@@ -122,14 +117,8 @@ function sendResponse($data, $statusCode = 200) {
  */
 function sendJsonResponse($data, $statusCode = 200) {
     global $path, $method;
-    
-    // Устанавливаем код статуса
     http_response_code($statusCode);
-    
-    // Преобразуем данные в JSON
     $jsonResponse = json_encode($data);
-    
-    // Логируем ответ
     log_api([
         'response' => $data,
         'path' => $path,
@@ -138,8 +127,6 @@ function sendJsonResponse($data, $statusCode = 200) {
         'format' => 'json',
         'time' => date('Y-m-d H:i:s')
     ]);
-    
-    // Отправляем ответ
     echo $jsonResponse;
 }
 
@@ -147,8 +134,6 @@ $method = $_SERVER['REQUEST_METHOD'];
 $path = $_GET['action'] ?? '';
 $vacancyModel = new Vacancy();
 $userModel = new User();
-
-// Обернем все в try-catch для обработки ошибок на хостинге
 try {
     switch ($path) {    case 'create':        if ($method === 'POST') {            // Получаем токен из заголовков
             $headers = getRequestHeaders();
@@ -158,14 +143,9 @@ try {
             } elseif (isset($headers['authorization'])) {
                 $token = $headers['authorization'];
             }
-              // Убираем префикс "Bearer " если есть
             $token = str_replace('Bearer ', '', $token);
-            
-            // Отладка для create
             error_log("VacancyAPI CREATE DEBUG - Token received: " . $token);
             error_log("VacancyAPI CREATE DEBUG - Headers: " . print_r($headers, true));
-            
-            // Проверяем авторизацию
             $user_id = $userModel->getUserIdByToken($token);
             error_log("VacancyAPI CREATE DEBUG - User ID from token: " . ($user_id ? $user_id : 'NULL'));
             
@@ -173,8 +153,6 @@ try {
                 sendResponse(['success' => false, 'error' => 'Неавторизовано - токен не найден'], 401);
                 break;
             }
-              
-            // Получаем данные из POST запроса (JSON или XML)
             if ($format === 'xml') {
                 $data = parseXmlInput();
             } else {
@@ -215,9 +193,7 @@ try {
             $employer = intval($_GET['employer'] ?? 0);
             
             if ($employer > 0) {
-                // Фильтрация по работодателю
                 $vacancies = $vacancyModel->getVacanciesByEmployer($employer);
-                // Фильтруем только активные вакансии
                 $vacancies = array_filter($vacancies, function($v) { return $v['is_active'] == 1; });
             } elseif ($search) {
                 $vacancies = $vacancyModel->search($search);
@@ -238,7 +214,6 @@ try {
         }
         break;    case 'update':
         if ($method === 'PUT' || $method === 'POST') {
-            // Получаем токен из заголовков
             $headers = getRequestHeaders();
             $token = '';
             if (isset($headers['Authorization'])) {
@@ -246,15 +221,9 @@ try {
             } elseif (isset($headers['authorization'])) {
                 $token = $headers['authorization'];
             }
-            
-            // Убираем префикс "Bearer " если есть
             $token = str_replace('Bearer ', '', $token);
-            
-            // Отладка для update
             error_log("VacancyAPI UPDATE DEBUG - Token received: " . $token);
             error_log("VacancyAPI UPDATE DEBUG - Headers: " . print_r($headers, true));
-            
-            // Проверяем авторизацию
             $user_id = $userModel->getUserIdByToken($token);
             error_log("VacancyAPI UPDATE DEBUG - User ID from token: " . ($user_id ? $user_id : 'NULL'));
             
@@ -267,7 +236,6 @@ try {
             error_log("VacancyAPI UPDATE DEBUG - Vacancy ID: " . $id);
             
             if ($id > 0) {
-                // Получаем данные из PUT запроса (JSON или XML)
                 if ($format === 'xml') {
                     $data = parseXmlInput();
                 } else {
@@ -315,7 +283,6 @@ try {
         }
         break;case 'my_vacancies':
         if ($method === 'GET') {
-            // Получаем токен из заголовков
             $headers = getRequestHeaders();
             $token = '';
             if (isset($headers['Authorization'])) {
@@ -323,11 +290,7 @@ try {
             } elseif (isset($headers['authorization'])) {
                 $token = $headers['authorization'];
             }
-            
-            // Убираем префикс "Bearer " если есть
             $token = str_replace('Bearer ', '', $token);
-            
-            // Проверяем авторизацию
             $user_id = $userModel->getUserIdByToken($token);
             if (!$user_id) {
                 sendResponse(['success' => false, 'error' => 'Неавторизовано'], 401);
@@ -339,7 +302,6 @@ try {
         }
         break;    case 'delete':
         if ($method === 'DELETE' || $method === 'GET') {
-            // Получаем токен из заголовков
             $headers = getRequestHeaders();
             $token = '';
             if (isset($headers['Authorization'])) {
@@ -347,11 +309,7 @@ try {
             } elseif (isset($headers['authorization'])) {
                 $token = $headers['authorization'];
             }
-            
-            // Убираем префикс "Bearer " если есть
             $token = str_replace('Bearer ', '', $token);
-            
-            // Проверяем авторизацию
             $user_id = $userModel->getUserIdByToken($token);
             if (!$user_id) {
                 sendResponse(['success' => false, 'error' => 'Неавторизовано'], 401);
@@ -374,7 +332,6 @@ try {
         sendResponse(['success' => false, 'error' => 'Not found'], 404);
 }
 } catch (Exception $e) {
-    // Логируем ошибку
     error_log("API Error: " . $e->getMessage());
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Внутренняя ошибка сервера: ' . $e->getMessage()]);

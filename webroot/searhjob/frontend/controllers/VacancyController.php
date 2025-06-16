@@ -1,5 +1,4 @@
 <?php
-// Контроллер для работы с вакансиями (MVC архитектура)
 require_once __DIR__ . '/../models/VacancyModel.php';
 session_start();
 
@@ -13,12 +12,11 @@ class VacancyController {
      * Отображение списка вакансий
      */
     public function index() {
-        // Получаем фильтры из запроса
         $filters = [
             'search' => $_GET['search'] ?? '',
             'location' => $_GET['location'] ?? '',
             'employment_type' => $_GET['employment_type'] ?? '',
-            'employer' => $_GET['employer'] ?? '' // Добавляем фильтр по работодателю
+            'employer' => $_GET['employer'] ?? ''
         ];
         
         // Получаем данные через модель
@@ -29,8 +27,6 @@ class VacancyController {
             'filters' => $filters,
             'error' => $result['success'] ? null : ($result['error'] ?? 'Ошибка загрузки вакансий')
         ];
-        
-        // Передаем данные в представление
         $this->render('vacancy_list', $data);
     }
       /**
@@ -42,12 +38,9 @@ class VacancyController {
         $canApply = false;
         $hasApplied = false;
         
-        // Проверяем, может ли пользователь подать заявку
+    
         if ($result['success'] && isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'job_seeker') {
             $canApply = true;
-            
-            // Проверяем, подавал ли уже заявку (требует дополнительного API вызова)
-            // Пока оставляем false - можно будет добавить позже через ApplicationModel
         }
         
         $data = [
@@ -63,13 +56,10 @@ class VacancyController {
      * Форма создания вакансии
      */
     public function create() {
-        // Проверяем авторизацию работодателя
         if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'employer') {
             header('Location: login.php');
             exit;
         }
-        
-        // Обработка POST-запроса (создание вакансии)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'title' => trim($_POST['title'] ?? ''),
@@ -93,7 +83,6 @@ class VacancyController {
                 ];
                 $this->render('vacancy_form', $viewData);
             }        } else {
-            // Отображение формы для GET-запроса
             $data = ['vacancy' => null, 'error' => null];
             $this->render('vacancy_form', $data);
         }
@@ -144,8 +133,6 @@ class VacancyController {
             header('Location: login.php');
             exit;
         }
-        
-        // Обработка POST-запроса (обновление вакансии)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'title' => trim($_POST['title'] ?? ''),
@@ -163,7 +150,6 @@ class VacancyController {
                 header('Location: my_vacancies.php?success=updated');
                 exit;
             } else {
-                // В случае ошибки показываем форму с данными и ошибкой
                 $viewData = [
                     'vacancy' => (object)$data,
                     'error' => $result['error'] ?? 'Ошибка обновления вакансии'
@@ -172,12 +158,10 @@ class VacancyController {
                 return;
             }
         }
-          // Получение вакансии для отображения формы (GET-запрос)
         $result = $this->vacancyModel->getVacancy($id);
         
         $vacancy = null;
         if ($result['success'] && isset($result['vacancy'])) {
-            // Преобразуем массив в объект для совместимости с представлением
             $vacancy = (object)$result['vacancy'];
         }
         
@@ -269,15 +253,11 @@ class VacancyController {
     /**
      * Рендеринг представления
      */    private function render($view, $data = []) {
-        // Извлекаем переменные для использования в представлении
         extract($data);
-        
-        // Подключаем новую профессиональную версию представления
         $viewFile = __DIR__ . "/../views/{$view}_view_new.php";
         if (file_exists($viewFile)) {
             include $viewFile;
         } else {
-            // Fallback на старую версию, если новая не найдена
             $fallbackFile = __DIR__ . "/../views/{$view}_view.php";
             if (file_exists($fallbackFile)) {
                 include $fallbackFile;

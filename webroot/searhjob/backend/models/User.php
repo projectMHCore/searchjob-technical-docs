@@ -1,5 +1,4 @@
 <?php
-// Модель пользователя для работы с MySQL и XML
 class User {
     private $db;
     
@@ -29,8 +28,6 @@ class User {
         $res = $this->db->query("INSERT INTO users ($fields) VALUES ($values)");
         if ($res) {
             $user_id = $this->db->insert_id;
-            
-            // Создаем XML файл для пользователя согласно требованиям методички Lab-2
             $this->createUserXMLFile($user_id, $login, $email, $role, $company_name);
             
             return ['success' => true, 'user_id' => $user_id];
@@ -44,7 +41,6 @@ class User {
         if ($res && $res->num_rows === 1) {
             $row = $res->fetch_assoc();
             if (password_verify($password, $row['password'])) {
-                // Генерируем токен для пользователя
                 $token = bin2hex(random_bytes(32));
                 $this->saveToken($row['id'], $token);
                 
@@ -57,13 +53,8 @@ class User {
             }        }
         return ['success' => false, 'error' => 'Неверный логин или пароль'];
     }
-    
-    /**
-     * Создание XML файла для пользователя согласно требованиям Lab-2
-     */
     private function createUserXMLFile($user_id, $login, $email, $role, $company_name = null) {
         try {
-            // Создаем директорию xml если её нет
             $xmlDir = __DIR__ . '/../xml';
             if (!is_dir($xmlDir)) {
                 if (!mkdir($xmlDir, 0755, true)) {
@@ -72,15 +63,11 @@ class User {
                 }
             }
             
-            // Создаем XML документ
             $xml = new DOMDocument('1.0', 'UTF-8');
             $xml->formatOutput = true;
-            
-            // Корневой элемент
             $root = $xml->createElement('user');
             $xml->appendChild($root);
             
-            // Добавляем данные пользователя
             $root->appendChild($xml->createElement('id', $user_id));
             $root->appendChild($xml->createElement('login', htmlspecialchars($login)));
             $root->appendChild($xml->createElement('email', htmlspecialchars($email)));
@@ -91,7 +78,6 @@ class User {
                 $root->appendChild($xml->createElement('company_name', htmlspecialchars($company_name)));
             }
             
-            // Сохраняем XML файл
             $filename = $xmlDir . '/user_' . $user_id . '.xml';
             return $xml->save($filename);
             
@@ -106,13 +92,11 @@ class User {
     public function getProfile($user_id) {
         $user_id = intval($user_id);
         
-        // Сначала пытаемся получить данные из XML файла
         $xmlFile = __DIR__ . '/../xml/user_' . $user_id . '.xml';
         if (file_exists($xmlFile)) {
             try {
                 $xml = simplexml_load_file($xmlFile);
                 if ($xml !== false) {
-                    // Для XML файлов возвращаем базовые данные и дополняем из БД
                     $basicProfile = [
                         'id' => (string)$xml->id,
                         'login' => (string)$xml->login,
@@ -121,8 +105,6 @@ class User {
                         'company_name' => isset($xml->company_name) ? (string)$xml->company_name : null,
                         'created' => (string)$xml->created_at
                     ];
-                    
-                    // Дополняем расширенными данными из БД
                     $extendedData = $this->getExtendedProfileData($user_id);
                     return (object) array_merge($basicProfile, $extendedData);
                 }
@@ -130,10 +112,9 @@ class User {
                 error_log("Ошибка чтения XML файла: " . $e->getMessage());
             }
         }
-          // Получаем полные данные из базы данных
         $fullProfile = $this->getUserProfile($user_id);
         if ($fullProfile) {
-            $fullProfile['created'] = $fullProfile['created_at']; // Alias для совместимости
+            $fullProfile['created'] = $fullProfile['created_at']; 
             return (object) $fullProfile;
         }
         
@@ -161,8 +142,6 @@ class User {
      */
     public function updateProfile($user_id, $data) {
         $user_id = intval($user_id);
-        
-        // Базовые поля
         $updates = [];
         $allowedFields = [
             'login', 'email', 'company_name',

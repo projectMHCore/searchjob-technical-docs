@@ -17,7 +17,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
-        /* Professional Modern Styles */
         * {
             margin: 0;
             padding: 0;
@@ -31,7 +30,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             position: relative;
         }
         
-        /* Prevent layout shifts */
         * {
             box-sizing: border-box;
         }
@@ -41,13 +39,11 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             height: auto;
         }
         
-        /* Smooth transitions for all elements */
         *:not(.no-transition) {
             transition-property: transform, opacity, box-shadow;
             transition-duration: 0.3s;
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         }
-          /* Navigation */
         .navbar {
             position: fixed;
             top: 0;
@@ -58,8 +54,7 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             transition: all 0.3s ease;
             box-shadow: 0 2px 20px rgba(0,0,0,0.1);
         }
-        
-        /* Theme Toggle */
+    
         .theme-toggle {
             background: none;
             border: 2px solid #e1e8ed;
@@ -163,7 +158,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             color: #eaa850;
             transform: translateY(-2px);
         }
-          /* Hero Section */
         .hero {
             min-height: 100vh;
             background: url('/frontend/assets/images/head_background.jpg') center center/cover no-repeat;
@@ -280,8 +274,7 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             font-size: 1rem;
             opacity: 0.9;
         }
-        
-        /* Section Styles */
+
         .section-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -295,7 +288,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             margin-bottom: 3rem;
             color: #2c3e50;
         }
-          /* Partners Section */
         .partners {
             padding: 100px 0;
             background: #f8fafc;
@@ -351,8 +343,7 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
           .partner-logo:hover img {
             filter: grayscale(0%) opacity(1);
         }
-        
-        /* Features Section */
+
         .features {
             padding: 100px 0;
             background: white;
@@ -405,8 +396,7 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             color: #64748b;
             line-height: 1.7;
         }
-        
-        /* Categories Section */
+
         .categories {
             padding: 100px 0;
             background: #f8fafc;
@@ -478,7 +468,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             transform: translateX(5px);
         }
         
-        /* CTA Section */
         .cta {
             padding: 100px 0;
             background: linear-gradient(135deg, #2c3e50, #34495e);
@@ -509,7 +498,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             flex-wrap: wrap;
         }
         
-        /* Footer */
         .footer {
             background: #1a202c;
             color: white;
@@ -555,7 +543,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             color: #a0aec0;
         }
         
-        /* Animations */
         .animate-fade-in-up {
             animation: fadeInUp 0.6s ease-out;
         }
@@ -571,7 +558,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             }
         }
         
-        /* Responsive Design */
         @media (max-width: 768px) {
             .nav-menu {
                 display: none;
@@ -658,7 +644,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                 max-height: 35px;
             }        }
         
-        /* CSS Variables for Theme */
         :root {
             --bg-primary: #ffffff;
             --bg-secondary: #f8fafc;
@@ -670,7 +655,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             --shadow: rgba(0,0,0,0.1);
         }
         
-        /* Dark Theme */
         [data-theme="dark"] {
             --bg-primary: #1a202c;
             --bg-secondary: #2d3748;
@@ -682,7 +666,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             --shadow: rgba(0,0,0,0.3);
         }
         
-        /* Apply theme variables */
         body {
             background-color: var(--bg-primary);
             color: var(--text-primary);
@@ -757,7 +740,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             color: var(--text-primary);
         }
 
-        /* Additional Animations */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -835,7 +817,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             transform: translateY(0);
         }
 
-        /* Fix feature card animation conflicts */
         .feature-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
@@ -934,7 +915,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             border-radius: 2px;
         }
 
-        /* Staggered animations for cards */
         .feature-card:nth-child(1) { animation-delay: 0.1s; }
         .feature-card:nth-child(2) { animation-delay: 0.2s; }
         .feature-card:nth-child(3) { animation-delay: 0.3s; }
@@ -952,7 +932,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
         .partner-logo:nth-child(6) { animation-delay: 0.35s; }
         .partner-logo:nth-child(7) { animation-delay: 0.4s; }
 
-        /* Loading animation for images */
         .partner-logo img {
             transition: all 0.4s ease;
             filter: grayscale(100%);
@@ -963,7 +942,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             transform: scale(1.1);
         }
 
-        /* Floating animation for call-to-action buttons */
         @keyframes float {
             0%, 100% {
                 transform: translateY(0px);
@@ -1320,14 +1298,11 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             </div>
         </div>
     </footer>    <script>
-        // Enhanced animations and interactions
         document.addEventListener('DOMContentLoaded', function() {
-            // Theme toggle functionality
             const themeToggle = document.getElementById('theme-toggle');
             const html = document.documentElement;
             const icon = themeToggle.querySelector('i');
-            
-            // Load saved theme
+        
             const savedTheme = localStorage.getItem('theme') || 'light';
             html.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
@@ -1339,7 +1314,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                 localStorage.setItem('theme', newTheme);
                 updateThemeIcon(newTheme);
                 
-                // Update navbar background immediately
                 const navbar = document.querySelector('.navbar');
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 
@@ -1357,7 +1331,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                     }
                 }
                 
-                // Add theme transition effect
                 themeToggle.style.transform = 'rotate(360deg)';
                 setTimeout(() => {
                     themeToggle.style.transform = '';
@@ -1372,7 +1345,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                 }
             }
 
-            // Enhanced Intersection Observer for scroll animations
             const observerOptions = {
                 threshold: 0.1,
                 rootMargin: '0px 0px -50px 0px'
@@ -1383,7 +1355,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                     if (entry.isIntersecting) {
                         entry.target.classList.add('animated');
                         
-                        // Add special effects for different elements
                         if (entry.target.classList.contains('feature-card')) {
                             setTimeout(() => {
                                 entry.target.style.transform = 'translateY(0) scale(1)';
@@ -1393,12 +1364,11 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                 });
             }, observerOptions);
 
-            // Prepare elements for animation
             const animatedElements = document.querySelectorAll('.feature-card, .category-card, .partner-logo, .section-title, .cta-title, .cta-subtitle');
             animatedElements.forEach((element, index) => {
                 element.classList.add('animate-on-scroll');
                 observer.observe(element);
-            });            // Enhanced navbar scroll effect
+            });
             let lastScrollTop = 0;
             let isScrolling = false;
             
@@ -1427,7 +1397,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                             navbar.style.backdropFilter = 'blur(5px)';
                         }
                         
-                        // Hide/show navbar on scroll
                         if (scrollTop > lastScrollTop && scrollTop > 200) {
                             navbar.style.transform = 'translateY(-100%)';
                         } else {
@@ -1441,7 +1410,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                 isScrolling = true;
             });
 
-            // Smooth scrolling for anchor links
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
                 anchor.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -1455,7 +1423,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                 });
             });
 
-            // Enhanced button interactions
             document.querySelectorAll('.btn-primary, .btn-secondary').forEach(button => {
                 button.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-3px) scale(1.05)';
@@ -1474,7 +1441,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                 });
             });
 
-            // Enhanced search form with animations
             const searchForm = document.querySelector('.search-form');
             const searchInput = document.querySelector('.search-input');
             
@@ -1486,7 +1452,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                         searchInput.style.borderColor = '#ef4444';
                         searchInput.style.transform = 'scale(1.02) translateX(-5px)';
                         
-                        // Shake animation
                         setTimeout(() => {
                             searchInput.style.transform = 'scale(1.02) translateX(5px)';
                         }, 100);
@@ -1498,7 +1463,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                             searchInput.style.borderColor = '';
                         }, 300);
                     } else {
-                        // Success animation
                         searchInput.style.borderColor = '#10b981';
                         searchInput.style.transform = 'scale(1.05)';
                         setTimeout(() => {
@@ -1516,15 +1480,13 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                     this.parentElement.style.transform = 'scale(1)';
                     this.parentElement.style.boxShadow = '0 8px 30px rgba(0,0,0,0.1)';
                 });
-            }            // Cards hover effects with improved animations
+            } 
             document.querySelectorAll('.feature-card').forEach((card, index) => {
                 card.addEventListener('mouseenter', function() {
-                    // Remove any ongoing animations first
                     this.style.animation = 'none';
                     this.style.transform = 'translateY(-15px) scale(1.05)';
                     this.style.boxShadow = '0 25px 50px rgba(0,0,0,0.2)';
                     
-                    // Animate icon
                     const icon = this.querySelector('i');
                     if (icon) {
                         icon.style.transform = 'scale(1.3) rotate(5deg)';
@@ -1543,12 +1505,10 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                 });
             });
 
-            // Partner logos interaction
             document.querySelectorAll('.partner-logo').forEach((logo, index) => {
                 logo.addEventListener('mouseenter', function() {
                     this.style.transform = 'translateY(-5px) scale(1.1)';
                     
-                    // Create ripple effect
                     const ripple = document.createElement('div');
                     ripple.style.position = 'absolute';
                     ripple.style.borderRadius = '50%';
@@ -1577,7 +1537,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                 });
             });
 
-            // Add ripple animation CSS
             const rippleCSS = `
                 @keyframes ripple {
                     to {
@@ -1590,7 +1549,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
             style.textContent = rippleCSS;
             document.head.appendChild(style);
 
-            // Parallax effect for hero section (subtle)
             window.addEventListener('scroll', function() {
                 const scrolled = window.pageYOffset;
                 const hero = document.querySelector('.hero');
@@ -1599,7 +1557,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                 }
             });
 
-            // Loading animation for images
             document.querySelectorAll('img').forEach(img => {
                 img.addEventListener('load', function() {
                     this.style.opacity = '0';
@@ -1607,7 +1564,6 @@ $userRole = $_SESSION['role'] ?? 'jobseeker';
                 });
             });
 
-            // Add entrance animation for CTA section
             const ctaSection = document.querySelector('.cta');
             if (ctaSection) {
                 const ctaObserver = new IntersectionObserver(function(entries) {

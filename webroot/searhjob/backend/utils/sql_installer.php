@@ -1,10 +1,8 @@
 <?php
 /**
  * Инсталлятор базы данных из SQL файла
- * Использует ваш экспортированный файл searhjob.sql для создания БД
  */
 
-// Подключение конфигурации
 $config = require __DIR__ . '/../config/db.php';
 
 // Обработка AJAX запросов
@@ -57,33 +55,25 @@ function installFromSqlFile($config) {
         return ['success' => false, 'message' => 'SQL файл не найден: ' . $sqlFile];
     }
       try {
-        // Подключение к существующей БД
         $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database'], $config['port']);
         
         if ($db->connect_error) {
             throw new Exception('Ошибка подключения к БД: ' . $db->connect_error);
         }
-        
-        // Читаем SQL файл
         $sql = file_get_contents($sqlFile);
         
         if ($sql === false) {
             throw new Exception('Не удалось прочитать SQL файл');
         }
-          // Удаляем комментарии и настройки MySQL
         $sql = preg_replace('/\/\*.*?\*\//s', '', $sql);
         $sql = preg_replace('/^--.*$/m', '', $sql);
         $sql = preg_replace('/^#.*$/m', '', $sql);
         $sql = preg_replace('/^SET.*$/m', '', $sql);
         $sql = preg_replace('/^\/\*!.*?\*\/;$/m', '', $sql);
-        
-        // Удаляем команды CREATE DATABASE и USE DATABASE
         $sql = preg_replace('/^CREATE DATABASE.*$/mi', '', $sql);
         $sql = preg_replace('/^USE.*$/mi', '', $sql);
-          // Разбиваем на отдельные запросы
         $allQueries = array_filter(array_map('trim', explode(';', $sql)));
         
-        // Сортируем запросы для правильного порядка выполнения
         $createTableQueries = [];
         $insertQueries = [];
         $alterQueries = [];
@@ -94,7 +84,6 @@ function installFromSqlFile($config) {
                 continue;
             }
             
-            // Пропускаем команды, которые могут вызвать проблемы
             if (preg_match('/^(CREATE DATABASE|USE\s+|DROP DATABASE)/i', $query)) {
                 continue;
             }
@@ -111,25 +100,19 @@ function installFromSqlFile($config) {
             }
         }
         
-        // Сортируем CREATE TABLE запросы по зависимостям
         $sortedCreateQueries = sortTablesByDependencies($createTableQueries);
-        
-        // Объединяем все запросы в правильном порядке
         $queries = array_merge($sortedCreateQueries, $insertQueries, $alterQueries, $otherQueries);
         
         $executedQueries = 0;
         $errors = [];
-          // Отключаем проверку внешних ключей временно
         $db->query("SET FOREIGN_KEY_CHECKS = 0");
         
         foreach ($queries as $query) {
-            // Выполняем запрос
             if ($db->query($query)) {
                 $executedQueries++;
             } else {
-                // Если ошибка связана с внешними ключами, попробуем создать таблицу без них
+                
                 if (strpos($db->error, 'errno: 150') !== false && preg_match('/^CREATE TABLE/i', $query)) {
-                    // Удаляем внешние ключи из запроса
                     $queryWithoutFK = preg_replace('/,\s*CONSTRAINT\s+`[^`]*`\s+FOREIGN KEY[^,)]+(\([^)]*\)\s+REFERENCES[^,)]+)/i', '', $query);
                     $queryWithoutFK = preg_replace('/,\s*FOREIGN KEY[^,)]+(\([^)]*\)\s+REFERENCES[^,)]+)/i', '', $queryWithoutFK);
                     
@@ -144,8 +127,6 @@ function installFromSqlFile($config) {
                 }
             }
         }
-        
-        // Включаем обратно проверку внешних ключей
         $db->query("SET FOREIGN_KEY_CHECKS = 1");
         
         $db->close();
@@ -177,15 +158,11 @@ function sortTablesByDependencies($createTableQueries) {
     $tables = [];
     $dependencies = [];
     
-    // Анализируем каждую таблицу
     foreach ($createTableQueries as $query) {
-        // Извлекаем имя таблицы
         if (preg_match('/CREATE TABLE\s+(?:IF NOT EXISTS\s+)?`?([^`\s]+)`?\s*\(/i', $query, $matches)) {
             $tableName = $matches[1];
             $tables[$tableName] = $query;
             $dependencies[$tableName] = [];
-            
-            // Ищем внешние ключи
             if (preg_match_all('/FOREIGN KEY.*?REFERENCES\s+`?([^`\s]+)`?/i', $query, $fkMatches)) {
                 $dependencies[$tableName] = $fkMatches[1];
             }
@@ -202,15 +179,11 @@ function sortTablesByDependencies($createTableQueries) {
         }
         
         $visited[$table] = true;
-        
-        // Сначала создаем все зависимые таблицы
         foreach ($dependencies[$table] as $dependency) {
             if (isset($tables[$dependency])) {
                 visit($dependency, $tables, $dependencies, $sorted, $visited);
             }
         }
-        
-        // Затем добавляем текущую таблицу
         if (isset($tables[$table])) {
             $sorted[] = $tables[$table];
         }
@@ -236,8 +209,6 @@ function getSqlFileInfo() {
     $content = file_get_contents($sqlFile);
     $size = filesize($sqlFile);
     $modified = filemtime($sqlFile);
-    
-    // Анализируем содержимое
     $createTableMatches = [];
     preg_match_all('/CREATE TABLE.*?`([^`]+)`/i', $content, $createTableMatches);
     $tables = $createTableMatches[1] ?? [];
@@ -274,8 +245,6 @@ function checkDatabaseConnection($config) {
                 'connected' => false
             ];
         }
-        
-        // Получаем информацию о БД
         $info = [];
         
         $result = $db->query("SELECT VERSION() as version");
@@ -320,8 +289,6 @@ function createBackup($db, $config) {
     
     $filename = 'backup_before_install_' . date('Y-m-d_H-i-s') . '.sql';
     $filepath = $backupDir . '/' . $filename;
-    
-    // Получаем список таблиц
     $tables = [];
     $result = $db->query("SHOW TABLES");
     while ($row = $result->fetch_array()) {
@@ -337,14 +304,11 @@ function createBackup($db, $config) {
     $sql .= "-- Created before SQL installation\n\n";
     
     foreach ($tables as $table) {
-        // Структура таблицы
         $result = $db->query("SHOW CREATE TABLE `$table`");
         $row = $result->fetch_assoc();
         $sql .= "-- Table: $table\n";
         $sql .= "DROP TABLE IF EXISTS `$table`;\n";
         $sql .= $row['Create Table'] . ";\n\n";
-        
-        // Данные таблицы
         $result = $db->query("SELECT * FROM `$table`");
         if ($result->num_rows > 0) {
             $sql .= "-- Data for table $table\n";
@@ -855,8 +819,6 @@ function createBackup($db, $config) {
                 if (data.success) {
                     setStepStatus('step4', 'completed');
                     showAlert(`✅ ${data.message} (Выполнено запросов: ${data.executed})`, 'success');
-                    
-                    // Обновляем информацию о БД
                     setTimeout(() => {
                         loadDatabaseInfo();
                     }, 2000);

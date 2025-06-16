@@ -7,7 +7,6 @@ echo "<style>body { font-family: Arial, sans-serif; margin: 20px; } .debug-secti
 echo "</head><body>";
 echo "<h1>🏢 Добавление поля для логотипа компании</h1>";
 
-// Проверяем авторизацию
 if (empty($_SESSION) || !isset($_SESSION['user_id'])) {
     echo "<div class='error'>❌ Требуется авторизация для выполнения операций с базой данных</div>";
     echo "<a href='login.php'>Войти в систему</a>";
@@ -15,7 +14,6 @@ if (empty($_SESSION) || !isset($_SESSION['user_id'])) {
     exit;
 }
 
-// Подключение к БД
 $config = require __DIR__ . '/../backend/config/db.php';
 $db = new mysqli($config['host'], $config['username'], $config['password'], $config['database'], $config['port']);
 
@@ -24,7 +22,6 @@ if ($db->connect_error) {
     exit;
 }
 
-// Обработка POST запросов
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
     
@@ -32,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<div class='debug-section'>";
         echo "<h2>🏢 Добавление поля company_logo в таблицу users</h2>";
         
-        // Проверяем, существует ли уже поле
         $result = $db->query("DESCRIBE users");
         $fieldExists = false;
         
@@ -48,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($fieldExists) {
             echo "<div class='warning'>⚠️ Поле company_logo уже существует в таблице users</div>";
         } else {
-            // Добавляем поле
             $sql = "ALTER TABLE users ADD COLUMN company_logo VARCHAR(200) NULL AFTER avatar";
             
             if ($db->query($sql)) {
@@ -77,7 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (mkdir($logoDir, 0755, true)) {
                 echo "<div class='success'>✅ Директория для логотипов создана: $logoDir</div>";
                 
-                // Создаем .htaccess для безопасности
                 $htaccessContent = "# Защита от выполнения PHP файлов\n";
                 $htaccessContent .= "php_flag engine off\n\n";
                 $htaccessContent .= "# Разрешаем только изображения\n";
@@ -107,7 +101,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<div class='debug-section'>";
         echo "<h2>🧪 Тест загрузки логотипа</h2>";
         
-        // Проверяем, что пользователь - работодатель
         $userId = $_SESSION['user_id'];
         $result = $db->query("SELECT role FROM users WHERE id = $userId");
         
@@ -117,8 +110,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($user['role'] === 'employer') {
                 echo "<div class='success'>✅ Пользователь является работодателем</div>";
                 echo "<p>Можно протестировать загрузку логотипа</p>";
-                
-                // Показываем форму загрузки
                 echo "<form method='post' enctype='multipart/form-data'>";
                 echo "<input type='hidden' name='action' value='upload_test_logo'>";
                 echo "<p><label>Выберите файл логотипа:</label></p>";
@@ -140,8 +131,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           if (isset($_FILES['logo_file']) && $_FILES['logo_file']['error'] === UPLOAD_ERR_OK) {
             $userId = $_SESSION['user_id'];
             $uploadDir = __DIR__ . '/assets/uploads/company_logos/';
-            
-            // Проверяем директорию
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0755, true);
             }
@@ -151,12 +140,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $fileExtension = strtolower($fileInfo['extension']);
             
             if (in_array($fileExtension, $allowedTypes)) {
-                // Генерируем имя файла
                 $fileName = 'company_logo_' . $userId . '_' . time() . '_' . uniqid() . '.' . $fileExtension;
                 $filePath = $uploadDir . $fileName;
                 
                 if (move_uploaded_file($_FILES['logo_file']['tmp_name'], $filePath)) {
-                    // Обновляем базу данных
                     $relativePath = 'assets/uploads/company_logos/' . $fileName;
                     $stmt = $db->prepare("UPDATE users SET company_logo = ? WHERE id = ?");
                     $stmt->bind_param("si", $relativePath, $userId);
@@ -166,14 +153,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         echo "<p><strong>Файл:</strong> $fileName</p>";
                         echo "<p><strong>Путь в БД:</strong> $relativePath</p>";
                         echo "<p><strong>Размер:</strong> " . round($_FILES['logo_file']['size'] / 1024, 2) . " KB</p>";
-                          // Показываем логотип
                         echo "<div style='margin-top: 15px;'>";
                         echo "<p><strong>Предварительный просмотр:</strong></p>";
                         echo "<img src='assets/uploads/company_logos/$fileName' style='max-width: 200px; max-height: 100px; border: 1px solid #ddd; border-radius: 4px;'>";
                         echo "</div>";
                     } else {
                         echo "<div class='error'>❌ Ошибка обновления базы данных: " . $db->error . "</div>";
-                        unlink($filePath); // Удаляем файл при ошибке БД
+                        unlink($filePath);
                     }
                 } else {
                     echo "<div class='error'>❌ Ошибка перемещения файла</div>";
@@ -187,8 +173,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "</div>";
     }
 }
-
-// Показываем текущее состояние таблицы
 echo "<div class='debug-section'>";
 echo "<h2>📊 Структура таблицы users</h2>";
 
@@ -224,8 +208,6 @@ if ($result) {
     echo "<div class='error'>❌ Не удалось получить структуру таблицы</div>";
 }
 echo "</div>";
-
-// Проверяем директорию для логотипов
 echo "<div class='debug-section'>";
 echo "<h2>📁 Состояние директории логотипов</h2>";
 
@@ -242,8 +224,6 @@ if (is_dir($uploadsDir)) {
 
 if (is_dir($logoDir)) {
     echo "<p>✅ Директория company_logos существует</p>";
-    
-    // Показываем файлы в директории
     $files = scandir($logoDir);
     $logoFiles = array_filter($files, function($file) {
         return preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $file);
@@ -263,12 +243,8 @@ if (is_dir($logoDir)) {
     echo "<p>❌ Директория company_logos НЕ существует</p>";
 }
 echo "</div>";
-
-// Показываем пользователей-работодателей
 echo "<div class='debug-section'>";
 echo "<h2>🏢 Работодатели в системе</h2>";
-
-// Проверяем, существует ли поле company_logo перед запросом
 $logoFieldExists = false;
 $result = $db->query("DESCRIBE users");
 if ($result) {
@@ -279,8 +255,6 @@ if ($result) {
         }
     }
 }
-
-// Выполняем запрос в зависимости от наличия поля
 if ($logoFieldExists) {
     $result = $db->query("SELECT id, login, company_name, company_logo FROM users WHERE role = 'employer' ORDER BY id");
 } else {
@@ -311,8 +285,6 @@ if ($result && $result->num_rows > 0) {
     echo "<p>📭 Работодателей в системе нет</p>";
 }
 echo "</div>";
-
-// Показываем формы действий
 echo "<div class='debug-section'>";
 echo "<h2>🛠️ Доступные действия</h2>";
 
@@ -335,8 +307,6 @@ echo "<p><small>Показывает форму для тестовой загр
 echo "</form>";
 
 echo "</div>";
-
-// Информационная секция
 echo "<div class='debug-section'>";
 echo "<h2>ℹ️ Информация</h2>";
 echo "<p><strong>Поле company_logo</strong> - будет хранить путь к файлу логотипа компании относительно корня сайта.</p>";
@@ -344,8 +314,6 @@ echo "<p><strong>Директория company_logos</strong> - будет сод
 echo "<p><strong>Безопасность</strong> - .htaccess файл запрещает выполнение PHP кода в директории с логотипами.</p>";
 echo "<p><strong>Формат имени файла</strong> - company_logo_{user_id}_{timestamp}_{uniqid}.{extension}</p>";
 echo "</div>";
-
-// Навигация
 echo "<div class='debug-section'>";
 echo "<h2>🔗 Навигация</h2>";
 echo "<p><a href='debug_user_id.php'>🔍 Диагностика User ID</a></p>";

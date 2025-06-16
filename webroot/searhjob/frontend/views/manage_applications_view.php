@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="/frontend/assets/style.css">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💼%3C/text%3E%3C/svg%3E">
     
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -1229,14 +1228,10 @@
             </div>
         </div>
     </footer>    <script>
-        // Enhanced animations and interactions
         document.addEventListener('DOMContentLoaded', function() {
-            // Theme toggle functionality
             const themeToggle = document.getElementById('theme-toggle');
             const html = document.documentElement;
             const icon = themeToggle.querySelector('i');
-            
-            // Load saved theme
             const savedTheme = localStorage.getItem('theme') || 'light';
             html.setAttribute('data-theme', savedTheme);
             updateThemeIcon(savedTheme);
@@ -1248,7 +1243,6 @@
                 localStorage.setItem('theme', newTheme);
                 updateThemeIcon(newTheme);
                 
-                // Update navbar background immediately
                 const navbar = document.querySelector('.navbar');
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 
@@ -1268,8 +1262,6 @@
                     icon.className = 'fas fa-moon';
                 }
             }
-            
-            // Navbar scroll effect
             window.addEventListener('scroll', function() {
                 const navbar = document.querySelector('.navbar');
                 const currentTheme = html.getAttribute('data-theme');
@@ -1291,17 +1283,15 @@
                     navbar.style.backdropFilter = 'blur(10px)';
                 }
             });
-        });        // Auto-mark as viewed when page loads
+        });      
         document.addEventListener('DOMContentLoaded', function() {
-            // Автоматично позначаємо заявки як переглянуті при завантаженні сторінки
+            
             const pendingApplications = document.querySelectorAll('.application-card .status-pending');
             if (pendingApplications.length > 0) {
-                // Можна додати AJAX запит для автоматичного оновлення статусу на "viewed"
+                
                 console.log('Знайдено заявок на розгляді:', pendingApplications.length);
             }
         });
-
-        // Confirm actions
         document.addEventListener('DOMContentLoaded', function() {
             const rejectButtons = document.querySelectorAll('.btn-danger');
             rejectButtons.forEach(button => {

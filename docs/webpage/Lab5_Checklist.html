@@ -353,13 +353,11 @@
 </head>
 <body>
     <div class="document-container fade-in">
-        <!-- Заголовок документа -->
         <div class="document-header">
             <h1><i class="fas fa-clipboard-check"></i> Checklist тестування системи SearchJob</h1>
             <div class="subtitle">Комплексна перевірка функціональності веб-додатку пошуку роботи</div>
         </div>
 
-        <!-- Інформація про документ -->
         <div class="document-info">
             <div class="info-grid">
                 <div class="info-item">
@@ -388,10 +386,7 @@
                 </div>
             </div>
         </div>
-
-        <!-- Область контенту -->
         <div class="content-area">
-            <!-- Модуль реєстрації -->
             <div class="test-module">
                 <div class="module-header" onclick="toggleModule('registration')">
                     <div class="module-title">
@@ -493,8 +488,6 @@
                     </table>
                 </div>
             </div>
-
-            <!-- Модуль авторизації -->
             <div class="test-module">
                 <div class="module-header" onclick="toggleModule('authorization')">
                     <div class="module-title">
@@ -596,8 +589,6 @@
                     </table>
                 </div>
             </div>
-
-            <!-- Модуль управління профілем -->
             <div class="test-module">
                 <div class="module-header" onclick="toggleModule('profile')">
                     <div class="module-title">
@@ -683,8 +674,6 @@
                     </table>
                 </div>
             </div>
-
-            <!-- Модуль вакансій -->
             <div class="test-module">
                 <div class="module-header" onclick="toggleModule('vacancies')">
                     <div class="module-title">
@@ -770,8 +759,6 @@
                     </table>
                 </div>
             </div>
-
-            <!-- Модуль заявок на роботу -->
             <div class="test-module">
                 <div class="module-header" onclick="toggleModule('applications')">
                     <div class="module-title">
@@ -857,8 +844,6 @@
                     </table>
                 </div>
             </div>
-
-            <!-- Модуль API -->
             <div class="test-module">
                 <div class="module-header" onclick="toggleModule('api')">
                     <div class="module-title">
@@ -928,8 +913,6 @@
                     </table>
                 </div>
             </div>
-
-            <!-- Модуль безпеки -->
             <div class="test-module">
                 <div class="module-header" onclick="toggleModule('security')">
                     <div class="module-title">
@@ -999,8 +982,6 @@
                     </table>
                 </div>
             </div>
-
-            <!-- Резюме тестування -->
             <div class="summary-section">
                 <h2><i class="fas fa-chart-pie"></i> Резюме тестування</h2>
                 <div class="summary-grid">
@@ -1026,7 +1007,6 @@
                     <div class="progress-fill" id="progress-fill"></div>
                 </div>
 
-                <!-- Підписи -->
                 <div class="signature-section">
                     <div class="signature-block">
                         <strong>Виконавець тестування</strong>
@@ -1044,10 +1024,7 @@
     </div>
 
     <script>
-        // Встановлення поточної дати
         document.getElementById('current-date').textContent = new Date().toLocaleDateString('uk-UA');
-
-        // Функція для розгортання/згортання модулів
         function toggleModule(moduleId) {
             const content = document.getElementById('content-' + moduleId);
             const arrow = document.getElementById('arrow-' + moduleId);
@@ -1061,7 +1038,6 @@
             }
         }
 
-        // Функція оновлення прогресу
         function updateProgress() {
             const totalCheckboxes = document.querySelectorAll('.status-checkbox').length;
             const checkedBoxes = document.querySelectorAll('.status-checkbox:checked').length;
@@ -1072,12 +1048,10 @@
             document.getElementById('progress-fill').style.width = percentage + '%';
         }
 
-        // Автоматичне розгортання першого модуля
         document.addEventListener('DOMContentLoaded', function() {
             toggleModule('registration');
         });
 
-        // Додавання анімацій при завантаженні
         window.addEventListener('load', function() {
             const modules = document.querySelectorAll('.test-module');
             modules.forEach((module, index) => {
@@ -1089,7 +1063,6 @@
             });
         });
 
-        // Збереження стану чекбоксів в localStorage
         function saveCheckboxState() {
             const checkboxes = document.querySelectorAll('.status-checkbox');
             const states = {};
@@ -1099,7 +1072,6 @@
             localStorage.setItem('checkboxStates', JSON.stringify(states));
         }
 
-        // Завантаження стану чекбоксів з localStorage
         function loadCheckboxState() {
             const states = JSON.parse(localStorage.getItem('checkboxStates') || '{}');
             const checkboxes = document.querySelectorAll('.status-checkbox');
@@ -1111,7 +1083,6 @@
             updateProgress();
         }
 
-        // Додавання обробників подій до чекбоксів
         document.addEventListener('DOMContentLoaded', function() {
             loadCheckboxState();
             

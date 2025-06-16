@@ -1,5 +1,4 @@
 <?php
-// Модель вакансии
 class Vacancy {
     private $conn;
       public function __construct() {
@@ -24,7 +23,7 @@ class Vacancy {
     }
     
     public function create($data) {
-        // Подготавливаем переменные для bind_param (они должны быть переменными, а не выражениями)
+        
         $employer_id = $data['employer_id'];
         $title = $data['title'];
         $description = $data['description'];
@@ -47,8 +46,6 @@ class Vacancy {
         );
         if ($stmt->execute()) {
             $vacancy_id = $stmt->insert_id;
-            
-            // Создаем XML файл для вакансии согласно требованиям методички Lab-2
             $this->createVacancyXMLFile($vacancy_id, $data);
             
             return $vacancy_id;
@@ -97,7 +94,6 @@ class Vacancy {
     }
     
     public function update($id, $data, $employerId = null) {
-        // Если указан employerId, проверяем права доступа
         if ($employerId !== null) {
             $checkStmt = $this->conn->prepare("SELECT id FROM vacancies WHERE id = ? AND employer_id = ?");
             $checkStmt->bind_param('ii', $id, $employerId);
@@ -105,7 +101,7 @@ class Vacancy {
             $result = $checkStmt->get_result();
             
             if ($result->num_rows === 0) {
-                return false; // Нет прав доступа
+                return false;
             }
         }
         
@@ -130,7 +126,6 @@ class Vacancy {
         );
         
         if ($stmt->execute()) {
-            // Обновляем XML файл вакансии согласно требованиям методички Lab-2
             $this->updateVacancyXMLFile($id, $data);
             return true;
         }
@@ -138,7 +133,6 @@ class Vacancy {
         return false;
     }
       public function delete($id, $employerId) {
-        // Проверяем, что вакансия принадлежит пользователю
         $stmt = $this->conn->prepare("SELECT id FROM vacancies WHERE id = ? AND employer_id = ?");
         $stmt->bind_param('ii', $id, $employerId);
         $stmt->execute();
@@ -148,12 +142,10 @@ class Vacancy {
             return false;
         }
         
-        // Удаляем вакансию из базы данных
         $stmt = $this->conn->prepare("DELETE FROM vacancies WHERE id = ? AND employer_id = ?");
         $stmt->bind_param('ii', $id, $employerId);
         
         if ($stmt->execute()) {
-            // Удаляем XML файл вакансии
             $xmlFile = __DIR__ . '/../xml/vacancies/vacancy_' . $id . '.xml';
             if (file_exists($xmlFile)) {
                 unlink($xmlFile);
@@ -168,7 +160,6 @@ class Vacancy {
      * Переключает статус активности вакансии (активна/неактивна)
      */
     public function toggleStatus($id, $employerId) {
-        // Проверяем, что вакансия принадлежит пользователю
         $stmt = $this->conn->prepare("SELECT is_active FROM vacancies WHERE id = ? AND employer_id = ?");
         $stmt->bind_param('ii', $id, $employerId);
         $stmt->execute();
@@ -180,8 +171,6 @@ class Vacancy {
         
         $row = $result->fetch_assoc();
         $newStatus = $row['is_active'] ? 0 : 1;
-        
-        // Обновляем статус
         $stmt = $this->conn->prepare("UPDATE vacancies SET is_active = ? WHERE id = ? AND employer_id = ?");
         $stmt->bind_param('iii', $newStatus, $id, $employerId);
         return $stmt->execute();
@@ -191,7 +180,6 @@ class Vacancy {
      * Устанавливает статус активности вакансии
      */
     public function setStatus($id, $isActive, $employerId) {
-        // Проверяем, что вакансия принадлежит пользователю
         $stmt = $this->conn->prepare("SELECT id FROM vacancies WHERE id = ? AND employer_id = ?");
         $stmt->bind_param('ii', $id, $employerId);
         $stmt->execute();
@@ -203,18 +191,12 @@ class Vacancy {
         
         $status = $isActive ? 1 : 0;
         
-        // Обновляем статус
         $stmt = $this->conn->prepare("UPDATE vacancies SET is_active = ? WHERE id = ? AND employer_id = ?");
         $stmt->bind_param('iii', $status, $id, $employerId);
         return $stmt->execute();
     }
-    
-    /**
-     * Создание XML файла для вакансии согласно требованиям Lab-2
-     */
     private function createVacancyXMLFile($vacancy_id, $data) {
         try {
-            // Создаем директорию xml для вакансий если её нет
             $xmlDir = __DIR__ . '/../xml/vacancies';
             if (!is_dir($xmlDir)) {
                 if (!mkdir($xmlDir, 0755, true)) {
@@ -222,16 +204,10 @@ class Vacancy {
                     return false;
                 }
             }
-            
-            // Создаем XML документ
             $xml = new DOMDocument('1.0', 'UTF-8');
             $xml->formatOutput = true;
-            
-            // Корневой элемент
             $root = $xml->createElement('vacancy');
             $xml->appendChild($root);
-            
-            // Добавляем данные вакансии
             $root->appendChild($xml->createElement('id', $vacancy_id));
             $root->appendChild($xml->createElement('employer_id', htmlspecialchars($data['employer_id'])));
             $root->appendChild($xml->createElement('title', htmlspecialchars($data['title'])));
@@ -243,8 +219,6 @@ class Vacancy {
             $root->appendChild($xml->createElement('employment_type', htmlspecialchars($data['employment_type'] ?? '')));
             $root->appendChild($xml->createElement('is_active', '1'));
             $root->appendChild($xml->createElement('created_at', date('Y-m-d H:i:s')));
-            
-            // Сохраняем XML файл
             $filename = $xmlDir . '/vacancy_' . $vacancy_id . '.xml';
             return $xml->save($filename);
             
@@ -262,11 +236,8 @@ class Vacancy {
             $xmlFile = __DIR__ . '/../xml/vacancies/vacancy_' . $vacancy_id . '.xml';
             
             if (file_exists($xmlFile)) {
-                // Обновляем существующий XML файл
                 $xml = new DOMDocument();
                 $xml->load($xmlFile);
-                
-                // Обновляем поля
                 $fields = ['title', 'description', 'salary', 'company', 'location', 'requirements', 'employment_type'];
                 foreach ($fields as $field) {
                     if (isset($data[$field])) {
@@ -276,8 +247,6 @@ class Vacancy {
                         }
                     }
                 }
-                
-                // Добавляем время обновления
                 $updatedAtElement = $xml->getElementsByTagName('updated_at')->item(0);
                 if (!$updatedAtElement) {
                     $updatedAtElement = $xml->createElement('updated_at');
@@ -287,7 +256,6 @@ class Vacancy {
                 
                 return $xml->save($xmlFile);
             } else {
-                // Создаем новый XML файл если не существует
                 return $this->createVacancyXMLFile($vacancy_id, $data);
             }
             
